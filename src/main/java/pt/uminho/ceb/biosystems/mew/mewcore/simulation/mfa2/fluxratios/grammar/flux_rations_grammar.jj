@@ -1,0 +1,163 @@
+/* flux_ratios_grammar.jj A grammar for mna fluxes restrictions. */
+options {
+	STATIC = false ;
+}
+
+PARSER_BEGIN(FluxRatios)
+
+	package mna4optflux.grammar;
+	
+	import java.io.PrintStream ;
+	import java.lang.Math;
+	import java.io.FileInputStream;
+	import java.io.FileNotFoundException;
+	import java.util.LinkedList;
+	import java.util.Map;
+	import java.util.HashMap;
+	import mna4optflux.exceptions.InvalidExpressionException;
+	import mna4optflux.utils.LinkedMap;
+	import mna4optflux.utils.Pair;
+	
+	class FluxRatios {
+		
+		LinkedMap<String, Pair<Double,Boolean>, LinkedList<Pair<Double,Boolean>>> fluxesCoeffs;
+		private double c;
+		
+		public FluxRatios(){
+		}
+
+		public Map<String, Double> run(String input) throws ParseException, TokenMgrError, NumberFormatException, FileNotFoundException {
+			FluxRatios parser = new FluxRatios(new FileInputStream(input)) ;
+			
+			Pair<LinkedMap<String, Pair<Double,Boolean>, LinkedList<Pair<Double,Boolean>>>, Double> data = parser.Start(System.out);
+			LinkedMap<String, Pair<Double,Boolean>, LinkedList<Pair<Double,Boolean>>> fluxesCoeffs = data.getA();
+			double ratio = data.getB();
+			  
+			Map<String, Double> result = new HashMap<String, Double>();
+			
+			for(String key:fluxesCoeffs.keySet())
+			{
+				double val = 0.0;
+				for(Pair<Double,Boolean> o: fluxesCoeffs.get(key))
+				{
+					if(o.getB())
+						val += o.getA()*ratio*-1;
+					else
+						val += o.getA();
+				}
+				result.put(key,val);
+			}
+			return result;
+		}
+		
+	}
+	
+PARSER_END(FluxRatios)
+
+// LEXICAL
+
+SKIP : { " " | "\n" | "\r" | "\r\n" }
+TOKEN : { < PLUS : "+" > }
+TOKEN : { < MINUS : "-" > }
+TOKEN : { < TIMES : "*" > }
+TOKEN : { < DIVIDE : "/" > }
+TOKEN : { < NUMBER : <DIGITS> | <DIGITS> "." <DIGITS> | <DIGITS> "." | "." <DIGITS> > }
+TOKEN : { < COMPARATOR : "=" | "<" | ">" | "<=" | ">=" > }
+TOKEN : { < FLUX_ID : ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])+ > }
+
+TOKEN : { < #DIGITS : (["0"-"9"])+ > } // #xxx -> xxx is not a token, it is just a local reg. exp.
+
+// PARSER
+
+/* Start -> Equation  EOF */
+Pair<LinkedMap<String, Pair<Double,Boolean>, LinkedList<Pair<Double,Boolean>>>, Double> Start(PrintStream printStream) throws NumberFormatException :
+{
+	fluxesCoeffs = new LinkedMap<String, Pair<Double,Boolean>, LinkedList<Pair<Double,Boolean>>>();
+}
+{
+	Equation()
+	<EOF>
+	{ 
+		return new Pair<LinkedMap<String, Pair<Double,Boolean>, LinkedList<Pair<Double,Boolean>>>, Double>(fluxesCoeffs,c);
+	}
+}
+
+/* Equation -> Expression COMPARATOR NUMBER */
+void Equation() :
+{
+	Token t, comp;
+}
+{
+	Expression() <COMPARATOR> t=<NUMBER>
+	{
+		c = Double.parseDouble(t.image);
+	}
+}
+
+/* Expression -> Term DIVIDE Term  */
+void Expression() throws NumberFormatException :
+{
+}
+{
+	Term(false) <DIVIDE> Term(true)
+}
+
+/* Term -> Primary (PLUS Primary | MINUS)* */
+void Term(Boolean divisor) throws NumberFormatException :
+{
+}
+{
+	Primary(divisor, false)
+	(
+		<PLUS> Primary(divisor, false)
+	|
+		<MINUS> Primary(divisor, true)
+	)*
+}
+
+/* 
+	Primary ->  Element
+		|	    MINUS Primary
+*/
+void Primary(Boolean divisor, Boolean negative) throws NumberFormatException :
+{
+}
+{
+	Element(divisor, negative)
+|
+	<MINUS> {negative = negative ? false : true;} Primary(divisor, negative)
+}
+
+/*
+	Element ->  FLUX_ID
+		|	    NUMBER (FLUX_ID)?
+*/
+void Element(Boolean divisor, Boolean negative) throws NumberFormatException :
+{
+	Token t=null, t2;
+	double coef;
+}
+{
+	t = <FLUX_ID>
+	{
+		coef = negative ? -1 : 1;
+		fluxesCoeffs.add(t.image,new Pair<Double,Boolean>(coef,divisor));
+	}
+|
+	t2=<NUMBER>
+	(
+		t=<FLUX_ID>
+	)?
+	{
+		if(t!=null)
+		{
+			coef = Double.parseDouble(t2.image);
+			if(negative)
+				coef *= -1;
+			fluxesCoeffs.add(t.image,new Pair<Double,Boolean>(coef,divisor));
+		}
+	}
+}
+
+
+

@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>pt.uminho.ceb.biosystems.mew</groupId>
+  <artifactId>mewcore</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>mewcore</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>pt.uminho.ceb.biosystems.mew</groupId>
+      <artifactId>utilities</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>pt.uminho.ceb.biosystems.mew</groupId>
+      <artifactId>biocomponents</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>pt.uminho.ceb.biosystems</groupId>
+      <artifactId>jecoli</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>pt.uminho.ceb.biosystems.mew</groupId>
+      <artifactId>solvers</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+		<groupId>colt</groupId>
+		<artifactId>colt</artifactId>
+		<version>1.2.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-math3</artifactId>
+		<version>3.4.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>com.google.code</groupId>
+	  <artifactId>matlabcontrol</artifactId>
+	  <version>4.1.0</version>
+	</dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
+        <configuration>
+          <skipTests>${skipTests}</skipTests>
+
+		  
+         <environmentVariables>
+             <LD_LIBRARY_PATH>/home/hgiesteira/Desktop/EclipseProjects/OptFlux/dependencies/unix64/static/:/opt/ibm/ILOG/CPLEX_Studio125/cplex/bin/x86-64_sles10_4.1/</LD_LIBRARY_PATH>
+             <PATH>/home/hgiesteira/Desktop/EclipseProjects/OptFlux/dependencies/unix64/bin/</PATH>
+         </environmentVariables>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+  
+  <repositories>
+	  <repository>
+	    <id>hgthirdparty</id>
+	    <url>http://193.137.11.210:8081/nexus/content/repositories/hgthirdparty</url>
+	  </repository>
+  </repositories>
+  
+  <distributionManagement>
+	  <snapshotRepository>
+	    <id>HGRepSnap</id>
+	    <url>http://193.137.11.210:8081/nexus/content/repositories/HGRepSnap</url>
+	  </snapshotRepository>
+	  <repository>
+	    <id>HGRep</id>
+	    <url>http://193.137.11.210:8081/nexus/content/repositories/HGRep</url>
+	  </repository>
+  </distributionManagement>
+  
+</project>
