@@ -2,10 +2,9 @@ package pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.conv
 
 import java.util.List;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.OverrideSteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
 public interface IConverter {
 	

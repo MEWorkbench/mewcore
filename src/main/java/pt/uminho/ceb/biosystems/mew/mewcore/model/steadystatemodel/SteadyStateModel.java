@@ -30,8 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.AbstractModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Compartment;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.IStoichiometricMatrix;
@@ -44,6 +42,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.model.components.enums.ReactionType;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.SteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import cern.colt.list.IntArrayList;
 
 public class SteadyStateModel extends AbstractModel implements ISteadyStateModel,Serializable {

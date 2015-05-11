@@ -2,6 +2,14 @@ package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstraction
 
 import java.util.Map;
 
+import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.turnover.TurnOverProperties;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
@@ -11,15 +19,6 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
-import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.turnover.TurnOverProperties;
 
 public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> extends
 		AbstractSSReferenceSimulation<T> {
@@ -38,23 +37,23 @@ public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> ex
 	}
 	
 	private void initProperties() {
-		possibleProperties.add(TurnOverProperties.TURNOVER_WT_REFERENCE);
+		optionalProperties.add(TurnOverProperties.TURNOVER_WT_REFERENCE);
 	}
 
 	@Override
 	protected void createVariables() throws WrongFormulationException, PropertyCastException, MandatoryPropertyException, SolverException{
-		if(debug)System.out.println("Turnover 1 " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("Turnover 1 " + (System.currentTimeMillis()-initTime));
 		super.createVariables();
-		if(debug)System.out.println("Turnover 2 " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("Turnover 2 " + (System.currentTimeMillis()-initTime));
 		
 		final int numberOfMetabolites = model.getNumberOfMetabolites();
 		
-		if(debug)System.out.println("Turnover 3 " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("Turnover 3 " + (System.currentTimeMillis()-initTime));
 		for(int i =0; i < model.getNumberOfReactions(); i++){
 			String name = model.getReactionId(i);
 			String idPositive = "TORV_"+name+"("+i+")_PST";
 			String idNegative = "TORV_"+name+"("+i+")_NGT";
-			ReactionConstraint rc = overrideRC.getReactionConstraint(i);
+			ReactionConstraint rc = model.getReactionConstraint(i);
 			rc=(rc!=null)?rc:model.getReactionConstraint(i);
 			
 			Map<String, Integer> newVars = L1VarTerm.splitNegAndPosVariable(problem, i, idPositive, idNegative, rc.getLowerLimit(), rc.getUpperLimit());
@@ -70,7 +69,7 @@ public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> ex
 			
 			
 		}
-		if(debug)System.out.println("Turnover 4 " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("Turnover 4 " + (System.currentTimeMillis()-initTime));
 		
 		final int startNumVars = problem.getNumberVariables();
 		for (int i = 0; i < numberOfMetabolites; i++) {
@@ -81,7 +80,7 @@ public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> ex
 			final LPVariable var = new LPVariable(varID, 0.0, upperBoundTurnover);
 			problem.addVariable(var);
 		}
-		if(debug)System.out.println("Turnover 5 " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("Turnover 5 " + (System.currentTimeMillis()-initTime));
 	}
 
 	public String getNameBooleanDirection(String reactionName, boolean possitive){
@@ -89,11 +88,11 @@ public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> ex
 		return name;
 	}
 	
-	protected void createConstrains() throws WrongFormulationException, PropertyCastException, MandatoryPropertyException, SolverException {
-//		System.out.println("createConstrains 1 " + (System.currentTimeMillis()-initType));
-		super.createConstrains();
+	protected void createConstraints() throws WrongFormulationException, PropertyCastException, MandatoryPropertyException, SolverException {
+//		System.out.println("createConstrains 1 " + (System.currentTimeMillis()-initTime));
+		super.createConstraints();
 
-//		System.out.println("createConstrains 2 " + (System.currentTimeMillis()-initType));
+//		System.out.println("createConstrains 2 " + (System.currentTimeMillis()-initTime));
 		final int numberOfMetabolites = model.getNumberOfMetabolites();
 		final int numberOfReactions = model.getNumberOfReactions();
 
@@ -137,7 +136,7 @@ public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> ex
 		for (int r = 0; r < numberOfReactions; r++) {
 			addDrirectionReversibilityInProblem(problem, r);
 		}
-//		System.out.println("createConstrains 3 " + (System.currentTimeMillis()-initType));
+//		System.out.println("createConstrains 3 " + (System.currentTimeMillis()-initTime));
 	}
 	
 	private void addDrirectionReversibilityInProblem(T problem, int r) {
@@ -235,24 +234,24 @@ public abstract class AbstractTurnoverFormulationFIXED<T extends MILPProblem> ex
 	}
 	
 	public void setTurnOverReference(final Map<String, Double> tr){
-		propreties.put(TurnOverProperties.TURNOVER_WT_REFERENCE, tr);
+		properties.put(TurnOverProperties.TURNOVER_WT_REFERENCE, tr);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Double> getTurnOverReference() throws PropertyCastException, MandatoryPropertyException {
-		if(debug)System.out.println("inside getTurnOverReference " + (System.currentTimeMillis()-initType));
-		Map<String, Double> tor = ManagerExceptionUtils.testCast(propreties, Map.class, TurnOverProperties.TURNOVER_WT_REFERENCE, true);
+		if(debug)System.out.println("inside getTurnOverReference " + (System.currentTimeMillis()-initTime));
+		Map<String, Double> tor = ManagerExceptionUtils.testCast(properties, Map.class, TurnOverProperties.TURNOVER_WT_REFERENCE, true);
 		
-		if(debug)System.out.println("cast " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("cast " + (System.currentTimeMillis()-initTime));
 		if(tor == null){
 			Map<String, Double> wtReference = getWTReference();
-			if(debug)System.out.println("getWTReference " + (System.currentTimeMillis()-initType));
+			if(debug)System.out.println("getWTReference " + (System.currentTimeMillis()-initTime));
 			tor = TurnOverProperties.getTurnOverCalculation(model, wtReference);
-			if(debug)System.out.println("getTurnOverCalculation " + (System.currentTimeMillis()-initType));
+			if(debug)System.out.println("getTurnOverCalculation " + (System.currentTimeMillis()-initTime));
 		}
 		
 		setTurnOverReference(tor);
-		if(debug)System.out.println("setTurnOverReference " + (System.currentTimeMillis()-initType));
+		if(debug)System.out.println("setTurnOverReference " + (System.currentTimeMillis()-initTime));
 		return tor;
 	}
 	

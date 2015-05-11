@@ -30,8 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
@@ -39,6 +38,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class CriticalReactions implements Serializable {
 	
@@ -62,6 +62,7 @@ public class CriticalReactions implements Serializable {
 		this.model = model;
 		center = new SimulationSteadyStateControlCenter(env, null, model, SimulationProperties.FBA);
 		center.setSolver(solver);
+		center.setMaximization(true);
 	}	
 	
 	public EnvironmentalConditions getEnvConditions(){
@@ -108,9 +109,22 @@ public class CriticalReactions implements Serializable {
 		for(int i=0; i < model.getNumberOfReactions(); i++)
 		{
 			String reactionId = model.getReactionId(i);
-			
+			System.out.println("crit ["+i+"/"+model.getNumberOfReactions()+"]");
 			if(wildTypeFluxes.getValue(reactionId) != 0.0 && isReactionCritical(reactionId))
 				criticalReactionIds.add(reactionId);
+		}
+	}
+	
+	public void identifyCriticalReactionIgnoring(Set<String> ignore) throws Exception {
+		center.addProperty(SimulationProperties.IS_MAXIMIZATION, true);
+		wildTypeFluxes = center.simulate().getFluxValues();
+		
+		criticalReactionIds = new ArrayList<String>();
+		
+		for (int i = 0; i < model.getNumberOfReactions(); i++) {
+			String reactionId = model.getReactionId(i);
+			
+			if ((ignore==null || !ignore.contains(reactionId)) && wildTypeFluxes.getValue(reactionId) != 0.0 && isReactionCritical(reactionId)) criticalReactionIds.add(reactionId);
 		}
 	}
 

@@ -30,14 +30,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class CriticalGenes extends CriticalReactions {
 	

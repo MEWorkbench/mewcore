@@ -9,7 +9,6 @@ import java.util.TreeSet;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IRepresentation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.set.SetRepresentation;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Reaction;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.enums.ReactionType;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
@@ -58,8 +57,9 @@ public class SteadyStateKnockoutDecoder implements ISteadyStateDecoder {
 		while(it.hasNext())
 		{
 			String nextId = it.next();
-			if(!notAllowedKnockouts.contains(model.getReactionIndex(nextId)))
-				notAllowedKnockouts.add(model.getReactionIndex(nextId));
+			int index = model.getReactionIndex(nextId);
+			if(!notAllowedKnockouts.contains(index))
+				notAllowedKnockouts.add(index);
 		}
 		createInternalDecodeTable();
 	}

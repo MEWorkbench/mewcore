@@ -25,13 +25,12 @@ package pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Gene;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.GeneReactionRule;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Protein;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ProteinReactionRule;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public interface ISteadyStateGeneReactionModel extends ISteadyStateModel {
 	

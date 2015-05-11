@@ -1,8 +1,9 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra;
 
-import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
+import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
+import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.exceptions.MatlabNotFoundException;
 
 public class CobraMethods {
 
@@ -20,7 +21,7 @@ public class CobraMethods {
 			conn = new MatlabConnection();
 			conn.init();
 			
-		} catch (MatlabConnectionException | MatlabInvocationException e) {
+		} catch (MatlabConnectionException | MatlabInvocationException | MatlabNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

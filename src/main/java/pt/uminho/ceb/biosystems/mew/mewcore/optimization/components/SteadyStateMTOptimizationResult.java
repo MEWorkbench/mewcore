@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.AlgorithmTypeEnum;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions.interfaces.IObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 /**
  * @author pmaia
@@ -153,38 +152,5 @@ public class SteadyStateMTOptimizationResult extends SteadyStateMultiSimulationS
 		bw.close();			
 		fw.close();		
 	}
-	
-//	public static SteadyStateOptimizationResult readFromFile(String file, String delimiter) throws IOException{
-//		FileReader fr = new FileReader(file);
-//		BufferedReader br = new BufferedReader(fr);
-//		
-////		String algorithmType = br.readLine();
-////		String isGeneKnockout = br.readLine();
-////		String isOverUnder = br.readLine();
-////		String environmentalConditions = br.readLine();
-//		
-//		SteadyStateOptimizationResult result = new SteadyStateOptimizationResult();
-//		Map<String,ArrayList<Double>> fitMap = result.getFitnessesMap();
-//		Map<String,SteadyStateSimulationResult> simMap = result.getSimulationMap();
-//		
-//		
-//		while(br.ready()){
-//			String line = br.readLine();
-//			String[] tok1 = line.split(delimiter+delimiter); // ;; separates fitnesses from genetic conditions 
-//			
-//			String[] fits = tok1[0].split(delimiter);
-//			String[] genCond = tok1[0].split(delimiter);
-//			
-//			SteadyStateSimulationResult res = new SteadyStateOptimizationResult();
-//			res.
-//			String id = result.
-//			
-//			
-//			
-//			
-//		}
-//		
-//		return result;
-//	}
 
 }

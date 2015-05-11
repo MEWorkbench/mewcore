@@ -2,8 +2,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions;
 
 import java.io.Serializable;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
@@ -13,12 +11,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProp
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.utils.Debugger;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected final double worstFitness = 0.0;
@@ -28,9 +24,10 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 	protected double alpha;
 	protected SolverType lpSolver = null;
 	protected double minBiomassValue;
+	protected SimulationSteadyStateControlCenter center = null;
 	
 	
-	public WeightedYIELDObjectiveFunction(String biomassId, String desiredFluxId, double alpha, SolverType lpSolver, double minBiomassValue) {
+	public WeightedYIELDObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, SolverType lpSolver, Double minBiomassValue) {
 		
 		this.biomassId = biomassId;
 		this.desiredFluxId = desiredFluxId;
@@ -41,7 +38,6 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 
 	@Override
 	public double evaluate(SteadyStateSimulationResult simResult){
-		// Formula:  alpha * FVA_Prod_Max + (1-alpha) * FVA_Prod_Min
 		
 		double fvaMaxProd = 0;
 		double fvaMinProd = 0;
@@ -56,9 +52,15 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 			ec.putAll(simResult.getEnvironmentalConditions());
 		ec.addReactionConstraint(biomassId, new ReactionConstraint(biomassFluxValue,100000.0));
 		
-		SimulationSteadyStateControlCenter center = new SimulationSteadyStateControlCenter(ec, gc, model, SimulationProperties.FBA);
-		center.setSolver(lpSolver);
-		center.setFBAObjSingleFlux(desiredFluxId, 1.0);
+		if(center==null){
+			center = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
+			center.setSolver(lpSolver);
+			center.setFBAObjSingleFlux(desiredFluxId, 1.0);
+		}
+		
+		center.setGeneticConditions(gc);
+		center.setEnvironmentalConditions(ec);
+		center.setMaximization(true);
 		SteadyStateSimulationResult fvaMaxResult = null;
 		
 		try {
@@ -83,13 +85,7 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 			if(fvaMinResult!=null && fvaMinResult.getFluxValues()!=null)
 				fvaMinProd = fvaMinResult.getFluxValues().getValue(desiredFluxId);
 		}
-		
-//			if(fvaMinProd < 0.000001)
-//				fvaMinProd = 0;
-//			
-//			if(fvaMaxProd < 0.000001)
-//				fvaMaxProd = 0;
-		
+
 		double ret = worstFitness;
 		if (biomassFluxValue > minBiomassValue)
 			ret = (alpha * fvaMaxProd + (1-alpha) * fvaMinProd);

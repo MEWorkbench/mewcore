@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.simulation.CobraFBAFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.simulation.CobraGeometricFBAFormulation;
@@ -28,15 +28,14 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSim
 
 public class SimulationTests {
 	
+	SteadyStateModel model;
+	EnvironmentalConditions envCond;
+	GeneticConditions geneCond;
+	
 	private String getFile(String fileName){
 		URL nyData = getClass().getClassLoader().getResource(fileName);
 		return nyData.getFile();
 	}
-	
-	
-	SteadyStateModel model;
-	EnvironmentalConditions envCond;
-	GeneticConditions geneCond;
 	
 	@Before
 	public void init() throws Exception{
@@ -58,7 +57,7 @@ public class SimulationTests {
 		geneCond = new GeneticConditions(new ReactionChangesList(Arrays.asList("R_EX_o2_e")));
 	}
 
-	//@Test
+	@Test
 	public void CobraFBA() throws Exception {
 		SimulationSteadyStateControlCenter.registerMethod("MATLAB_FBA", CobraFBAFormulation.class);
 		
@@ -77,7 +76,7 @@ public class SimulationTests {
 		System.out.println("Reaction: "+ result.getOFString() + " Value: " + d);
 	}
 	
-	//@Test
+	@Test
 	public void CobraMOMA() throws Exception {
 		SimulationSteadyStateControlCenter.registerMethod("MATLAB_MOMA", CobraMOMAFormulation.class);
 		
@@ -94,7 +93,7 @@ public class SimulationTests {
 //		System.out.println("Reaction: "+ result.getOFString() + " Value: " + d);
 	}
 	
-	//@Test
+	@Test
 	public void CobraLinearMOMA() throws Exception {
 		SimulationSteadyStateControlCenter.registerMethod("MATLAB_LMOMA", CobraLinearMOMAFormulation.class);
 		
@@ -111,7 +110,7 @@ public class SimulationTests {
 		System.out.println("Reaction: "+ result.getOFString() + " Value: " + d);
 	}
 	
-	//@Test
+	@Test
 	public void CobraGeometricFBA() throws Exception {
 		SimulationSteadyStateControlCenter.registerMethod("MATLAB_GEOFBA", CobraGeometricFBAFormulation.class);
 		

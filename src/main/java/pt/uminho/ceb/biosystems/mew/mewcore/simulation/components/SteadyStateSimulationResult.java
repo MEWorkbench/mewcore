@@ -26,13 +26,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Reaction;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.enums.ReactionType;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
 
 public class SteadyStateSimulationResult implements Serializable{
@@ -177,8 +176,7 @@ public class SteadyStateSimulationResult implements Serializable{
 		return geneticConditions.getGeneList();
 	}
 	
-	public String getNetConversion()
-	{
+	public String getNetConversion(){
 		return getNetConversion(false);
 	}
 	

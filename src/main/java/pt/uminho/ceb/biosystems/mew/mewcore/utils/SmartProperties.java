@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.utils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -55,16 +56,13 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	/**
 	 * Suffix for variable assignments
 	 */
-	private static final String									VAR_ASSIGN_SUFFIX		= "\\}";
+	private static final String									VAR_ASSIGN_SUFFIX		= "\\}(%)?";
 	
 	/**
 	 * Variable assignment pattern
 	 */
-	private static final Pattern								VAR_ASS_PATT			= Pattern
-																								.compile(VAR_ASSIGN_PREFIX
-																										+ "(.+?)"
-																										+ VAR_ASSIGN_SUFFIX);
-	
+	private static final Pattern								VAR_ASS_PATT			= Pattern.compile(VAR_ASSIGN_PREFIX + "(.+?)" + VAR_ASSIGN_SUFFIX);
+		
 	/**
 	 * Special tag for combination of properties
 	 */
@@ -73,11 +71,10 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	/**
 	 * Special tag for hierarchically dependent properties
 	 */
-	public static final Pattern									SPECIAL_DEPENDS			= Pattern
-																								.compile("^@DEPENDS.*?");
+	public static final Pattern									SPECIAL_DEPENDS			= Pattern.compile("^@DEPENDS.*?");
 	
 	/**
-	 * Alias assignment patter
+	 * Alias assignment pattern
 	 */
 	public static final Pattern									ALIAS_PATTERN			= Pattern.compile("^~(.+?)");
 	
@@ -132,13 +129,19 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	 */
 	private boolean												_debug					= false;
 	
+	/**
+	 * The loaded properties file that generated this
+	 * <code>SmartProperties</code> instance
+	 */
+	private String												_propertiesFile			= null;
+	
 	public SmartProperties() {
 		super();
 	}
 	
-	public SmartProperties(
-			String properties) {
+	public SmartProperties(String properties) {
 		super();
+		_propertiesFile = properties;
 		try {
 			this.load(new FileReader(properties));
 		} catch (FileNotFoundException e) {
@@ -167,9 +170,11 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		}
 	}
 	
-	protected void processProperties() throws Exception {
+	public void processProperties() throws Exception {
 		loadDependencies();
 		loadAliases();
+		loadSpecialVariables();
+		loadSystemEnvironmentVariables();
 		loadVariables();
 		generateCombinationsTree();
 	}
@@ -199,11 +204,43 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		for (String dep : stringPropertyNames()) {
 			Matcher m = ALIAS_PATTERN.matcher(dep);
 			if (m.matches()) {
-				String value = getProperty(dep);
+//				String value = getProperty(dep);
+				String value = super.get(dep);
 				remove(dep);
-				String alias = m.group(1);
+				String alias = m.group(1).trim();
 				getAliasesMap().put(alias, value);
 			}
+		}
+	}
+	
+	private void loadSpecialVariables() {
+		if (_propertiesFile != null && !_propertiesFile.isEmpty()) {
+			File pFile = new File(_propertiesFile);
+			if (pFile.exists()) {
+				getVariableMap().put("THIS", pFile.getAbsolutePath());
+				getVariableMap().put("CDIR", pFile.getParent());
+
+			} else
+				System.out.println("[" + getClass().getSimpleName() + "]: properties file ["+_propertiesFile+"] does not exist");
+			
+		} else 
+			System.out.println("[" + getClass().getSimpleName() + "]: properties file is null or empty.");
+		
+		
+	}
+	
+	private void loadSystemEnvironmentVariables() {
+		
+		Map<String, String> env = System.getenv();
+		
+		for (String var : env.keySet()) {
+			String value = System.getenv(var);
+			if (value != null && !value.isEmpty()){
+//				System.out.println("[" + getClass().getSimpleName() + "]: variable [" + var + "] = ["+value+"]");
+				getVariableMap().put(var, value);
+			}
+			else
+				System.out.println("[" + getClass().getSimpleName() + "]: warning, variable [" + var + "] is undefined... ignoring...");
 		}
 	}
 	
@@ -236,8 +273,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		if (sval != null && !key.equals(SPECIAL_COMBINE) && !key.equals(SPECIAL_DEPENDS)) {
 			try {
 				sval = replaceVariableMatches(sval, state);
-				if (replaceAliases)
-					sval = replaceAliasesMatches(sval);
+				if (replaceAliases) sval = replaceAliasesMatches(sval);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -262,16 +298,17 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		final Matcher m = VAR_ASS_PATT.matcher(value);
 		while (m.find()) {
 			String var = m.group(1);
-			
+			boolean repAlias = !(m.group(2)!=null);
 			String replacement = null;
-			if (possibleVarMapStates.get(state).containsKey(var))
+			if (possibleVarMapStates!=null && possibleVarMapStates.get(state).containsKey(var))
 				replacement = possibleVarMapStates.get(state).get(var);
 			else
 				replacement = variableMap.get(var);
 			
-			if (replacement == null)
-				throw new Exception("Attempted to replace variable assignment [" + var
-						+ "] but the variable isn't assigned.");
+			if(repAlias)
+				replacement = replaceAliasesMatchesStatewise(replacement,state);
+			
+			if (replacement == null) throw new Exception("Attempted to replace variable assignment [" + var + "] but the variable isn't assigned.");
 			String varRegexp = VAR_ASSIGN_PREFIX + var + VAR_ASSIGN_SUFFIX;
 			value = value.replaceAll(varRegexp, replacement);
 		}
@@ -280,11 +317,17 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	
 	private String replaceAliasesMatches(String value) {
 		
-		if (aliasesMap != null && !aliasesMap.isEmpty())
-			for (String alias : aliasesMap.keySet()) {
-				if (value.contains(alias))
-					value = value.replaceAll(alias, aliasesMap.get(alias));
-			}
+		if (aliasesMap != null && !aliasesMap.isEmpty() && aliasesMap.containsKey(value)) value = aliasesMap.get(value);
+		return value;
+	}
+	
+	private String replaceAliasesMatchesStatewise(String value, int state) throws Exception{
+		if (aliasesMap != null && !aliasesMap.isEmpty() && aliasesMap.containsKey(value)){
+			value = aliasesMap.get(value);
+			
+			value = replaceVariableMatches(value, state);
+		}
+		
 		return value;
 	}
 	
@@ -316,7 +359,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		
 	}
 	
-	public GenericTree<Pair<String,String>> buildCombinationsTreeUntilVariable(String cutVariable) throws Exception{
+	public GenericTree<Pair<String, String>> buildCombinationsTreeUntilVariable(String cutVariable) throws Exception {
 		if (combinationsString != null) {
 			GenericTree<Pair<String, String>> variableTree = new GenericTree<Pair<String, String>>();
 			String[] vars = combinationsString.split(COMBINATION_DELIMITER);
@@ -325,8 +368,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 				String varAssign = vars[i].trim();
 				String variable = matchVariable(varAssign);
 				varsList.add(i, variable);
-				if(variable.equals(cutVariable))
-					break;
+				if (variable.equals(cutVariable)) break;
 			}
 			
 			String currentVar = varsList.get(0);
@@ -367,8 +409,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 				List<TreeNode<Pair<String, String>>> path = validPaths.get(i);
 				HashMap<String, String> map = new HashMap<String, String>();
 				for (TreeNode<Pair<String, String>> pair : path) {
-					if (pair.getElement() != null)
-						map.put(pair.getElement().getA(), pair.getElement().getB());
+					if (pair.getElement() != null) map.put(pair.getElement().getA(), pair.getElement().getB());
 				}
 				possibleVarMapStates.add(i, map);
 				possibleStatesPaths.put(i, path);
@@ -396,14 +437,12 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	}
 	
 	public Map<String, String> getVariableMap() {
-		if (variableMap == null)
-			variableMap = new HashMap<String, String>();
+		if (variableMap == null) variableMap = new HashMap<String, String>();
 		return variableMap;
 	}
 	
 	public Map<String, String> getAliasesMap() {
-		if (aliasesMap == null)
-			aliasesMap = new HashMap<String, String>();
+		if (aliasesMap == null) aliasesMap = new HashMap<String, String>();
 		return aliasesMap;
 	}
 	
@@ -530,14 +569,12 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	 * the "logical line" and stores the line in "lineBuf".
 	 */
 	class LineReader {
-		public LineReader(
-				InputStream inStream) {
+		public LineReader(InputStream inStream) {
 			this.inStream = inStream;
 			inByteBuf = new byte[8192];
 		}
 		
-		public LineReader(
-				Reader reader) {
+		public LineReader(Reader reader) {
 			this.reader = reader;
 			inCharBuf = new char[8192];
 		}
@@ -721,8 +758,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 						aChar = '\r';
 					else if (aChar == 'n')
 						aChar = '\n';
-					else if (aChar == 'f')
-						aChar = '\f';
+					else if (aChar == 'f') aChar = '\f';
 					out[outLen++] = aChar;
 				}
 			} else {
@@ -759,8 +795,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 			}
 			switch (aChar) {
 				case ' ':
-					if (x == 0 || escapeSpace)
-						outBuffer.append('\\');
+					if (x == 0 || escapeSpace) outBuffer.append('\\');
 					outBuffer.append(' ');
 					break;
 				case '\t':
@@ -813,8 +848,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		while (current < len) {
 			char c = comments.charAt(current);
 			if (c > '\u00ff' || c == '\n' || c == '\r') {
-				if (last != current)
-					bw.write(comments.substring(last, current));
+				if (last != current) bw.write(comments.substring(last, current));
 				if (c > '\u00ff') {
 					uu[2] = toHex((c >> 12) & 0xf);
 					uu[3] = toHex((c >> 8) & 0xf);
@@ -826,26 +860,18 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 					if (c == '\r' && current != len - 1 && comments.charAt(current + 1) == '\n') {
 						current++;
 					}
-					if (current == len - 1
-							|| (comments.charAt(current + 1) != '#' && comments.charAt(current + 1) != '!'))
-						bw.write("#");
+					if (current == len - 1 || (comments.charAt(current + 1) != '#' && comments.charAt(current + 1) != '!')) bw.write("#");
 				}
 				last = current + 1;
 			}
 			current++;
 		}
-		if (last != current)
-			bw.write(comments.substring(last, current));
+		if (last != current) bw.write(comments.substring(last, current));
 		bw.newLine();
 	}
 	
 	public void store(Writer writer, String comments, int state) throws Exception {
-		store0(
-				(writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer),
-				comments,
-				false,
-				true,
-				state);
+		store0((writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer), comments, false, true, state);
 	}
 	
 	/**
@@ -855,12 +881,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	 * @throws Exception
 	 */
 	public void store(Writer writer, String comments) throws Exception {
-		store0(
-				(writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer),
-				comments,
-				false,
-				false,
-				0);
+		store0((writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter(writer), comments, false, false, 0);
 	}
 	
 	public void store(OutputStream out, String comments, int state) throws Exception {
@@ -889,7 +910,6 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 				String val = get(key);
 				if (replace) {
 					val = replaceVariableMatches(val, state);
-					val = replaceAliasesMatches(val);
 				}
 				
 				key = saveConvert(key, true, escUnicode);
@@ -910,8 +930,7 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	}
 	
 	/** A table of hex digits */
-	private static final char[]	hexDigit	= { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D',
-			'E', 'F'						};
+	private static final char[]	hexDigit	= { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 	
 	public Set<String> stringPropertyNames() {
 		IndexedHashMap<String, String> h = new IndexedHashMap<String, String>();
@@ -928,9 +947,9 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	}
 	
 	public static void main(String... args) throws Exception {
-		String test = "LALA";
+		String test = "${LALA}%";
 		
-		Matcher m = ALIAS_PATTERN.matcher(test);
+		Matcher m = VAR_ASS_PATT.matcher(test);
 		
 		if (m.matches()) {
 			System.out.println("match");

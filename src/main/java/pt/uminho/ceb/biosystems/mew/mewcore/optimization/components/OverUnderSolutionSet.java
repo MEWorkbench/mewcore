@@ -9,11 +9,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.MOUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.list.ListPairs;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 public class OverUnderSolutionSet {
 	public static Double						FIT_THRESHOLD		= 0.00001;
@@ -22,6 +26,7 @@ public class OverUnderSolutionSet {
 	protected List<double[]>					attributes;
 	protected String[]							attributeNames;
 	protected int								maxAttributeIndex	= -1;
+	protected HashSet<String>					solutionHash		= null;
 	
 	public OverUnderSolutionSet() {
 		solutions = new ArrayList<List<Pair<String, Double>>>();
@@ -82,14 +87,15 @@ public class OverUnderSolutionSet {
 			ListPairs ts = new ListPairs(targetSolution);
 			
 			if (ts.isContained(sol)) list.add(i);
+			
 		}
 		
 		return list;
 	}
 	
-	// checks of solution is there or a sub-solution with better fitness is there
+	// checks if solution is there or a sub-solution with better fitness is there
 	public boolean checkIfSolutionAndSubsetExists(List<Pair<String, Double>> solution, double... attribs) {
-		Collections.sort(solution, new Comparator<Pair<String, Double>>() {			
+		Collections.sort(solution, new Comparator<Pair<String, Double>>() {
 			@Override
 			public int compare(Pair<String, Double> o1, Pair<String, Double> o2) {
 				return o1.compareToByValue(o2);
@@ -106,7 +112,9 @@ public class OverUnderSolutionSet {
 			double[] attsSS = attributes.get(index);
 			boolean allBetter = true;
 			for (int j = 0; j < attsSS.length; j++)
+				
 				if (attribs[j] - attsSS[j] > THRESH_2) allBetter = false;
+			
 			if (allBetter) {
 				return true;
 			}
@@ -116,7 +124,8 @@ public class OverUnderSolutionSet {
 	}
 	
 	public boolean checkIfSolutionExistsIgnoreAttributes(List<Pair<String, Double>> solution) {
-		Collections.sort(solution,new Comparator<Pair<String, Double>>() {			
+		
+		Collections.sort(solution, new Comparator<Pair<String, Double>>() {
 			@Override
 			public int compare(Pair<String, Double> o1, Pair<String, Double> o2) {
 				return o1.compareToByValue(o2);
@@ -126,6 +135,7 @@ public class OverUnderSolutionSet {
 	}
 	
 	public void removeSupersetNonBetterSolutions(List<Pair<String, Double>> solution, double... attribs) {
+		
 		List<Integer> ss = findSupersetSolutions(solution);
 		List<Integer> toremove = new ArrayList<Integer>();
 		
@@ -133,8 +143,10 @@ public class OverUnderSolutionSet {
 			double[] attsSS = this.attributes.get(ss.get(k));
 			boolean allBetter = true;
 			for (int j = 0; j < attsSS.length; j++)
+				
 				if (attsSS[j] - attribs[j] > FIT_THRESHOLD) allBetter = false;
 			if (allBetter) toremove.add(ss.get(k));
+			
 		}
 		Collections.sort(toremove);
 		
@@ -143,6 +155,15 @@ public class OverUnderSolutionSet {
 			removeSolution(index);
 		}
 		
+	}
+	
+	public void addSolution(Set<Pair<String, Double>> solution, double... attribs) {
+		
+		List<Pair<String, Double>> pairedSolution = new ArrayList<Pair<String, Double>>();
+		for (Pair<String, Double> k : solution)
+			pairedSolution.add(k);
+		
+		addSolution(pairedSolution, attribs);
 	}
 	
 	public void addSolution(List<Pair<String, Double>> solution, double... attribs) {
@@ -165,7 +186,16 @@ public class OverUnderSolutionSet {
 		this.attributes.remove(index);
 	}
 	
-	public int addOrderedKnockoutSolution(List<String> solution, double... attribs) {
+	public void addKnockoutSolution(Set<String> solution, double... attribs) {
+		List<Pair<String, Double>> pairedSolution = new ArrayList<Pair<String, Double>>();
+		for (String k : solution)
+			pairedSolution.add(new Pair<String, Double>(k, 0.0));
+		
+		addSolution(pairedSolution, attribs);
+	}
+	
+	public int addOrderedKnockoutSolution(Set<String> solution, double... attribs) {
+		
 		List<Pair<String, Double>> pairedSolution = new ArrayList<Pair<String, Double>>();
 		for (String k : solution)
 			pairedSolution.add(new Pair<String, Double>(k, 0.0));
@@ -173,25 +203,43 @@ public class OverUnderSolutionSet {
 		return addOrdered(pairedSolution, attribs);
 	}
 	
+	public boolean addOrderedNoRepeatKnockoutSolution(Set<String> solution, double... atts) {
+		List<Pair<String, Double>> pairSol = new ArrayList<Pair<String, Double>>();
+		for (String s : solution)
+			pairSol.add(new Pair<String, Double>(s, 0.0));
+		
+		if (!checkIfSolutionExistsIgnoreAttributes(pairSol)) {
+			addOrdered(pairSol, atts);
+			return true;
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Implementation of an insertion sort for a <code>SolutionSet</code>
 	 * 
-	 * @param solution the solution to add
-	 * @param attribs the attributes of the solution to add
+	 * @param solution
+	 *            the solution to add
+	 * @param attribs
+	 *            the attributes of the solution to add
 	 * 
 	 * @return the index of insertion or -1 if no insertion happens
 	 */
+	
 	public int addOrdered(List<Pair<String, Double>> solution, double... attribs) {
 		if (maxAttributeIndex == -1) maxAttributeIndex = attribs.length;
 		
-		Collections.sort(solution,new Comparator<Pair<String, Double>>() {			
+		Collections.sort(solution, new Comparator<Pair<String, Double>>() {
 			@Override
 			public int compare(Pair<String, Double> o1, Pair<String, Double> o2) {
 				return o1.compareToByValue(o2);
 			};
+			
 		});
 		
 		if (findSolution(solution) >= 0) {
+			//			System.out.println("found");
 			return -1;
 		}
 		
@@ -232,7 +280,9 @@ public class OverUnderSolutionSet {
 		for (int i = 0; i < solutions.size(); i++) {
 			int klarge = 0;
 			for (int j = 0; j < solutions.size(); j++) {
+				
 				if ((i != j) && (attributes.get(j)[attribToUse] > attributes.get(i)[attribToUse])) klarge++;
+				
 			}
 			attributes.get(i)[attribToKeep] = klarge;
 		}
@@ -299,6 +349,7 @@ public class OverUnderSolutionSet {
 	}
 	
 	public double[] getAttributeColumn(int attIndex) {
+		
 		if (attIndex > maxAttributeIndex) throw new IllegalArgumentException("Maximum index for attributes is " + maxAttributeIndex);
 		
 		double[] column = new double[attributes.size()];
@@ -346,9 +397,10 @@ public class OverUnderSolutionSet {
 			if (!newSet.checkIfSolutionAndSubsetExists(ls, atts)) {
 				newSet.addOrdered(ls, atts);
 				newSet.removeSupersetNonBetterSolutions(ls, atts);
-			} else {
-				System.out.println("solutions exists!");
 			}
+			//			else {
+			//				System.out.println("solutions exists!");
+			//			}
 		}
 		
 		return newSet;
@@ -368,15 +420,47 @@ public class OverUnderSolutionSet {
 			List<Pair<String, Double>> ls = anotherSet.getSolution(i);
 			double[] atts = anotherSet.getAttributes(i);
 			
-			if (!newSet.checkIfSolutionExistsIgnoreAttributes(ls))
-				newSet.addOrdered(ls, atts);
-			else
-				System.out.println("solutions exists!");
+			if (!newSet.checkIfSolutionExistsIgnoreAttributes(ls)) newSet.addOrdered(ls, atts);
+			//			else
+			//				System.out.println("solutions exists!");
 		}
 		
 		return newSet;
 	}
 	
+	public void mergeHashed(OverUnderSolutionSet anotherSet) {		
+				
+		for (int i = 0; i < anotherSet.size(); i++) {
+			List<Pair<String, Double>> ls = anotherSet.getSolution(i);
+			double[] atts = anotherSet.getAttributes(i);
+			TreeSet<String> tset = new TreeSet<String>();
+			for(Pair<String,Double> elem : ls)
+				tset.add(elem.getA());
+			
+			String sol = StringUtils.concat(",", tset);
+			
+			if (!getSolutionHash().contains(sol)){ 
+				addSolution(ls, atts);
+				getSolutionHash().add(sol);
+			}else
+				System.out.println("CONTAINS!");
+		}		
+	}
+	
+	public HashSet<String> getSolutionHash(){
+		if(solutionHash==null){
+			solutionHash = new HashSet<String>();
+			for(List<Pair<String,Double>> sol : solutions){
+				TreeSet<String> tset = new TreeSet<String>();
+				for(Pair<String,Double> elem : sol)
+					tset.add(elem.getA());
+				
+				solutionHash.add(StringUtils.concat(",", tset));
+			}
+		}
+		
+		return solutionHash;
+	}
 	public double[] getBestSolutionForAttribute(int attributeIndex) {
 		if (size() == 0) return null;
 		
@@ -394,6 +478,7 @@ public class OverUnderSolutionSet {
 	}
 	
 	public double[] getBestSolutionForAttributeConstrained(int atrMaxIndex, int atrConstIndex, double minValue) {
+		
 		double max = Double.NEGATIVE_INFINITY;
 		double[] res = null;
 		
@@ -425,6 +510,7 @@ public class OverUnderSolutionSet {
 	}
 	
 	public OverUnderSolutionSet[] splitUsingSolutionSize(int minSize, int maxSize) {
+		
 		OverUnderSolutionSet[] res = new OverUnderSolutionSet[maxSize - minSize + 1];
 		
 		for (int i = 0; i < res.length; i++)
@@ -433,7 +519,9 @@ public class OverUnderSolutionSet {
 		for (int i = 0; i < size(); i++) {
 			List<Pair<String, Double>> sol = solutions.get(i);
 			int solsize = sol.size();
+			
 			if (solsize >= minSize && solsize <= maxSize) res[solsize - minSize].addSolution(sol, getAttributes(i));
+			
 		}
 		
 		return res;
@@ -444,7 +532,9 @@ public class OverUnderSolutionSet {
 			
 			List<Pair<String, Double>> ids = solutions.get(i);
 			for (int j = 0; j < ids.size(); j++) {
+				
 				if (j > 0) System.out.print(" ");
+				
 				System.out.print(ids.get(j));
 			}
 			
@@ -466,7 +556,9 @@ public class OverUnderSolutionSet {
 			
 			List<Pair<String, Double>> ids = solutions.get(i);
 			for (int j = 0; j < ids.size(); j++) {
+				
 				//				if (j>0) bw.write(" ");
+				
 				bw.write("," + ids.get(j).getValue() + "=" + ids.get(j).getPairValue());
 			}
 			
@@ -485,6 +577,7 @@ public class OverUnderSolutionSet {
 			
 			List<Pair<String, Double>> ids = solutions.get(i);
 			for (int j = 0; j < ids.size(); j++) {
+				
 				if (j != 0) bw.write(",");
 				
 				bw.write(ids.get(j).getValue() + "=" + ids.get(j).getPairValue());
@@ -540,7 +633,9 @@ public class OverUnderSolutionSet {
 			
 			for (int k = 0; k < nonDominated[i].length; k++) {
 				bw.write(nonDominated[i][k] + "");
+				
 				if (k != nonDominated[i].length - 1) bw.write(sep);
+				
 			}
 			bw.write("\n");
 		}
@@ -549,7 +644,7 @@ public class OverUnderSolutionSet {
 		fw.close();
 	}
 	
-	public void loadFromCSVFile(String filename) throws NumberFormatException, IOException {
+	public void loadFromCSVFile(String filename, boolean ordered) throws NumberFormatException, IOException {
 		FileReader fr = new FileReader(filename);
 		BufferedReader br = new BufferedReader(fr);
 		
@@ -558,26 +653,42 @@ public class OverUnderSolutionSet {
 			String[] tokens = line.split(",,");
 			String[] attributtes = tokens[0].split(",");
 			String[] elements = {};
+			
 			if (tokens.length > 1) elements = tokens[1].split(",");
 			
 			ListPairs idList = new ListPairs();
 			for (String elem : elements) {
+				String id = null;
+				Double value = null;
 				String[] tk = elem.split("=");
-				String id = tk[0];
-				Double value = Double.parseDouble(tk[1]);
+				if (tk.length == 2) {
+					id = tk[0];
+					value = Double.parseDouble(tk[1]);
+				} else {
+					id = elem;
+					value = 0.0;
+				}
 				Pair<String, Double> pair = new Pair<String, Double>(id, value);
 				idList.add(pair);
+				
 			}
 			
 			double[] atts = new double[attributtes.length];
 			for (int k = 0; k < atts.length; k++)
 				atts[k] = Double.parseDouble(attributtes[k]);
 			
-			addOrdered(idList, atts);
+			if (ordered)
+				addOrdered(idList, atts);
+			else
+				addSolution(idList, atts);
 		}
 		
 		br.close();
 		fr.close();
+	}
+	
+	public void loadFromCSVFile(String filename) throws NumberFormatException, IOException {
+		loadFromCSVFile(filename, true);
 	}
 	
 	/**
@@ -589,7 +700,8 @@ public class OverUnderSolutionSet {
 	}
 	
 	/**
-	 * @param attributeNames the attributeNames to set
+	 * @param attributeNames
+	 *            the attributeNames to set
 	 */
 	public void setAttributeNames(String[] attributeNames) {
 		this.attributeNames = attributeNames;

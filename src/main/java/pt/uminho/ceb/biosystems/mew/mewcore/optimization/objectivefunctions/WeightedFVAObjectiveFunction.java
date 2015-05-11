@@ -2,8 +2,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions;
 
 import java.io.Serializable;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
@@ -13,6 +11,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProp
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.utils.Debugger;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class WeightedFVAObjectiveFunction implements IObjectiveFunction, Serializable{
 

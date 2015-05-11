@@ -25,8 +25,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel;
 import java.util.List;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Compartment;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.IModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.IStoichiometricMatrix;
@@ -34,6 +32,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Metabolite;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Pathway;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Reaction;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public interface ISteadyStateModel  extends IModel, IModelInformation {
 	

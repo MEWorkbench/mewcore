@@ -27,10 +27,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 
 public class SumOfFluxesObjectiveFunction implements IObjectiveFunction, Serializable {
 	

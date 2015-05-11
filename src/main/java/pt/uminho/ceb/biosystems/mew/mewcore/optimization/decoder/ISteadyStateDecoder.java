@@ -26,7 +26,6 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IRepresentation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.solution.decoder.ISolutionDecoder;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditions;
 

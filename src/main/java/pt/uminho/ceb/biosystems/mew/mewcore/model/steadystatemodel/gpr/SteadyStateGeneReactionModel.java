@@ -28,12 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.AbstractSyntaxTree;
-import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.TreeUtils;
-import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.DataTypeEnum;
-import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.IValue;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Compartment;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Gene;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.GeneReactionRule;
@@ -47,6 +41,11 @@ import pt.uminho.ceb.biosystems.mew.mewcore.model.components.enums.ModelType;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.IModelInformation;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.SteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
+import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.AbstractSyntaxTree;
+import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.TreeUtils;
+import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.DataTypeEnum;
+import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.IValue;
 
 public class SteadyStateGeneReactionModel extends SteadyStateModel implements ISteadyStateGeneReactionModel, IModelInformation, Serializable{
 	private static final long serialVersionUID = 1L;

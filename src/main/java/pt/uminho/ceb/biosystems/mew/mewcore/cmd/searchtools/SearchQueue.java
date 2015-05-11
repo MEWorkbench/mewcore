@@ -2,6 +2,12 @@ package pt.uminho.ceb.biosystems.mew.mewcore.cmd.searchtools;
 
 public enum SearchQueue {
 	
+	SHORT{
+		@Override
+		public String getFlags() {
+			return "-q short";
+		}
+	},
 	BIO {
 		@Override
 		public String getFlags() {

@@ -8,16 +8,14 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import javax.swing.JOptionPane;
-
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.CommandExecutionException;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.optimization.CobraOptKnockFormulation;
@@ -36,13 +34,13 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationStea
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 
 public class OptimizationTests {
+
+	SteadyStateModel model;
 	
 	private String getFile(String fileName){
 		URL nyData = getClass().getClassLoader().getResource(fileName);
 		return nyData.getFile();
 	}
-
-	SteadyStateModel model;
 	
 	@Before
 	public void init() throws Exception{
@@ -61,7 +59,7 @@ public class OptimizationTests {
 		conn.init();
 	}
 	
-	//@Test
+	@Test
 	public void cobraOptKnock() throws Exception{
 		//OptimizationSteadyStateControlCenter.registerMethod("MATLAB_OPTKNOCK", CobraOptKnockFormulation.class);
 		SimulationSteadyStateControlCenter.registerMethod("MATLAB_OPTKNOCK", CobraOptKnockFormulation.class);
@@ -107,7 +105,7 @@ public class OptimizationTests {
 	}
 	
 	
-	//@Test
+	@Test
 	public void cobraTestGDLS(){
 		try{
 			//SimulationSteadyStateControlCenter.registerMethod("MATLAB_GDLS", CobraGDLSFormulation.class);

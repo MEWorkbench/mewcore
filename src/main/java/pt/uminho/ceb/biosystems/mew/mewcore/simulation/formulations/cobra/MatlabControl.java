@@ -1,5 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.cobra;
-//package org.optflux.metabolic.simulation.formulations.cobra;
+//package metabolic.simulation.formulations.cobra;
 //
 //import com.mathworks.jmi.Matlab;
 //

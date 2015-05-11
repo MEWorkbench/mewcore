@@ -1,0 +1,2 @@
+R_MALS / R_MALS - R_ME1 + R_PPC + R_FUM<=0.35
+R_PPC / R_PPC + R_MDH=0.7

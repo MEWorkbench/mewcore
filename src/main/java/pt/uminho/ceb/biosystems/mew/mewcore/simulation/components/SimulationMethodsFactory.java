@@ -10,20 +10,6 @@ public class SimulationMethodsFactory extends AbstractSimulationMethodsFactory{
 
 	protected Map<String, Class<? extends LPProblem>> mapTypeMethods;
 
-//	
-//	static{
-////		TODO: put default methods where, use Enum
-//		
-//		mapMethods = new LinkedHashMap<String,Class<?>>();
-//		mapTypeMethods = new HashMap<String,Class<? extends LPProblem>>();
-//		registerMethod(SimulationProperties.FBA, FBA.class);
-//		registerMethod(SimulationProperties.PARSIMONIUS,  PARSIMONIOUS.class);
-//		registerMethod(SimulationProperties.MOMA, MOMA.class);
-//		registerMethod(SimulationProperties.LMOMA, LMOMA.class);
-//		registerMethod(SimulationProperties.ROOM, ROOM.class);
-//		registerMethod(TurnOverProperties.MIMBL, MiMBl.class);
-//	}
-	
 	public SimulationMethodsFactory(Map<String,Class<?>> mapMethods)
 	{
 		super(mapMethods);

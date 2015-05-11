@@ -1,20 +1,19 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.matlab.cobra;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
-
-import org.junit.Before;
-import org.junit.Test;
-import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
-import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.CommandExecutionException;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.optimization.CobraOptKnockFormulation;
@@ -22,7 +21,6 @@ import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalCondit
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.SteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.ConstrainedReaction;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.OptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.SteadyStateOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.controlcenter.OptimizationSteadyStateControlCenter;
@@ -33,17 +31,12 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationStea
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 
 public class OptimizationValidation {
-	
-	private String getFile(String fileName){
-		URL nyData = getClass().getClassLoader().getResource(fileName);
-		return nyData.getFile();
-	}
 
 	SteadyStateModel model;
 	
 	@Before
 	public void init() throws Exception{
-		JSBMLReader reader = new JSBMLReader(getFile("models/iMM904_flux.xml"), "1",false);
+		JSBMLReader reader = new JSBMLReader("files/models/iMM904_flux.xml", "1",false);
 		
 		//JSBMLReader reader = new JSBMLReader("C:\\Users\\Programador\\Desktop\\Uminho\\2ano\\Tese\\Outros\\PAPER\\iMM904\\iMM904_struct_corr_itacon_drain.xml", "1",false);
 		
@@ -58,7 +51,7 @@ public class OptimizationValidation {
 		conn.init();
 	}
 	
-	//@Test
+	@Test
 	public void cobraOptKnock() throws Exception{
 		//OptimizationSteadyStateControlCenter.registerMethod("MATLAB_OPTKNOCK", CobraOptKnockFormulation.class);
 		SimulationSteadyStateControlCenter.registerMethod("MATLAB_OPTKNOCK", CobraOptKnockFormulation.class);
@@ -100,7 +93,7 @@ public class OptimizationValidation {
 		
 	}
 	
-	//@Test
+	@Test
 	public void cobraTestGDLS(){
 		try{
 			//SimulationSteadyStateControlCenter.registerMethod("MATLAB_GDLS", CobraGDLSFormulation.class);

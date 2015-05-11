@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.matlab;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -9,9 +8,9 @@ import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.optimization.OptSwapFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.SteadyStateModel;
@@ -24,17 +23,12 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSim
 
 public class OptSwapTests {
 	
-	private String getFile(String fileName){
-		URL nyData = getClass().getClassLoader().getResource(fileName);
-		return nyData.getFile();
-	}
-	
 	SteadyStateModel model;
 	
 	@Before
 	public void init() throws Exception{
 		//JSBMLReader reader = new JSBMLReader("/home/vmsilico/Desktop/Tools/Models/iJO1366.xml", "1",false);
-		JSBMLReader reader = new JSBMLReader(getFile("models/ecoli_core_model.xml"), "1",false);
+		JSBMLReader reader = new JSBMLReader("/home/vmsilico/Desktop/Tools/Models/ecoli_core_model.xml", "1",false);
 		
 		Container cont = new Container(reader);
 		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));

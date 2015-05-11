@@ -2,7 +2,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.cmd.searchtools;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IRepresentation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.solution.decoder.ISolutionDecoder;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.decoder.ISteadyStateDecoder;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditions;
 

@@ -34,12 +34,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
+import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.list.ListStrings;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
-import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 
 public class ReactionChangesList extends MapStringNum implements Serializable {
 	
@@ -47,6 +46,19 @@ public class ReactionChangesList extends MapStringNum implements Serializable {
 
 	public ReactionChangesList() {
 		super();
+	}
+	
+	public ReactionChangesList(Set<String> reactions){
+		super();
+		
+		for(String r : reactions)
+			addReaction(r, 0.0);
+	}
+	
+	public ReactionChangesList(String[] reactions){
+		super();
+		for(String r : reactions)
+			addReaction(r,0.0);
 	}
 	
 
@@ -309,5 +321,10 @@ public class ReactionChangesList extends MapStringNum implements Serializable {
 		r.close();
 		f.close();
 			
-	}	
+	}
+	
+	public ReactionChangesList clone(){
+		return (ReactionChangesList)(super.clone());
+	}
+	
 }

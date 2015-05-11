@@ -5,11 +5,10 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IRepresentation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.hybridset.HybridSetRepresentation;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneChangesList;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 public class GeneReactionUnderOverExp2Decoder extends SteadyStateUnderOverExp2Decoder{
 

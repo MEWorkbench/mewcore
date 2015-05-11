@@ -1,21 +1,21 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.cobra;
-//package org.optflux.metabolic.simulation.formulations.cobra;
+//package metabolic.simulation.formulations.cobra;
 //
 //import java.util.Map;
 //
 //import MatlabConnectionException;
 //import MatlabInvocationException;
 //import MatlabProxy;
-//import org.optflux.metabolic.model.components.ReactionConstraint;
-//import org.optflux.metabolic.model.steadystatemodel.ISteadyStateModel;
-//import org.optflux.metabolic.simulation.components.FluxValueMap;
-//import org.optflux.metabolic.simulation.components.OverrideSteadyStateModel;
-//import org.optflux.metabolic.simulation.components.SimulationProperties;
-//import org.optflux.metabolic.simulation.components.SteadyStateSimulationResult;
-//import org.optflux.metabolic.simulation.formulations.exceptions.ManagerExceptionUtils;
-//import org.optflux.metabolic.simulation.formulations.exceptions.MandatoryPropertyException;
-//import org.optflux.metabolic.simulation.formulations.exceptions.PropertyCastException;
-//import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
+//import metabolic.model.components.ReactionConstraint;
+//import metabolic.model.steadystatemodel.ISteadyStateModel;
+//import metabolic.simulation.components.FluxValueMap;
+//import metabolic.simulation.components.OverrideSteadyStateModel;
+//import metabolic.simulation.components.SimulationProperties;
+//import metabolic.simulation.components.SteadyStateSimulationResult;
+//import metabolic.simulation.formulations.exceptions.ManagerExceptionUtils;
+//import metabolic.simulation.formulations.exceptions.MandatoryPropertyException;
+//import metabolic.simulation.formulations.exceptions.PropertyCastException;
+//import utilities.datastructures.map.MapStringNum;
 //import cern.colt.list.DoubleArrayList;
 //import cern.colt.list.IntArrayList;
 //import cern.colt.matrix.DoubleMatrix2D;

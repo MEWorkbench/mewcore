@@ -1,15 +1,9 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.turnover;
 
 import java.util.Map;
-import java.util.TreeMap;
-
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolution;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.AbstractTurnoverFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.L1VarTerm;
@@ -17,6 +11,11 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolution;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
 public class MiMBl extends AbstractTurnoverFormulation<LPProblem>{
 
@@ -47,7 +46,7 @@ public class MiMBl extends AbstractTurnoverFormulation<LPProblem>{
 
 	public boolean use2Opt() throws PropertyCastException, MandatoryPropertyException{
 		if(use2Opt==null){
-			use2Opt = ManagerExceptionUtils.testCast(propreties, Boolean.class, TurnOverProperties.USE_2OPT, true);
+			use2Opt = ManagerExceptionUtils.testCast(properties, Boolean.class, SimulationProperties.USE_2OPT, true);
 			
 			if(use2Opt == null){
 				use2Opt = false;
@@ -85,9 +84,7 @@ public class MiMBl extends AbstractTurnoverFormulation<LPProblem>{
 	}
 
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void normalizeResult(SteadyStateSimulationResult res) throws PropertyCastException, MandatoryPropertyException{
-		
 		
 		MiMBl_NormalizeSolution normalise = new MiMBl_NormalizeSolution(model);
 		normalise.setSolverType(getSolverType());
@@ -95,7 +92,7 @@ public class MiMBl extends AbstractTurnoverFormulation<LPProblem>{
 		normalise.setReference(wtReference);
 		normalise.setObjectiveValue(res.getOFvalue());
 
-		res.addComplementaryInfoReactions(TurnOverProperties.MIMBL_FIRST_OPTIMIZARION_FLUXVALUE,
+		res.addComplementaryInfoReactions(SimulationProperties.MIMBL_FIRST_OPTIMIZATION_FLUXVALUE,
 				res.getFluxValues());
 		
 //		if(debug){
@@ -142,4 +139,5 @@ public class MiMBl extends AbstractTurnoverFormulation<LPProblem>{
 		}
 		return turno;
 	}
+
 }

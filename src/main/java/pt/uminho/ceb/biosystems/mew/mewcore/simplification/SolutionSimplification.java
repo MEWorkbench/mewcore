@@ -1,25 +1,3 @@
-/*
- * Copyright 2010
- * IBB-CEB - Institute for Biotechnology and Bioengineering - Centre of Biological Engineering
- * CCTC - Computer Science and Technology Center
- *
- * University of Minho 
- * 
- * This is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
- * (at your option) any later version. 
- * 
- * This code is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU Public License for more details. 
- * 
- * You should have received a copy of the GNU Public License 
- * along with this code. If not, see http://www.gnu.org/licenses/ 
- * 
- * Created inside the SysBioPseg Research Group (http://sysbio.di.uminho.pt)
- */
 package pt.uminho.ceb.biosystems.mew.mewcore.simplification;
 
 import java.io.Serializable;
@@ -27,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.InfeasibleProblemException;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.cmd.clustertools.SimulationMethodsEnum;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
@@ -41,6 +15,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditi
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class SolutionSimplification implements Serializable {
 	
@@ -52,19 +27,13 @@ public class SolutionSimplification implements Serializable {
 	
 	protected List<IObjectiveFunction>				objectiveFunctions;
 	
-	protected String								methodType			= SimulationProperties.PARSIMONIUS;
+	protected String								methodType			= SimulationProperties.FBA;
 	
 	protected SimulationSteadyStateControlCenter	center				= null;
 	
 	protected FluxValueMap							referenceFD			= null;
 	
-	public SolutionSimplification(
-		ISteadyStateModel model,
-		List<IObjectiveFunction> objFunctions,
-		String methodType,
-		FluxValueMap referenceFD,
-		EnvironmentalConditions envCond,
-		SolverType solver) {
+	public SolutionSimplification(ISteadyStateModel model, List<IObjectiveFunction> objFunctions, String methodType, FluxValueMap referenceFD, EnvironmentalConditions envCond, SolverType solver) {
 		this.model = model;
 		this.objectiveFunctions = objFunctions;
 		this.methodType = methodType;
@@ -72,25 +41,22 @@ public class SolutionSimplification implements Serializable {
 		this.center.setMaximization(true);
 		this.center.setSolver(solver);
 		this.center.setWTReference(referenceFD);
-		
+		//		CplexParamConfiguration.setDoubleParam("TiLim", 5.0);
 	}
 	
-	public SolutionSimplification(
-		ISteadyStateModel model,
-		List<IObjectiveFunction> objFunctions,
-		String methodType,
-		FluxValueMap referenceFD,
-		EnvironmentalConditions envCond,
-		SolverType solver,
-		String fbaObjective) {
+	public SolutionSimplification(ISteadyStateModel model, List<IObjectiveFunction> objFunctions, String methodType, FluxValueMap referenceFD, EnvironmentalConditions envCond, SolverType solver, Boolean ou2stepApproach) {
+		this(model, objFunctions, methodType, referenceFD, envCond, solver);
+		center.setOverUnder2StepApproach(ou2stepApproach);
+	}
+	
+	public SolutionSimplification(ISteadyStateModel model, List<IObjectiveFunction> objFunctions, String methodType, FluxValueMap referenceFD, EnvironmentalConditions envCond, SolverType solver, String fbaObjective) {
 		this(model, objFunctions, methodType, referenceFD, envCond, solver);
 		center.setFBAObjSingleFlux(fbaObjective, 1.0);
-		if (referenceFD == null && !fbaObjective.equals(SimulationMethodsEnum.PFBA.getSimulationProperty()))
-			try {
-				center.addWTReference();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		if (referenceFD == null && !fbaObjective.equals(SimulationProperties.PFBA)) try {
+			center.addWTReference();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setSolver(SolverType solver) {
@@ -107,46 +73,53 @@ public class SolutionSimplification implements Serializable {
 	
 	public SolutionSimplificationResult simplifyReactionsSolution(GeneticConditions initialSolution, SteadyStateSimulationResult initialRes) throws Exception {
 		
-		SteadyStateSimulationResult origRes;
+		SteadyStateSimulationResult origRes = null;
 		if (initialRes == null) {
 			center.setGeneticConditions(initialSolution);
-			origRes = center.simulate();
-		} else
-			origRes = initialRes;
-		
-		double[] initialFitnesses = evaluateSolution(origRes);
-		
-		Set<String> reactionIds = initialSolution.getReactionList().getReactionIds();
-		
-		List<String> rIDsIterator = new ArrayList<String>(reactionIds);
-		
-		GeneticConditions finalSolution = initialSolution;
-		double[] finalFitnesses = initialFitnesses;
-		SteadyStateSimulationResult finalRes = origRes;
-		
-		for (String reactionId : rIDsIterator) {
-			
-			double expressionLevel = initialSolution.getReactionList().getReactionFlux(reactionId);
-			
-			finalSolution.getReactionList().removeReaction(reactionId);
-			
-			center.setGeneticConditions(finalSolution);
-			
-			SteadyStateSimulationResult res = center.simulate();
-			
-			double[] simpfitnesses = evaluateSolution(res);
-			
-			if (compare(finalFitnesses, simpfitnesses)) {
-				finalFitnesses = simpfitnesses;
-				finalRes = res;
-			} else {
-				finalSolution.getReactionList().addReaction(reactionId, expressionLevel);
+			try {
+				origRes = center.simulate();
+			} catch (Exception e) {
+				e.printStackTrace();
+//				return new SolutionSimplificationResult(origRes, initialSolution, objectiveFunctions, null);
 			}
-		}
+		} else
+			origRes = initialRes;		
+			
+			double[] initialFitnesses = evaluateSolution(origRes);
+//			System.out.println("InitFit: "+Arrays.toString(initialFitnesses));
+			
+			Set<String> reactionIds = initialSolution.getReactionList().getReactionIds();
+			
+			List<String> rIDsIterator = new ArrayList<String>(reactionIds);
+			
+			GeneticConditions finalSolution = initialSolution;
+			double[] finalFitnesses = initialFitnesses;
+			SteadyStateSimulationResult finalRes = origRes;
+			
+			for (String reactionId : rIDsIterator) {
+				
+				double expressionLevel = initialSolution.getReactionList().getReactionFlux(reactionId);
+				
+				finalSolution.getReactionList().removeReaction(reactionId);
+				
+				center.setGeneticConditions(finalSolution);
+				
+				SteadyStateSimulationResult res = center.simulate();
+				
+				double[] simpfitnesses = evaluateSolution(res);
+				
+				if (compare(finalFitnesses, simpfitnesses)) {
+					finalFitnesses = simpfitnesses;
+					finalRes = res;
+				} else {
+					finalSolution.getReactionList().addReaction(reactionId, expressionLevel);
+				}
+			}
+			
+			SolutionSimplificationResult optimizationSimplification = new SolutionSimplificationResult(finalRes, finalSolution, objectiveFunctions, finalFitnesses);
+			
+			return optimizationSimplification;
 		
-		SolutionSimplificationResult optimizationSimplification = new SolutionSimplificationResult(finalRes, finalFitnesses);
-		
-		return optimizationSimplification;
 	}
 	
 	public SteadyStateOptimizationResult simplifySteadyStateOptimizationResult(SteadyStateOptimizationResult optResultIN, boolean isGeneOpt) throws Exception {
@@ -154,14 +127,14 @@ public class SolutionSimplification implements Serializable {
 		
 		for (String id : optResultIN.getSimulationMap().keySet()) {
 			
-			try {
-				SteadyStateSimulationResult resOrig = optResultIN.getSimulationResult(id);
-				SolutionSimplificationResult simp = null;
-				if (isGeneOpt)
-					simp = simplifyGenesSolution(resOrig.getGeneticConditions(), resOrig);
-				else
-					simp = simplifyReactionsSolution(resOrig.getGeneticConditions(), resOrig);
-				
+			SteadyStateSimulationResult resOrig = optResultIN.getSimulationResult(id);
+			SolutionSimplificationResult simp = null;
+			if (isGeneOpt)
+				simp = simplifyGenesSolution(resOrig.getGeneticConditions(), resOrig);
+			else
+				simp = simplifyReactionsSolution(resOrig.getGeneticConditions(), resOrig);
+			
+			if (simp != null) {
 				SteadyStateSimulationResult resOut = simp.getSimulationResult();
 				double[] fits = simp.getFitnesses();
 				
@@ -170,8 +143,6 @@ public class SolutionSimplification implements Serializable {
 					fitnesses.add(f);
 				
 				optResultOut.addOptimizationResultNoRepeated(resOut, fitnesses);
-			} catch (InfeasibleProblemException inf) {
-				inf.printStackTrace();
 			}
 		}
 		
@@ -226,7 +197,7 @@ public class SolutionSimplification implements Serializable {
 			}
 		}
 		
-		SolutionSimplificationResult optimizationSimplification = new SolutionSimplificationResult(finalRes, finalFitnesses);
+		SolutionSimplificationResult optimizationSimplification = new SolutionSimplificationResult(finalRes, finalSolution, objectiveFunctions, finalFitnesses);
 		
 		return optimizationSimplification;
 	}
@@ -248,10 +219,8 @@ public class SolutionSimplification implements Serializable {
 		while (res && i < objectiveFunctions.size()) {
 			IObjectiveFunction of = objectiveFunctions.get(i);
 			if (of.isMaximization()) {
-				if (fitnesses[i] - simplifiedFitness[i] > delta)
-					res = false;
-			} else if (simplifiedFitness[i] - fitnesses[i] > delta)
-				res = false;
+				if (fitnesses[i] - simplifiedFitness[i] > delta) res = false;
+			} else if (simplifiedFitness[i] - fitnesses[i] > delta) res = false;
 			i++;
 		}
 		

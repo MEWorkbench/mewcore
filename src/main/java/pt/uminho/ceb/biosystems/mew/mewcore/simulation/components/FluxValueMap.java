@@ -1,5 +1,10 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.components;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,11 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPMapVariableValues;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 
 public class FluxValueMap extends MapStringNum implements Serializable {
 	
@@ -103,4 +107,51 @@ public class FluxValueMap extends MapStringNum implements Serializable {
 		return new Pair<List<Integer>,List<String>>(indexes,unexistent);
 	} 
 	
+	public static FluxValueMap loadFromFile(String fileIn,String delimiter) throws IOException{
+		FileReader fr = new FileReader(fileIn);
+		BufferedReader br = new BufferedReader(fr);
+		FluxValueMap map = new FluxValueMap();
+		int lineCounter = 0;
+		while(br.ready()){
+			String line = br.readLine();
+			String[] tokens = line.split(delimiter);
+			if(tokens.length!=2){
+				br.close();
+				throw new IOException("Invalid format at line "+lineCounter+". Input must contain only two columns.");
+			}
+			else{
+				String id = tokens[0];
+				Double value = null;
+				try{
+					value = Double.parseDouble(tokens[1]);
+				}catch(NumberFormatException e){
+					br.close();
+					throw new IOException("Invalid format at line "+lineCounter+". Expecting real value at second column but found "+tokens[1]+".");
+				}
+				
+				map.put(id, value);
+			}
+			lineCounter++;
+		}
+		br.close();
+		
+		return map;
+	}
+	
+	public void saveToFile(String fileOut, String delimiter) throws IOException{
+		FileWriter fw = new FileWriter(fileOut);
+		BufferedWriter bw = new BufferedWriter(fw);
+		int lineCounter = 0;
+		for(String id : keySet()){
+			bw.append(id+delimiter+get(id));
+			if(lineCounter < size())
+				bw.newLine();
+			lineCounter++;
+		}
+		
+		bw.flush();
+		bw.close();		
+	}
 }
+
+

@@ -2,8 +2,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions;
 
 import java.io.Serializable;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
@@ -13,6 +11,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProp
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.utils.Debugger;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class WeightedBPCYObjectiveFunction implements IObjectiveFunction, Serializable{
 
@@ -27,9 +26,10 @@ public class WeightedBPCYObjectiveFunction implements IObjectiveFunction, Serial
 	protected String desiredFluxId;
 	protected double alpha;
 	protected SolverType lpSolver = null;
+	protected SimulationSteadyStateControlCenter center = null;
 	
 	
-	public WeightedBPCYObjectiveFunction(String biomassId, String desiredFluxId, double alpha, SolverType lpSolver) {
+	public WeightedBPCYObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, SolverType lpSolver) {
 		
 		this.biomassId = biomassId;
 		this.desiredFluxId = desiredFluxId;
@@ -56,9 +56,13 @@ public class WeightedBPCYObjectiveFunction implements IObjectiveFunction, Serial
 				ec.putAll(simResult.getEnvironmentalConditions());
 			ec.addReactionConstraint(biomassId, new ReactionConstraint(biomassFluxValue,100000.0));
 			
-			SimulationSteadyStateControlCenter center = new SimulationSteadyStateControlCenter(ec, gc, model, SimulationProperties.FBA);
-			center.setSolver(lpSolver);
-			center.setFBAObjSingleFlux(desiredFluxId, 1.0);
+			if(center==null){
+				center = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
+				center.setSolver(lpSolver);
+				center.setFBAObjSingleFlux(desiredFluxId, 1.0);
+			}
+			center.setGeneticConditions(gc);
+			center.setEnvironmentalConditions(ec);
 			center.setMaximization(true);
 			SteadyStateSimulationResult fvaMaxResult = null;
 			
@@ -85,11 +89,11 @@ public class WeightedBPCYObjectiveFunction implements IObjectiveFunction, Serial
 					fvaMinProd = fvaMinResult.getFluxValues().getValue(desiredFluxId);
 			}
 			
-//			if(fvaMinProd < 0.000001)
-//				fvaMinProd = 0;
-//			
-//			if(fvaMaxProd < 0.000001)
-//				fvaMaxProd = 0;
+			if(Double.isNaN(fvaMinProd))
+				fvaMinProd = 0;
+
+			if(Double.isNaN(fvaMaxProd))
+				fvaMaxProd = 0;
 		}
 		
 		

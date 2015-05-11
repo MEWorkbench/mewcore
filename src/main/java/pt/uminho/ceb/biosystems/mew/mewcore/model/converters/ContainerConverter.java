@@ -18,13 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.AbstractSyntaxTree;
-import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.DataTypeEnum;
-import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.IValue;
-
-import cern.colt.matrix.impl.SparseDoubleMatrix2D;
-
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.CompartmentCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.GeneCI;
@@ -32,7 +25,6 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.Metabolit
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.ReactionCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.ReactionConstraintCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.StoichiometryValueCI;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ColtSparseStoichiometricMatrix;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Compartment;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Gene;
@@ -47,6 +39,11 @@ import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateM
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.SteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
+import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.AbstractSyntaxTree;
+import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.DataTypeEnum;
+import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.IValue;
+import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 
 
 public class ContainerConverter {

@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringBoolean;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringBoolean;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 public class BinaryFluxValueMap extends MapStringBoolean {
 	

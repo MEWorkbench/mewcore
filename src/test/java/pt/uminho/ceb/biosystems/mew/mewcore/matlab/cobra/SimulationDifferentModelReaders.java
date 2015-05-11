@@ -1,35 +1,29 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.matlab.cobra;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
-import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.DatabaseCSVFilesReader;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.NewDatabaseCSVFilesReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.simulation.CobraFBAFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
 
 public class SimulationDifferentModelReaders {
-	
-	private String getFile(String fileName){
-		URL nyData = getClass().getClassLoader().getResource(fileName);
-		return nyData.getFile();
-	}
 
 	@Test
 	public void FBAFromSBML() throws Exception {
-		JSBMLReader reader = new JSBMLReader(getFile("models/ecoli_core_model.xml"), "1",false);
+		JSBMLReader reader = new JSBMLReader("files/models/ecoli_core_model.xml", "1",false);
 		
 		Container cont = new Container(reader);
 		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
@@ -50,7 +44,7 @@ public class SimulationDifferentModelReaders {
 		System.out.println(result.getOFString() + ": " + result.getOFvalue());
 	}
 	
-	//@Test
+	@Test
 	public void FBAFromCSVWithMetab() throws Exception {
 		
 		Delimiter tab = Delimiter.TAB;
@@ -87,7 +81,7 @@ public class SimulationDifferentModelReaders {
 		
 	}
 	
-	//@Test
+	@Test
 	public void FBAFromCSVWithoutMetab() throws Exception {
 		Delimiter tab = Delimiter.TAB;
 		

@@ -1,8 +1,11 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.simulation;
 
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Map;
 
+import matlabcontrol.MatlabConnectionException;
+import matlabcontrol.MatlabInvocationException;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.converter.ConnectionFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
@@ -10,8 +13,6 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
-import matlabcontrol.MatlabConnectionException;
-import matlabcontrol.MatlabInvocationException;
 
 public class RavenFBAFormulation extends ConnectionFormulation{
 
@@ -144,6 +145,55 @@ public class RavenFBAFormulation extends ConnectionFormulation{
 	protected Map<String, Object> createConverterParameteres() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public void preSimulateActions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void postSimulateActions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void clearAllProperties() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setRecreateOF(boolean recreateOF) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean isRecreateOF() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void saveModelToMPS(String file, boolean includeTime) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

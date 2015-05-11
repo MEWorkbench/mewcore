@@ -1,0 +1,23 @@
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+	<apply>
+	<eq/>
+		<apply>
+		<divide/>
+			<ci> IDP1 </ci>
+			<ci> MDH1 </ci>
+        </apply>
+		<cn> 2 </cn>
+	</apply>
+</math>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+	<apply>
+        <eq/>
+		<apply>
+            <divide/>
+			<ci> FUM </ci>
+			<ci> ACO1 </ci>
+        </apply>
+		<cn> 0.5 </cn>
+	</apply>
+</math>

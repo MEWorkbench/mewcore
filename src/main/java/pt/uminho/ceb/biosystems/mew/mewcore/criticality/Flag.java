@@ -4,7 +4,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.utils.IOnOffSwitch;
 
 public class Flag implements IOnOffSwitch {
 	
-	protected boolean		_on			= true;
+	protected boolean		_on			= false;
 	public TargetIDStrategy	_strategy	= null;
 	
 	public Flag(TargetIDStrategy strategy) {
@@ -30,6 +30,10 @@ public class Flag implements IOnOffSwitch {
 	@Override
 	public void off() {
 		_on = false;
+	}
+
+	public TargetIDStrategy get_strategy() {
+		return _strategy;
 	}
 	
 }

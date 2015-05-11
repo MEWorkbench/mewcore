@@ -4,7 +4,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.simulation.components;
 import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 

@@ -1,9 +1,12 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions;
 
+import java.util.List;
 import java.util.Map;
 
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
 import pt.uminho.ceb.biosystems.mew.solvers.qp.QPObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.solvers.qp.QPProblem;
@@ -21,8 +24,7 @@ public class QuadraticTerm extends AbstractObjTerm{
 		
 		//In this case the part for the objective function is ax² + abx
 		//in the solver implementation we need check if it use this form.
-		
-			 
+					 
 		QPProblem qpProblem = (QPProblem) problem;
 		QPObjectiveFunction quadratic = qpProblem.getQPObjectiveFunction();
 		LPObjectiveFunction lpObjective = qpProblem.getObjectiveFunction();
@@ -36,4 +38,11 @@ public class QuadraticTerm extends AbstractObjTerm{
 		
 		return null;
 	}
+
+	@Override
+	public Map<String, Integer> addObjectiveTermToProblem(LPProblem problem, List<LPVariable> ofAssociatedVars, List<LPConstraint> ofAssociatedConstraints) throws WrongFormulationException {
+		return addObjectiveTermToProblem(problem);
+	}
+
+	
 }

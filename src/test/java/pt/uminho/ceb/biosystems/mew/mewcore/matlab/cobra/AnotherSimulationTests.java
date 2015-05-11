@@ -6,10 +6,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.FlatFilesReader;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.simulation.CobraFBAFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
@@ -27,10 +27,10 @@ public class AnotherSimulationTests {
 		return nyData.getFile();
 	}
 
-	//@Test
+	@Test
 	public void FBASimulation1() {
 		try{
-			JSBMLReader reader = new JSBMLReader(getFile("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml"), "1",false);
+			JSBMLReader reader = new JSBMLReader("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml", "1",false);
 			
 			Container cont = new Container(reader);
 			Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
@@ -68,10 +68,10 @@ public class AnotherSimulationTests {
 	}
 	
 	
-	//@Test
+	@Test
 	public void FBASimulation2() {
 		try{
-			JSBMLReader reader = new JSBMLReader(getFile("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml"), "1",false);
+			JSBMLReader reader = new JSBMLReader("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml", "1",false);
 			
 			Container cont = new Container(reader);
 			Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
@@ -106,10 +106,10 @@ public class AnotherSimulationTests {
 	}
 
 	
-	//@Test
+	@Test
 	public void FBASimulation3() {
 		try{
-			JSBMLReader reader = new JSBMLReader(getFile("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml"), "1",false);
+			JSBMLReader reader = new JSBMLReader("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml", "1",false);
 			
 			Container cont = new Container(reader);
 			Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
@@ -144,13 +144,13 @@ public class AnotherSimulationTests {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void FBASimulationTableFormatModel() {
 		try{
 			//JSBMLReader reader = new JSBMLReader("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml", "1",false);
-			FlatFilesReader reader = new FlatFilesReader(getFile("home/vmsilico/Desktop/Tools/Models/FlatFiles/EcoliCoreModel.fluxes"),
-					getFile("/home/vmsilico/Desktop/Tools/Models/FlatFiles/EcoliCoreModel.matrix"), 
-					getFile("/home/vmsilico/Desktop/Tools/Models/FlatFiles/EcoliCoreModel.metab"), 
+			FlatFilesReader reader = new FlatFilesReader("/home/vmsilico/Desktop/Tools/Models/FlatFiles/EcoliCoreModel.fluxes",
+					"/home/vmsilico/Desktop/Tools/Models/FlatFiles/EcoliCoreModel.matrix", 
+					"/home/vmsilico/Desktop/Tools/Models/FlatFiles/EcoliCoreModel.metab", 
 					null, "Ecoli");
 			
 			Container cont = new Container(reader);
@@ -167,7 +167,7 @@ public class AnotherSimulationTests {
 					"R_METTHFD", "R_MDH1", "R_EX_h_e_", "R_TRPD", "R_R02285", "R_NUDPK1", "R_TRKT1", "R_BKTB", 
 					"R_R01557", "R_ADNK", "R_SUCCD2_SL", "R_SUCOAS", "R_EX_ppa_e_", "R_PDH1", "R_GA3PD")));
 			
-			EnvironmentalConditions envCond = EnvironmentalConditions.readFromFile(getFile("/home/vmsilico/Documents/Files/glds_giesteira/envconditions.env"), ",");
+			EnvironmentalConditions envCond = EnvironmentalConditions.readFromFile("/home/vmsilico/Documents/Files/glds_giesteira/envconditions.env", ",");
 			
 			SimulationSteadyStateControlCenter.registerMethod("MATLAB_FBA", CobraFBAFormulation.class);
 			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, "MATLAB_FBA");

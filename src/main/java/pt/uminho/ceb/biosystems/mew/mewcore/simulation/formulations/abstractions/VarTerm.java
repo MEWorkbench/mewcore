@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
@@ -13,8 +14,6 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermA
 
 public class VarTerm extends AbstractObjTerm{
 
-	
-	static final double maxValue = Double.MAX_VALUE;
 	public VarTerm(int varIndex, double additional) {
 		this(varIndex, 1, additional);
 	}
@@ -37,7 +36,9 @@ public class VarTerm extends AbstractObjTerm{
 		String name = "fo_"+varIndex;
 		
 		var.put(name, varIndexfo);
-		LPVariable normFoVar = new LPVariable(name, -maxValue, maxValue);
+
+		LPVariable normFoVar = new LPVariable(name, minValue, maxValue);
+
 		problem.addVariable(normFoVar);
 		LPProblemRow rowFo = new LPProblemRow();
 		
@@ -50,13 +51,42 @@ public class VarTerm extends AbstractObjTerm{
 			objective.addRow(varIndexfo, 1);
 		} catch (LinearProgrammingTermAlreadyPresentException e) {
 			throw new WrongFormulationException(e);
-		}
-		
+		}		
 		
 		return var;
 		
 	}
 
-
-
+	@Override
+	public Map<String, Integer> addObjectiveTermToProblem(LPProblem problem, List<LPVariable> ofAssociatedVars, List<LPConstraint> ofAssociatedConstraints) throws WrongFormulationException {
+		LPObjectiveFunction objective = problem.getObjectiveFunction();
+		
+		Map<String, Integer> var = new HashMap<String, Integer>();
+		int varIndexfo = problem.getNumberVariables();
+		String name = "fo_"+varIndex;
+		
+		var.put(name, varIndexfo);
+		LPVariable normFoVar = new LPVariable(name, minValue, maxValue);
+		problem.addVariable(normFoVar);
+		//NEW
+		ofAssociatedVars.add(normFoVar);
+		LPProblemRow rowFo = new LPProblemRow();
+		
+		try {
+			rowFo.addTerm(varIndex, multiplier);
+			rowFo.addTerm(varIndexfo, -1);
+			LPConstraint constFo = new LPConstraint(LPConstraintType.EQUALITY, rowFo, -additional);
+			//NEW
+			ofAssociatedConstraints.add(constFo);
+			problem.addConstraint(constFo);
+			
+			objective.addRow(varIndexfo, 1);
+		} catch (LinearProgrammingTermAlreadyPresentException e) {
+			throw new WrongFormulationException(e);
+		}
+		
+		
+		return var;
+	}
+	
 }

@@ -1,16 +1,13 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations;
 
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.enums.ReactionType;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.AbstractSSReferenceSimulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.L1VarTerm;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
 
 public class LMOMA extends AbstractSSReferenceSimulation<LPProblem>{
 
@@ -25,7 +22,7 @@ public class LMOMA extends AbstractSSReferenceSimulation<LPProblem>{
 	}
 
 	@Override
-	protected void createObjectiveFunction() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, SolverException {
+	protected void createObjectiveFunction() throws PropertyCastException, MandatoryPropertyException {
 		problem.setObjectiveFunction(new LPProblemRow(), false);
 
 		getWTReference();
@@ -45,5 +42,4 @@ public class LMOMA extends AbstractSSReferenceSimulation<LPProblem>{
 	public String getObjectiveFunctionToString() {
 		return "Σ |v-wt|";
 	}
-
 }

@@ -10,17 +10,16 @@ import java.util.Map;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 import matlabcontrol.MatlabProxy;
-
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.converter.IConverter;
+import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.exceptions.MatlabNotFoundException;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.IStoichiometricMatrix;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.enums.ModelType;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.SteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.OverrideSteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 import cern.colt.list.DoubleArrayList;
 import cern.colt.list.IntArrayList;
 import cern.colt.matrix.DoubleMatrix2D;
@@ -36,39 +35,37 @@ public class MatlabConnection implements IConverter{
 	{
 	}
 	
-	public void init() throws MatlabConnectionException, MatlabInvocationException
+	public void init() throws MatlabConnectionException, MatlabInvocationException, MatlabNotFoundException{
+		init(null);
+	}
+	
+	public void init(MatlabProxy proxy) throws MatlabConnectionException, MatlabInvocationException, MatlabNotFoundException
 	{
-		setProxy(MatlabProxySingleton.getInstance().getProxy());
-		//proxy.feval("try");
-//		try {
-			//runCommand("cd C:/gurobi562/win64/matlab");
-			//runCommand("addpath(genpath('C:/gurobi562/win64/matlab'))");
+		MatlabProxy p;
+		p = (proxy != null) ? proxy : MatlabProxySingleton.getInstance().getProxy();
+		
+		// Reconnect Proxy. Used when user closes MATLAB but still want to use
+		// Tries three times but this could be a input parameter
+		int i = 0;
+		while(!p.isConnected() && i < 3){
+			p = MatlabProxySingleton.getInstance().reconnectProxy();
+			i++;
+		}
+		
+		if(i==3)
+			throw new MatlabNotFoundException();
+		
+		setProxy(p);
+		
+		// Verify if cobra is already initialized
+		runCommand("global CBTLPSOLVER;" +
+				" if(isempty(CBTLPSOLVER))" +
+				" initCobraToolbox;" +
+				" end;" +
+				" clear CBTLPSOLVER;");
+		
+		runCommand("setenv('PATH','" + System.getenv("PATH") + "');");
 			
-			//runCommand("gurobi_setup");
-			//runCommand("savepath");
-			
-			//runCommand("addpath(genpath('C:/Program Files/MATLAB/R2013a/toolbox/cobra'))");
-			
-			
-			// Verify if cobra is already initialized
-			runCommand("global CBTLPSOLVER;" +
-					" if(isempty(CBTLPSOLVER))" +
-					" initCobraToolbox;" +
-					" end;" +
-					" clear CBTLPSOLVER;");
-			
-			runCommand("setenv('PATH','" + System.getenv("PATH") + "');");
-			
-			
-			
-			
-//			runCommand("if(isempty(CBTLPSOLVER))");
-//			runCommand("	initCobraToolbox;");
-//			runCommand("end");
-//		} catch (CommandExecutionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 	
 	public void sendModel(ISteadyStateModel model, String modelName) throws MatlabInvocationException, CommandExecutionException
@@ -101,7 +98,7 @@ public class MatlabConnection implements IConverter{
 	public void sendModifiedModel(OverrideSteadyStateModel overrideModel) throws MatlabInvocationException
 	{		
 
-		for(String rId : overrideModel.getOverridedReactions()){
+		for(String rId : overrideModel.getOverriddenReactions()){
 			ReactionConstraint rc = overrideModel.getReactionConstraint(rId);
 			double lower = rc.getLowerLimit();
 			double upper = rc.getUpperLimit();

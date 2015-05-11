@@ -27,6 +27,8 @@ public class TurnOverProperties {
 	 * Identify MIMBL Problem
 	 */
 	public static final String MIMBL = "MIMBL";
+	
+	public static final String MIMBL_MILP = "MIMBL_MILP";
 
 	public static final String USE_2OPT = "USE_2OPT";
 	

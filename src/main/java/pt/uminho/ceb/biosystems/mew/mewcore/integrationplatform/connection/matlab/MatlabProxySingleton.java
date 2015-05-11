@@ -1,19 +1,14 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.exceptions.MatlabNotFoundException;
-import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.properties.MatlabProperties;
-
-import com.sun.org.apache.xerces.internal.impl.PropertyManager;
 
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 import matlabcontrol.MatlabProxy;
 import matlabcontrol.MatlabProxyFactory;
 import matlabcontrol.MatlabProxyFactoryOptions;
+import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.exceptions.MatlabNotFoundException;
+import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.properties.MatlabProperties;
 
 
 public class MatlabProxySingleton {
@@ -21,47 +16,58 @@ public class MatlabProxySingleton {
 	
 	static boolean loadpathdef = true;
 	static MatlabProxySingleton instance;
-	private MatlabProxy proxy;
-	private MatlabProperties matprops;
+	private static MatlabProxy proxy;
+	private static MatlabProperties matprops;
+	private static boolean isConnected = false;
 	
-	//
-	// 
-	//
-	private MatlabProxySingleton() throws MatlabConnectionException, MatlabInvocationException {
-		
-		MatlabProperties prop;
-		if(getMatprops() != null)
-			prop = getMatprops();
-		else
-			prop = new MatlabProperties();
-		try {
-			prop = MatlabProperties.createProperties(MatlabProperties.FILE);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		File f = new File(prop.getExecutableFile());
-//		if(!f.exists())
-//			throw new MatlabNotFoundException();
-		 MatlabProxyFactoryOptions options = new MatlabProxyFactoryOptions.Builder()
-		 .setHidden(prop.getShowConsoleOnly())
-         //.setMatlabLocation("C:\\Program Files\\MATLAB\\R2013a\\bin\\matlab.exe")
-		 .setMatlabLocation(prop.getExecutableFile())//"C:\\Program Files\\MATLAB\\R2013a\\bin\\matlab.exe")
-         .build();
-		MatlabProxyFactory factory = new MatlabProxyFactory(options);
-		proxy = factory.getProxy();
-		//if(loadpathdef) proxy.eval("addpath(pathdef())");
+	private MatlabProxySingleton() throws MatlabConnectionException, MatlabInvocationException, MatlabNotFoundException {
+		this(getMatlabProperties());
 	}
 	
-	static MatlabProxySingleton getInstance() throws MatlabConnectionException, MatlabInvocationException{
-		if(instance ==null)
-			instance = new MatlabProxySingleton();
+	private MatlabProxySingleton(MatlabProperties properties) throws MatlabConnectionException, MatlabInvocationException, MatlabNotFoundException {
+		
+		File f = new File(properties.getExecutableFile());
+		if(!f.exists())
+			throw new MatlabNotFoundException();
+		
+		MatlabProxyFactoryOptions options = new MatlabProxyFactoryOptions.Builder()
+			.setProxyTimeout(60000)
+			.setUsePreviouslyControlledSession(true)
+			.setHidden(properties.getShowConsoleOnly())
+			.setMatlabLocation(properties.getExecutableFile())
+	        .build();
+		
+		MatlabProxyFactory factory = new MatlabProxyFactory(options);
+		proxy = factory.getProxy();
+		
+		isConnected = true;
+	}
+	
+	public static MatlabProxySingleton getInstance() throws MatlabConnectionException, MatlabInvocationException, MatlabNotFoundException{
+		return getInstance(null);
+	}
+	
+	public static MatlabProxySingleton getInstance(MatlabProperties properties) throws MatlabConnectionException, MatlabInvocationException, MatlabNotFoundException{
+		if(instance == null){
+			if(properties == null)
+				instance = new MatlabProxySingleton();
+			else
+				instance = new MatlabProxySingleton(properties);
+		}
 		
 		return instance;
+	}
+	
+	public static MatlabProperties getMatlabProperties(){
+		MatlabProperties prop;
+		if(matprops != null)
+			prop = matprops;
+		else
+			prop = new MatlabProperties();
+		
+		prop = MatlabProperties.createPropertiesFromFile(MatlabProperties.FILE);
+		
+		return prop;
 	}
 	
 	
@@ -73,18 +79,36 @@ public class MatlabProxySingleton {
 		return matprops;
 	}
 	
-	
-	public MatlabProxy getProxy() {
+	public MatlabProxy getProxy() throws MatlabNotFoundException, MatlabConnectionException, MatlabInvocationException {
 		if(!proxy.isConnected())
-			try {
-				instance = new MatlabProxySingleton();
-			} catch (MatlabConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MatlabInvocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			instance = new MatlabProxySingleton();
 		return proxy;
+	}
+	
+	public static boolean isConnected(){
+		if(proxy == null)
+			return isConnected;
+		return proxy.isConnected();
+	}
+	
+	public MatlabProxy reconnectProxy() throws MatlabNotFoundException, MatlabConnectionException, MatlabInvocationException{
+		return getProxy();
+	}
+	
+	public static void main(String[] args) {
+		
+		MatlabProperties prop = MatlabProperties.createPropertiesFromFile("../optfluxcore3/conf/Properties/matlab.confX1");
+		try {
+			MatlabProxySingleton.getInstance(prop).getProxy();
+		} catch (MatlabNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MatlabConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MatlabInvocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

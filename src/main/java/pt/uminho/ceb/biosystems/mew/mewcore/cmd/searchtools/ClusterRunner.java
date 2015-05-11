@@ -13,16 +13,15 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.componen
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.components.ProcessingStrategy;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.trimming.ITrimmingFunction;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.trimming.ZitzlerTruncation;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.cmd.clustertools.GeneratorConstants;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.OptimizationStrategy;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.SteadyStateMTOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.archivetrimming.SelectionValueTrimmer;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.configuration.OptimizationConfiguration;
-import pt.uminho.ceb.biosystems.mew.mewcore.optimization.controlcenter.MTSmartStrainOptimizationControlCenter;
+import pt.uminho.ceb.biosystems.mew.mewcore.optimization.controlcenter.StrainOptimizationControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions.interfaces.IObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.mewcore.utils.TimeUtils;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
+import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
 
 public class ClusterRunner {
 	
@@ -49,6 +48,11 @@ public class ClusterRunner {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void run() throws Exception, InvalidConfigurationException {
 		
+		//NOTE: pmaia legacy support for mergeSort when using java 7
+		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+		CplexParamConfiguration.setDoubleParam("EpRHS", 0.000000001);
+		CplexParamConfiguration.setWarningStream(null);
+		
 		if (_baseName == null)
 			_baseName = generateOutputFileName(_configuration) + ClusterConstants.DEFAULT_NAME_CONNECTOR + "run";
 		else {
@@ -56,7 +60,7 @@ public class ClusterRunner {
 		}
 		
 		// strain opt
-		MTSmartStrainOptimizationControlCenter optCenter = new MTSmartStrainOptimizationControlCenter(_configuration);
+		StrainOptimizationControlCenter optCenter = new StrainOptimizationControlCenter(_configuration);
 		int archiveMaxSize = _configuration.getOptimizationArchiveMaxSize();
 		int numObjectives = _configuration.getObjectiveFunctions().size();
 		
@@ -88,24 +92,29 @@ public class ClusterRunner {
 		
 		optCenter.setArchive(archive);
 		optCenter.setTerminationCriteria(_configuration.getTerminationCriteria());
-		// run optimization
 		
+		// plotting
+//		Plot2DGUI<ILinearRepresentation<Double>> plotter = new Plot2DGUI<ILinearRepresentation<Double>>(optCenter.getOptimizationAlgorithm());
+//		plotter.setObserveArchive(true);
+//		plotter.run();
+//		
 		// redirect java output
-		PrintStream console = System.out;
-		
-		File file = new File(_baseName + ".log");
-		FileOutputStream fos = new FileOutputStream(file);
-		PrintStream ps = new PrintStream(fos);
-		// System.setOut(ps);
-		
-		PrintStream console_err = System.err;
-		
-		File file_err = new File(_baseName + ".err");
-		FileOutputStream fos_err = new FileOutputStream(file_err);
-		PrintStream ps_err = new PrintStream(fos_err);
-		// System.setErr(ps_err);
-		
-		//
+		if(_configuration.isRedirectOutput()){
+			System.out.println("redirecting logging output to " + _baseName + ".log");
+			System.out.println("redirecting error output to " + _baseName + ".err");
+			File file = new File(_baseName + ".log");
+			FileOutputStream fos = new FileOutputStream(file);
+			PrintStream ps = new PrintStream(fos);
+			System.setOut(ps);
+			
+			File file_err = new File(_baseName + ".err");
+			FileOutputStream fos_err = new FileOutputStream(file_err);
+			PrintStream ps_err = new PrintStream(fos_err);
+			System.setErr(ps_err);
+		}
+
+
+		// run optimization
 		long timestart = System.currentTimeMillis();
 		SteadyStateMTOptimizationResult result = optCenter.run();
 		long timeend = System.currentTimeMillis();
@@ -115,12 +124,12 @@ public class ClusterRunner {
 		
 		if (result.getNumberOfResults() > 0) {
 			System.out.println("Saving solutions...");
-			result.writeToFile(_baseName + ".ss", GeneratorConstants.DELIMITER);
+			result.writeToFile(_baseName + ".ss", ClusterConstants.DELIMITER);
 			System.out.println("Saved solutions to " + _baseName + ".ss");
 			System.out.println("Saving bests...");
 			archive.writeBestSolutionsToFile(
 					_baseName + ".best",
-					GeneratorConstants.DELIMITER,
+					ClusterConstants.DELIMITER,
 					true,
 					optCenter.getDecoder());
 			System.out.println("Saved bests to " + _baseName + ".best");
@@ -130,13 +139,13 @@ public class ClusterRunner {
 			}
 		}
 		
-		// set console as default output again
-		System.setOut(console);
-		System.setErr(console_err);
+//		// set console as default output again
+//		System.setOut(console);
+//		System.setErr(console_err);
 		
 	}
 	
-	private String generateOutputFileName(OptimizationConfiguration conf) throws Exception {
+	public String generateOutputFileName(OptimizationConfiguration conf) throws Exception {
 		
 		StringBuffer buff = new StringBuffer();
 		String organism = conf.getModelName();
@@ -145,21 +154,29 @@ public class ClusterRunner {
 		OptimizationStrategy strat = conf.getOptimizationStrategy();
 		IndexedHashMap<IObjectiveFunction, String> objectiveFunctions = conf.getObjectiveFunctions();
 		
-		buff.append(organism + GeneratorConstants.DEFAULT_NAME_CONNECTOR);
-		buff.append(algorithm.getShortName() + GeneratorConstants.DEFAULT_NAME_CONNECTOR);
+		buff.append(organism + ClusterConstants.DEFAULT_NAME_CONNECTOR);
+		buff.append(algorithm.getShortName() + ClusterConstants.DEFAULT_NAME_CONNECTOR);
 		for (String sm : simMethods)
-			buff.append(sm + GeneratorConstants.DEFAULT_NAME_CONNECTOR);
-		buff.append(strat.toString() + GeneratorConstants.DEFAULT_NAME_CONNECTOR);
+			buff.append(sm + ClusterConstants.DEFAULT_NAME_CONNECTOR);
+		buff.append(strat.toString() + ClusterConstants.DEFAULT_NAME_CONNECTOR);
 		
 		for (int i = 0; i < objectiveFunctions.size(); i++) {
 			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
 			String ofn = (of.isMaximization() ? "MAX" : "MIN") + "~" + of.getShortString();
-			buff.append(ofn + GeneratorConstants.DEFAULT_NAME_CONNECTOR);
+			buff.append(ofn + ClusterConstants.DEFAULT_NAME_CONNECTOR);
 		}
 		
 		buff.append("run" + _run);
 		
 		return buff.toString();
+	}
+	
+	public void setBaseName(String baseName){
+		_baseName = baseName;
+	}
+	
+	public void setRun(int run){
+		_run = run;
 	}
 	
 	public static void main(String... args) {

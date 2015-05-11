@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 public class GeneticConditions implements Serializable{
 
@@ -38,9 +37,21 @@ public class GeneticConditions implements Serializable{
 		if(isOverUnder)
 			this.reactionList = geneList.getReactionUnderOverList(model);
 		else
-			this.reactionList = geneList.getReactionKnockoutList(model);
+			this.reactionList = geneList.getReactionKnockoutList(model);		
 	}
 
+	/**
+	 * Full constructor for cloning purposes
+	 * 
+	 * @param geneList
+	 * @param reactionList
+	 * @param isOverUnder
+	 */
+	public GeneticConditions(GeneChangesList geneList, ReactionChangesList reactionList, boolean isOverUnder){
+		this.geneList = geneList;
+		this.reactionList = reactionList;
+		this.isOverUnder = isOverUnder;
+	}
 
 	public GeneChangesList getGeneList() {
 		return geneList;
@@ -77,9 +88,11 @@ public class GeneticConditions implements Serializable{
 		
 		for(Double value : map.values())
 			if(value>0) return true;
-		return false;
-				
-		
+		return false;	
+	}
+	
+	public boolean isGenes(){
+		return geneList!=null;
 	}
 	
 	public boolean equals(GeneticConditions conditions){
@@ -132,4 +145,13 @@ public class GeneticConditions implements Serializable{
 			
 		return sb.toString();
 	}
+	
+	public GeneticConditions clone(){
+		GeneChangesList gcl = getGeneList()==null ? null : this.getGeneList().clone();
+		ReactionChangesList rcl = getReactionList().clone();
+		boolean ou = isOverUnder ? true : false;		
+		
+		return new GeneticConditions(gcl , rcl, ou);
+	}
+	 
 }

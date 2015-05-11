@@ -1,10 +1,16 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions;
 
+import java.util.List;
 import java.util.Map;
 
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
 
 public abstract class AbstractObjTerm{
+
+	protected static double minValue = -10000.0;
+	protected static double maxValue = 10000.0;
 	
 	protected int varIndex;
 	protected double multiplier;
@@ -16,20 +22,29 @@ public abstract class AbstractObjTerm{
 		this.multiplier = multiplier;
 		this.additional = additional;
 	}
-
 	
 	abstract public Map<String, Integer> addObjectiveTermToProblem(LPProblem problem) throws WrongFormulationException;
+	abstract public Map<String, Integer> addObjectiveTermToProblem(LPProblem problem,List<LPVariable> ofAssociatedVars, List<LPConstraint> ofAssociatedConstraints) throws WrongFormulationException;
 		
-	public int getProblemVarIdx(){
+	public int getProblemVarIndex(){
 		return varIndex;
 	}
 	
-	public double getMutiplierFactor(){
+	public double getMultiplierFactor(){
 		return multiplier;
 	}
 	
 	public double getAdditionalFactor(){
 		return additional;
 	}
-
+	
+	public static void setMinValue(double minVal){
+		minValue = minVal;
+	}
+	
+	public static void setMaxValue(double maxVal){
+		maxValue = maxVal;
+	}
+	
+	
 }

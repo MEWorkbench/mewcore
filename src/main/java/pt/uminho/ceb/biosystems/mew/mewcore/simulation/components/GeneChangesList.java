@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Gene;
+import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
+import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.list.ListStrings;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
@@ -48,10 +51,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.node.Min
 import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.node.Or;
 import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.node.Variable;
 import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.node.VariableDouble;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.model.components.Gene;
-import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
-import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 
 public class GeneChangesList extends MapStringNum implements Serializable
 {

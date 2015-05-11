@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.optimization;
 
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +9,6 @@ import java.util.TreeSet;
 
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
-
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.converter.ConnectionFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.exceptions.CobraMatlabFormulationException;
@@ -22,6 +20,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditi
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
 public class CobraGDLSFormulation extends ConnectionFormulation{
 
@@ -236,5 +235,47 @@ public class CobraGDLSFormulation extends ConnectionFormulation{
 		}
 		
 		return result;
+	}
+
+	@Override
+	public void preSimulateActions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void postSimulateActions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clearAllProperties() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setRecreateOF(boolean recreateOF) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isRecreateOF() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveModelToMPS(String file, boolean includeTime) {
+		// TODO Auto-generated method stub
+		
 	}
 }

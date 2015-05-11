@@ -24,39 +24,14 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions;
 
 import java.lang.reflect.Constructor;
-
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.mewcore.utils.Evaluator;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public enum ObjectiveFunctionType {
 	
-	EN{
-		@Override
-		public String toString(){
-			return "ENSEMBLE";
-		}
-		
-		@Override
-		protected Class<?>[] getArgumentsClasses() {
-			Class<?>[] argumentsClasses = {
-					String.class,
-					IObjectiveFunction.class
-			};
-			return argumentsClasses;
-		}
-
-		@Override
-		protected Class<?> getObjectiveFunctionClass() {
-			return EnsembleObjectiveFunction.class;
-		}
-
-		@Override
-		protected String toStringAtgumentsHelp() {
-			return "";
-		}
-	},
 	BPCY{
 		@Override
 		public String toString(){
@@ -79,7 +54,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(biomassId, desiredFluxId, substrateId)";
 		}
 	},
@@ -106,7 +81,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(biomassId, desiredFluxId, minimumBiomass, solver)";
 		}
 	},
@@ -134,7 +109,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "ProductYieldObjectiveFunction(biomassId, productId, substrateId, minUptakeFlux, minBiomassFlux )";
 		}
 	},
@@ -159,7 +134,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(id, isMaximization)";
 		}
 		
@@ -184,7 +159,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			// TODO Auto-generated method stub
 			return "(fluxId)";
 		}
@@ -209,7 +184,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(Boolean maximize)";
 		}
 	},
@@ -233,7 +208,7 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(maximize, fluxesToSum)";
 		}
 	},
@@ -261,19 +236,11 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(biomassId, desiredFluxId, maxBiomass, maxProduct, alpha)";
 		}
-	}
-
-//	WFVA{
-//		@Override
-//		public String toString(){
-//			return "Weighted Flux Variability Analysis";
-//		}
-//
-//	}
-	, WEIGHTED_YIELD {
+	},
+	WEIGHTED_YIELD {
 		@Override
 		public String toString() {
 			return"Weighted Yield Variability Analysis";
@@ -284,9 +251,9 @@ public enum ObjectiveFunctionType {
 			Class<?>[] argumentsClasses = {
 					String.class,
 					String.class,
-					double.class,
+					Double.class,
 					SolverType.class,
-					double.class
+					Double.class
 			};
 			
 			return argumentsClasses;
@@ -298,12 +265,12 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(biomassId, desiredFluxId, alpha, lpSolver, minBiomassValue)";
 		}
 	
-	}
-	, WEIGHTED_BPCY {
+	}, 
+	WEIGHTED_BPCY {
 		@Override
 		public String toString() {
 			return"Weighted Yield Variability Analysis";
@@ -314,7 +281,7 @@ public enum ObjectiveFunctionType {
 			Class<?>[] argumentsClasses = {
 					String.class,
 					String.class,
-					double.class,
+					Double.class,
 					SolverType.class
 			};
 			
@@ -327,11 +294,186 @@ public enum ObjectiveFunctionType {
 		}
 
 		@Override
-		protected String toStringAtgumentsHelp() {
+		protected String toStringArgumentsHelp() {
 			return "(biomassId, desiredFluxId, alpha, solver)";
 		}
 	
+	},
+	FVA {
+		@Override
+		public String toString() {
+			return"Flux Variability Analysis";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					String.class,
+					String.class,
+					Boolean.class
+			};
+			
+			return argumentsClasses;
+		}		
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return FVAObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "(biomassId, desiredFluxId, isMaximization)";
+		}
+	
+	},
+	FVASENSE {
+		@Override
+		public String toString() {
+			return"Flux Variability Analysis with sense";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					String.class,
+					String.class,
+					Boolean.class,
+					Boolean.class,
+					SolverType.class
+			};
+			
+			return argumentsClasses;
+		}		
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return FVASenseObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "(biomassId, desiredFluxId, isMaximization, isFVAMaximization, solverType)";
+		}
+	
+	},
+	CYIELD {
+		@Override
+		public String toString() {
+			return"Carbon yield";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					String.class,
+					String.class,
+					String.class
+			};
+			
+			return argumentsClasses;
+		}		
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return CarbonYieldObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "(substrateID, desiredFluxId, modelConfigurationFile)";
+		}
+	
+	},
+	PMTCYIELD {
+		@Override
+		public String toString() {
+			return" Percentage of Max. Theor. Carbon yield";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					String.class,
+					String.class,
+					String.class,
+					SolverType.class
+			};
+			
+			return argumentsClasses;
+		}		
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return PercentMaxTheoreticalCarbonYieldObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "(substrateID, desiredFluxId, modelConfigurationFile, solver)";
+		}
+	
 	}
+	,
+	TURN {
+		@Override
+		public String toString() {
+			return"Turnover";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					String.class,
+					String.class,
+					Double.class,
+					Boolean.class
+			};
+			
+			return argumentsClasses;
+		}		
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return TurnoverObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "(metaboliteID, biomassID, minBiomass, isMaximization)";
+		}
+	},
+	MIN_ALTERN {
+		@Override
+		public String toString() {
+			return "Minimize alternatives";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					Set.class,
+					String.class,
+					String.class,
+					String.class,
+					SolverType.class,
+					Boolean.class
+			};
+			
+			return argumentsClasses;
+		}		
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return MinimizeAlternativesObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "([alternative1, alternative2, ..., alternativeN], desiredFluxId, modelConfigurationFile, solver, useCountsInsteadOfCarbons, maximize)";
+		}
+	
+	}	
 	;
 
 	@Override
@@ -341,7 +483,7 @@ public enum ObjectiveFunctionType {
 
 	protected abstract Class<?> getObjectiveFunctionClass();
 	
-	protected abstract String toStringAtgumentsHelp();
+	protected abstract String toStringArgumentsHelp();
 
 	public IObjectiveFunction getObjectiveFunction(String... args) throws InvalidObjectiveFunctionConfiguration {
 
@@ -380,5 +522,9 @@ public enum ObjectiveFunctionType {
 
 		return of;	
 	}
+	
+//	public static void main(String ... args){
+//		
+//	}
 
 }

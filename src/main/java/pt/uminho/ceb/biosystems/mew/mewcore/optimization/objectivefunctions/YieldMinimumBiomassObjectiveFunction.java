@@ -24,9 +24,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions;
 
 import java.io.Serializable;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-import pt.uminho.ceb.biosystems.mew.utilities.math.MathUtils;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.objectivefunctions.interfaces.IObjectiveFunction;
@@ -34,6 +31,8 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.utils.Debugger;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.utilities.math.MathUtils;
 
 public class YieldMinimumBiomassObjectiveFunction implements IObjectiveFunction, Serializable {
 	

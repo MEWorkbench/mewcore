@@ -1,16 +1,15 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.turnover;
 
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.AbstractTurnoverFormulation;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.VarTerm;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
 
 public class TurnOver_Text extends AbstractTurnoverFormulation<LPProblem>{
 

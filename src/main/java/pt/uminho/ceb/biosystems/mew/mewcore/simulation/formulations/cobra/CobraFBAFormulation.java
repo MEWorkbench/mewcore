@@ -1,13 +1,13 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.cobra;
-//package org.optflux.metabolic.simulation.formulations.cobra;
+//package metabolic.simulation.formulations.cobra;
 //
 //import java.util.HashMap;
 //import java.util.Map;
 //
 //import MatlabConnectionException;
 //import MatlabInvocationException;
-//import org.optflux.metabolic.model.steadystatemodel.ISteadyStateModel;
-//import org.optflux.metabolic.simulation.components.SimulationProperties;
+//import metabolic.model.steadystatemodel.ISteadyStateModel;
+//import metabolic.simulation.components.SimulationProperties;
 //
 //public class CobraFBAFormulation extends ConnectionFormulation{
 //

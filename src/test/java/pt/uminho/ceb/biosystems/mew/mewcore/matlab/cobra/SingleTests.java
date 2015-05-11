@@ -1,15 +1,14 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.matlab.cobra;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.CobraMethods;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.formulations.cobra.simulation.CobraFBAFormulation;
@@ -25,17 +24,12 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSim
 
 public class SingleTests {
 	
-	private String getFile(String fileName){
-		URL nyData = getClass().getClassLoader().getResource(fileName);
-		return nyData.getFile();
-	}
-	
 	SteadyStateModel model;
 	
 	@Before
 	public void init() throws Exception{
 		//JSBMLReader reader = new JSBMLReader("files/models/Ec_iJR904.xml", "1",false);
-		JSBMLReader reader = new JSBMLReader(getFile("models/ecoli_core_model.xml"), "1",false);
+		JSBMLReader reader = new JSBMLReader("files/models/ecoli_core_model.xml", "1",false);
 		
 		Container cont = new Container(reader);
 		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
@@ -52,7 +46,7 @@ public class SingleTests {
 //		geneCond = new GeneticConditions(new ReactionChangesList(Arrays.asList("R_EX_o2_e")));
 	}
 
-	//@Test
+	@Test
 	public void FBA() {
 		try{
 			SimulationSteadyStateControlCenter.registerMethod(CobraMethods.COBRAFBA, CobraFBAFormulation.class);
@@ -79,7 +73,7 @@ public class SingleTests {
 		}
 	}
 	
-	//@Test
+	@Test
 	public void GeometricFBA() {
 		try{
 			SimulationSteadyStateControlCenter.registerMethod(CobraMethods.COBRAGEOMETRICFBA, CobraGeometricFBAFormulation.class);
@@ -107,7 +101,7 @@ public class SingleTests {
 	}
 	
 	
-	//@Test
+	@Test
 	public void LinearMOMA() {
 		try{
 			SimulationSteadyStateControlCenter.registerMethod(CobraMethods.COBRALMOMA, CobraLinearMOMAFormulation.class);
@@ -136,7 +130,7 @@ public class SingleTests {
 	}
 	
 	
-	//@Test
+	@Test
 	public void MOMA() {
 		try{
 			SimulationSteadyStateControlCenter.registerMethod(CobraMethods.COBRAMOMA, CobraMOMAFormulation.class);

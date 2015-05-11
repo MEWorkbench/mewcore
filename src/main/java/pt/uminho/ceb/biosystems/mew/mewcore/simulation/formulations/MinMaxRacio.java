@@ -3,6 +3,15 @@ package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.WrongFormulationException;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
+import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
@@ -13,26 +22,16 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
-import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
-import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.FluxValueMap;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProperties;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.WrongFormulationException;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
-
 public class MinMaxRacio extends FBA{
 
 	public MinMaxRacio(ISteadyStateModel model) {
 		super(model);
-		mandatoryProps.add(SimulationProperties.MIN_MAX_RACIO_DIVISOR);
-		mandatoryProps.add(SimulationProperties.MIN_MAX_RACIO_DIVISOR_SENSE);
-		mandatoryProps.add(SimulationProperties.MIN_MAX_RACIO_DIVIDEND);
-		mandatoryProps.add(SimulationProperties.MIN_MAX_RACIO_DIVIDEND_SENSE);
+		mandatoryProperties.add(SimulationProperties.MIN_MAX_RACIO_DIVISOR);
+		mandatoryProperties.add(SimulationProperties.MIN_MAX_RACIO_DIVISOR_SENSE);
+		mandatoryProperties.add(SimulationProperties.MIN_MAX_RACIO_DIVIDEND);
+		mandatoryProperties.add(SimulationProperties.MIN_MAX_RACIO_DIVIDEND_SENSE);
 		
-		possibleProperties.add("DEFAULT_UB_LB");
+		optionalProperties.add("DEFAULT_UB_LB");
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class MinMaxRacio extends FBA{
 		int varDividendIdx = model.getReactionIndex(getDividendVariable());
 		
 		LPVariable v = problem.getVariable(varDividendIdx);
-		ReactionConstraint rc = overrideRC.getReactionConstraint(varDividendIdx);
+		ReactionConstraint rc = model.getReactionConstraint(varDividendIdx); //was overrideRC
 		if(getDividendSense()>0){
 			
 			double upperLimit = rc.getUpperLimit();
@@ -91,7 +90,7 @@ public class MinMaxRacio extends FBA{
 	
 	private int getDivisorSense() throws PropertyCastException, MandatoryPropertyException {
 		
-		Number i = ManagerExceptionUtils.testCast(propreties, Number.class, SimulationProperties.MIN_MAX_RACIO_DIVISOR_SENSE, false);
+		Number i = ManagerExceptionUtils.testCast(properties, Number.class, SimulationProperties.MIN_MAX_RACIO_DIVISOR_SENSE, false);
 		double d = i.doubleValue();
 		
 		if( d <0)
@@ -103,7 +102,7 @@ public class MinMaxRacio extends FBA{
 	}
 	
 	private int getDividendSense() throws PropertyCastException, MandatoryPropertyException{
-		Number i = ManagerExceptionUtils.testCast(propreties, Number.class, SimulationProperties.MIN_MAX_RACIO_DIVIDEND_SENSE, false);
+		Number i = ManagerExceptionUtils.testCast(properties, Number.class, SimulationProperties.MIN_MAX_RACIO_DIVIDEND_SENSE, false);
 		double d = i.doubleValue();
 		
 		if( d <0)
@@ -115,9 +114,9 @@ public class MinMaxRacio extends FBA{
 
 
 	@Override
-	protected void createConstrains() throws WrongFormulationException,
+	protected void createConstraints() throws WrongFormulationException,
 			PropertyCastException, MandatoryPropertyException, SolverException {
-		super.createConstrains();
+		super.createConstraints();
 		
 		int tIdx = getIdxVar("t");
 		int numberReactions = model.getNumberOfReactions();
@@ -126,7 +125,7 @@ public class MinMaxRacio extends FBA{
 		for(int i =0; i < numberReactions; i++){
 			if(i==varcIdx) continue;
 			
-			ReactionConstraint rc = overrideRC.getReactionConstraint(i);
+			ReactionConstraint rc = model.getReactionConstraint(i); //was overrideRC
 			
 			try {
 				LPProblemRow rowLow = new LPProblemRow();
@@ -162,23 +161,23 @@ public class MinMaxRacio extends FBA{
 
 	public String getDivisorVariable() throws PropertyCastException, MandatoryPropertyException{
 		
-		return (String) ManagerExceptionUtils.testCast(propreties, String.class, SimulationProperties.MIN_MAX_RACIO_DIVISOR, false);
+		return (String) ManagerExceptionUtils.testCast(properties, String.class, SimulationProperties.MIN_MAX_RACIO_DIVISOR, false);
 	}
 	
 	public String getDividendVariable() throws PropertyCastException, MandatoryPropertyException{
 		
-		return (String) ManagerExceptionUtils.testCast(propreties, String.class, SimulationProperties.MIN_MAX_RACIO_DIVIDEND, false);
+		return (String) ManagerExceptionUtils.testCast(properties, String.class, SimulationProperties.MIN_MAX_RACIO_DIVIDEND, false);
 	}
 	
 	public double getDefaultBounds(){
 		Double d = getProperty("DEFAULT_UB_LB");
-		if(d == null) d = 100000d;
+		if(d == null) d = 100000000d;
 		return d;
 	}
 
 
 	public void setDivisorId(String id) {
-		propreties.put(SimulationProperties.MIN_MAX_RACIO_DIVISOR, id);
+		properties.put(SimulationProperties.MIN_MAX_RACIO_DIVISOR, id);
 	}
 	
 	public void setDivisorSense(Number d){
@@ -186,7 +185,7 @@ public class MinMaxRacio extends FBA{
 	}
 	
 	public void setDividendId(String id) {
-		propreties.put(SimulationProperties.MIN_MAX_RACIO_DIVIDEND, id);
+		properties.put(SimulationProperties.MIN_MAX_RACIO_DIVIDEND, id);
 	}
 	
 	public void setDividendSense(Number d){

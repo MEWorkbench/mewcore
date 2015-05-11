@@ -22,6 +22,7 @@
  */
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.components;
 
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,15 +83,18 @@ public class OverrideSteadyStateModel extends AbstractOverrideSteadyStateModel {
 		
 		if (reactionList != null && reactionList.containsReactionKnockout(reactionId))
 			return new ReactionConstraint(0,0);
-
+		
 		if(environmentalConditions != null && environmentalConditions.containsKey(reactionId)) 
 			return environmentalConditions.getReactionConstraint(reactionId);
+		
+
+
 		
 		return model.getReactionConstraint(reactionId);
 	}
 
-	public Set<String> getOverridedReactions() {
-		// Falta colocar esta validacao
+
+	public Set<String> getOverriddenReactions() {
 		
 		Set<String> ret = new HashSet<String>();
 		

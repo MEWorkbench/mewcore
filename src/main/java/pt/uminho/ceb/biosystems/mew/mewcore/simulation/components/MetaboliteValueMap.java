@@ -2,10 +2,9 @@ package pt.uminho.ceb.biosystems.mew.mewcore.simulation.components;
 
 import java.io.Serializable;
 
+import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPMapVariableValues;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
-import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 
 public class MetaboliteValueMap extends MapStringNum implements Serializable {
 	

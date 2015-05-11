@@ -3,10 +3,9 @@ package pt.uminho.ceb.biosystems.mew.mewcore.cmd.searchtools;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.StringUtils;
-import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.configuration.OptimizationConfiguration;
+import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 import cern.colt.Arrays;
 
 public class SearchConfiguration extends OptimizationConfiguration {
@@ -29,7 +28,9 @@ public class SearchConfiguration extends OptimizationConfiguration {
 	
 	public static final String	NUMBER_RUNS			= "search.numruns";
 	
-	public SearchConfiguration(String properties) throws Exception {
+	public SearchConfiguration(
+		String properties)
+		throws Exception {
 		super(properties);
 		analyzeSearchProperties();
 	}
@@ -38,8 +39,8 @@ public class SearchConfiguration extends OptimizationConfiguration {
 		if (!containsKey(SEARCH_WALLTIME) && !containsKey(SEARCH_QUEUE))
 			throw new Exception("Illegal SearchProperties definition. Must specify EITHER one of [" + SEARCH_QUEUE + "] or [" + SEARCH_WALLTIME + "] properties.");
 		
-		if (containsKey(SEARCH_WALLTIME) && containsKey(SEARCH_QUEUE))
-			throw new Exception("Illegal SearchProperties definition. Must specify ONLY one of [" + SEARCH_QUEUE + "] or [" + SEARCH_WALLTIME + "] properties.");
+//		if (containsKey(SEARCH_WALLTIME) && containsKey(SEARCH_QUEUE))
+//			throw new Exception("Illegal SearchProperties definition. Must specify ONLY one of [" + SEARCH_QUEUE + "] or [" + SEARCH_WALLTIME + "] properties.");
 		
 		if (containsKey(SEARCH_WALLTIME)) {
 			try {
@@ -94,21 +95,21 @@ public class SearchConfiguration extends OptimizationConfiguration {
 	}
 	
 	public Walltime getSearchWallTime() {
-		String tag = getProperty(SEARCH_WALLTIME);
+		String tag = getProperty(SEARCH_WALLTIME,currentState,true);
 		if (tag != null)
 			return Walltime.valueOf(tag.toUpperCase());
 		return null;
 	}
 	
 	public SearchQueue getSearchQueue() {
-		String tag = getProperty(SEARCH_QUEUE);
+		String tag = getProperty(SEARCH_QUEUE,currentState,true);
 		if (tag != null)
 			return SearchQueue.valueOf(tag.toUpperCase());
 		return null;
 	}
 	
 	public SearchNode getSearchForcedNode() {
-		String tag = getProperty(SEARCH_FORCE_NODE);
+		String tag = getProperty(SEARCH_FORCE_NODE,currentState,true);
 		if (tag != null)
 			return SearchNode.valueOf(tag.toUpperCase());
 		else
@@ -116,18 +117,18 @@ public class SearchConfiguration extends OptimizationConfiguration {
 	}
 	
 	public String getSearchNumberOfNodes() {
-		return getProperty(SEARCH_NUM_NODES);
+		return getProperty(SEARCH_NUM_NODES,currentState,true);
 	}
 	
 	public String getSearhNumberOfCores() {
-		return getProperty(SEARCH_NUM_CORES);
+		return getProperty(SEARCH_NUM_CORES,currentState,true);
 	}
 	
-	public String getSearhMaxMemory() {
+	public String getSearchMaxMemory() {
 		String ret = "-Xmx";
 		
 		if (containsKey(SEARCH_MAX_MEMORY))
-			ret += getProperty(SEARCH_MAX_MEMORY) + "m";
+			ret += getProperty(SEARCH_MAX_MEMORY,currentState,true) + "m";
 		else
 			ret += DEFAULT_MAX_MEMORY + "m";
 		
@@ -135,7 +136,7 @@ public class SearchConfiguration extends OptimizationConfiguration {
 	}
 	
 	public String getNumberOfRuns() {
-		return getProperty(NUMBER_RUNS);		
+		return getProperty(NUMBER_RUNS,currentState,true);
 	}
 	
 	public String getSearchSubmissionTags() {
@@ -168,10 +169,5 @@ public class SearchConfiguration extends OptimizationConfiguration {
 		
 		return finalTag;
 	}
-	
-	public static void main(String... args) throws Exception {
-		SearchConfiguration prop = new SearchConfiguration("files/propertiesTest/hierpropertiesTest.conf");
-		
-		System.out.println(prop.getSearchSubmissionTags());
-	}
+
 }

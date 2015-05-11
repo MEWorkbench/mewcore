@@ -57,7 +57,7 @@ public abstract class ConnectionFormulation implements ISteadyStateSimulationMet
 //			System.out.println(createConverterParameteres());
 //			System.out.println(properties);
 			createModelOverride();
-			if(overrideRC.getOverridedReactions() != null)
+			if(overrideRC.getOverriddenReactions() != null)
 				converter.sendModifiedModel(overrideRC);
 			
 			prepareMatlabEnvironment();

@@ -2,12 +2,6 @@ package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.turnover;
 
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolution;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions.AbstractTurnoverFormulationFIXED;
@@ -16,6 +10,11 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.abstractions
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.ManagerExceptionUtils;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.exceptions.PropertyCastException;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolution;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 
 public class MiMBlFIXED extends AbstractTurnoverFormulationFIXED<MILPProblem>{
 
@@ -46,7 +45,7 @@ public class MiMBlFIXED extends AbstractTurnoverFormulationFIXED<MILPProblem>{
 
 	public boolean use2Opt() throws PropertyCastException, MandatoryPropertyException{
 		if(use2Opt==null){
-			use2Opt = ManagerExceptionUtils.testCast(propreties, Boolean.class, TurnOverProperties.USE_2OPT, true);
+			use2Opt = ManagerExceptionUtils.testCast(properties, Boolean.class, TurnOverProperties.USE_2OPT, true);
 			
 			if(use2Opt == null){
 				use2Opt = false;

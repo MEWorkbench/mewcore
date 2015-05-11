@@ -1,14 +1,14 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.simulation.formulations.cobra;
-//package org.optflux.metabolic.simulation.formulations.cobra;
+//package metabolic.simulation.formulations.cobra;
 //
 //import java.util.Map;
 //
-//import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
+//import utilities.datastructures.map.MapStringNum;
 //import MatlabConnectionException;
 //import MatlabInvocationException;
-//import org.optflux.metabolic.model.steadystatemodel.ISteadyStateModel;
-//import org.optflux.metabolic.simulation.components.OverrideSteadyStateModel;
-//import org.optflux.metabolic.simulation.components.SteadyStateSimulationResult;
+//import metabolic.model.steadystatemodel.ISteadyStateModel;
+//import metabolic.simulation.components.OverrideSteadyStateModel;
+//import metabolic.simulation.components.SteadyStateSimulationResult;
 //
 //public interface IConverter {
 //	

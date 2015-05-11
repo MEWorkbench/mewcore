@@ -3,19 +3,17 @@ package pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.configurati
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.cmd.searchtools.ContainerSource;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.utils.SmartProperties;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public class ModelConfiguration extends SmartProperties {
 	
@@ -24,6 +22,8 @@ public class ModelConfiguration extends SmartProperties {
 	public static final String	MODEL_PREFIX			= "model";
 	
 	public static final String	MODEL_NAME				= "model.name";
+	
+	public static final String	MODEL_VERSION			= "model.version";
 	
 	public static final String	MODEL_SOURCE			= "model.source";
 	
@@ -56,8 +56,9 @@ public class ModelConfiguration extends SmartProperties {
 	
 	private void analyzeModelProperties() throws Exception {
 		
-		if (!containsKey(MODEL_NAME))
-			throw new Exception("Illegal ModelProperties definition. Must define a [" + MODEL_NAME + "] property.");
+		if (!containsKey(MODEL_NAME)) throw new Exception("Illegal ModelProperties definition. Must define a [" + MODEL_NAME + "] property.");
+		
+		if (!containsKey(MODEL_VERSION)) throw new Exception("Illegal ModelProperties definition. Must define a [" + MODEL_VERSION + "] property.");
 		
 		if (!containsKey(MODEL_SOURCE))
 			throw new Exception("Illegal ModelProperties definition. Must define a [" + MODEL_SOURCE + "] property.");
@@ -66,30 +67,18 @@ public class ModelConfiguration extends SmartProperties {
 			
 			switch (model_source) {
 				case SBML:
-					if (!containsKey(MODEL_FILE))
-						throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE
-								+ "] requires a property [" + MODEL_FILE + "].");
+					if (!containsKey(MODEL_FILE)) throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE + "] requires a property [" + MODEL_FILE + "].");
 					break;
 				case METATOOL:
-					if (!containsKey(MODEL_FILE))
-						throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE
-								+ "] requires a property [" + MODEL_FILE + "].");
+					if (!containsKey(MODEL_FILE)) throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE + "] requires a property [" + MODEL_FILE + "].");
 					break;
 				case BIO_OPT:
-					if (!containsKey(MODEL_FILE))
-						throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE
-								+ "] requires a property [" + MODEL_FILE + "].");
+					if (!containsKey(MODEL_FILE)) throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE + "] requires a property [" + MODEL_FILE + "].");
 					break;
 				case SPARSE_FLAT_FILES: {
-					if (!containsKey(MODEL_REACTIONS))
-						throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE
-								+ "] requires a property [" + MODEL_REACTIONS + "].");
-					if (!containsKey(MODEL_METABOLITES))
-						throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE
-								+ "] requires a property [" + MODEL_METABOLITES + "].");
-					if (!containsKey(MODEL_MATRIX))
-						throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE
-								+ "] requires a property [" + MODEL_MATRIX + "].");
+					if (!containsKey(MODEL_REACTIONS)) throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE + "] requires a property [" + MODEL_REACTIONS + "].");
+					if (!containsKey(MODEL_METABOLITES)) throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE + "] requires a property [" + MODEL_METABOLITES + "].");
+					if (!containsKey(MODEL_MATRIX)) throw new Exception("Illegal ModelProperties definition. Model source [" + MODEL_SOURCE + "] requires a property [" + MODEL_MATRIX + "].");
 				}
 				default:
 					break;
@@ -126,10 +115,10 @@ public class ModelConfiguration extends SmartProperties {
 	public ISteadyStateModel getModel() throws InvalidSteadyStateModelException {
 		if (_model == null) {
 			Container container = getContainer();
-			container.putDrainsInReactantsDirection();
-			
 			Set<String> toRemove = container.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
 			container.removeMetabolites(toRemove);
+			container.putDrainsInReactantsDirection();
+			
 			ISteadyStateModel model = ContainerConverter.convert(container);
 			model.setBiomassFlux(getModelBiomass());
 			_model = model;
@@ -138,58 +127,61 @@ public class ModelConfiguration extends SmartProperties {
 	}
 	
 	public ContainerSource getModelSource() {
-		return ContainerSource.valueOf(getProperty(MODEL_SOURCE,currentState,true));
+		return ContainerSource.valueOf(getProperty(MODEL_SOURCE, currentState, true));
 	}
 	
 	public String getModelName() {
-		return getProperty(MODEL_NAME,currentState,true);
+		return getProperty(MODEL_NAME, currentState, true);
+	}
+	
+	public String getModelVersion() {
+		return getProperty(MODEL_VERSION, currentState, true);
 	}
 	
 	public String getModelFile() {
-		return getProperty(MODEL_FILE,currentState,true);
+		return getProperty(MODEL_FILE, currentState, true);
 	}
 	
 	public String getModelReactionsFile() {
-		return getProperty(MODEL_REACTIONS,currentState,true);
+		return getProperty(MODEL_REACTIONS, currentState, true);
 	}
 	
 	public String getModelMetabolitesFile() {
-		return getProperty(MODEL_METABOLITES,currentState,true);
+		return getProperty(MODEL_METABOLITES, currentState, true);
 	}
 	
 	public String getModelMatrixFile() {
-		return getProperty(MODEL_MATRIX,currentState,true);
+		return getProperty(MODEL_MATRIX, currentState, true);
 	}
 	
 	public String getModelGenes() {
-		return getProperty(MODEL_GENES,currentState,true);
+		return getProperty(MODEL_GENES, currentState, true);
 	}
 	
 	public String getModelCriticalReactionsFile() {
-		return getProperty(MODEL_CRIT_REACTIONS,currentState,true);
+		return getProperty(MODEL_CRIT_REACTIONS, currentState, true);
 	}
 	
 	public String getModelCriticalGenesFile() {
-		return getProperty(MODEL_CRIT_GENES,currentState,true);
+		return getProperty(MODEL_CRIT_GENES, currentState, true);
 	}
 	
 	public String getModelBiomass() {
-		return getProperty(MODEL_BIOMASS_REACTION,currentState,true);
+		return getProperty(MODEL_BIOMASS_REACTION, currentState, true);
 	}
 	
-	public List<String> getModelCofactors() throws IOException {
-		String tag = getProperty(MODEL_COFACTORS,currentState,true);
+	public Set<String> getModelCofactors() throws IOException {
+		String tag = getProperty(MODEL_COFACTORS, currentState, true);
 		if (tag != null && !tag.isEmpty()) {
 			FileReader fr = new FileReader(tag);
 			BufferedReader br = new BufferedReader(fr);
-			List<String> toret = new ArrayList<String>();
+			Set<String> toret = new HashSet<String>();
 			int iline = 0;
 			while (br.ready()) {
 				String cofactor = br.readLine().trim();
 				if (_container.getMetabolite(cofactor) == null) {
 					br.close();
-					throw new IOException(tag + ":line " + iline + " [" + cofactor
-							+ "] is not a valid co-factor for model [" + getModelName() + "]");
+					throw new IOException(tag + ":line " + iline + " [" + cofactor + "] is not a valid co-factor for model [" + getModelName() + "]");
 				} else
 					toret.add(cofactor);
 				iline++;

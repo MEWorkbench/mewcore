@@ -1,9 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.matlab.cobra;
 
-import static org.junit.Assert.*;
-
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,30 +10,21 @@ import matlabcontrol.MatlabInvocationException;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.criticality.CriticalReactions;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.CommandExecutionException;
 import pt.uminho.ceb.biosystems.mew.mewcore.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
-import pt.uminho.ceb.biosystems.mew.mewcore.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.ConstrainedReaction;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.components.OptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.mewcore.optimization.controlcenter.OptimizationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneChangesList;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditions;
-import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 
 public class GDLSTests {
-	
-	private String getFile(String fileName){
-		URL nyData = getClass().getClassLoader().getResource(fileName);
-		return nyData.getFile();
-	}
 	
 	SteadyStateModel model;
 
@@ -46,7 +33,7 @@ public class GDLSTests {
 		//JSBMLReader reader = new JSBMLReader("files/models/Ec_iJR904.xml", "1",false);
 		
 		//JSBMLReader reader = new JSBMLReader("/home/vmsilico/Desktop/Tools/Models/Ec_iAF1260.xml", "1",false);
-		JSBMLReader reader = new JSBMLReader(getFile("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml"), "1",false);
+		JSBMLReader reader = new JSBMLReader("/home/vmsilico/Documents/Files/glds_giesteira/CN127_7AHPT.xml", "1",false);
 		
 		
 		Container cont = new Container(reader);
@@ -61,13 +48,13 @@ public class GDLSTests {
 		conn.init();
 	}
 	
-	//@Test
+	@Test
 	public void cobraTestGDLS(){
 		try{
 			//SimulationSteadyStateControlCenter.registerMethod("MATLAB_GDLS", CobraGDLSFormulation.class);
 			
 			
-			EnvironmentalConditions envCond = EnvironmentalConditions.readFromFile(getFile("/home/vmsilico/Documents/Files/glds_giesteira/envconditions.env"), ",");
+			EnvironmentalConditions envCond = EnvironmentalConditions.readFromFile("/home/vmsilico/Documents/Files/glds_giesteira/envconditions.env", ",");
 			
 			OptimizationSteadyStateControlCenter cc = new OptimizationSteadyStateControlCenter(envCond, null, model, OptimizationProperties.COBRA_GDLS);
 			
@@ -83,7 +70,7 @@ public class GDLSTests {
 			Set<String> selectedReactions = new TreeSet<String>(model.getReactions().keySet());
 			
 			CriticalReactions cReactions = new CriticalReactions(model, null, null);
-			cReactions.loadCriticalReactionsFromFile(getFile("/home/vmsilico/Documents/Files/glds_giesteira/critical.txt"));
+			cReactions.loadCriticalReactionsFromFile("/home/vmsilico/Documents/Files/glds_giesteira/critical.txt");
 			
 			selectedReactions.removeAll(cReactions.getCriticalReactionIds());
 			
@@ -134,12 +121,12 @@ public class GDLSTests {
 	}
 	
 	
-	//@Test
+	@Test
 	public void cobraTestOptKnock(){
 		try{
 			//SimulationSteadyStateControlCenter.registerMethod("MATLAB_GDLS", CobraGDLSFormulation.class);
 			
-			EnvironmentalConditions envCond = EnvironmentalConditions.readFromFile(getFile("/home/vmsilico/Documents/Files/glds_giesteira/envconditions.env"), ",");
+			EnvironmentalConditions envCond = EnvironmentalConditions.readFromFile("/home/vmsilico/Documents/Files/glds_giesteira/envconditions.env", ",");
 			
 			OptimizationSteadyStateControlCenter cc = new OptimizationSteadyStateControlCenter(envCond, null, model, OptimizationProperties.COBRA_OPTKNOCK);
 			
@@ -154,7 +141,7 @@ public class GDLSTests {
 			selectedReactions.remove("R_Biomass");
 			
 			CriticalReactions cReactions = new CriticalReactions(model, null, null);
-			cReactions.loadCriticalReactionsFromFile(getFile("/home/vmsilico/Documents/Files/glds_giesteira/critical.txt"));
+			cReactions.loadCriticalReactionsFromFile("/home/vmsilico/Documents/Files/glds_giesteira/critical.txt");
 			
 			//selectedReactions.removeAll(cReactions.getCriticalReactionIds());
 			
@@ -208,7 +195,7 @@ public class GDLSTests {
 
 	
 	
-	//@Test
+	@Test
 	public void cobraTestNewOptKnock(){
 		try{
 			//SimulationSteadyStateControlCenter.registerMethod("MATLAB_GDLS", CobraGDLSFormulation.class);

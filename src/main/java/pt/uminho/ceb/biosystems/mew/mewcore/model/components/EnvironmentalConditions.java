@@ -28,7 +28,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.ReactionConstraintCI;
-
 import pt.uminho.ceb.biosystems.mew.mewcore.model.exceptions.NonExistentIdException;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.steadystatemodel.ISteadyStateModel;
 
@@ -164,6 +162,7 @@ public class EnvironmentalConditions extends LinkedHashMap<String, ReactionConst
 		Map<String, ReactionConstraint> wrongEnvCond = new HashMap(); 
 		List<String> errors = new ArrayList<String>();
 		
+		int linecounter=0;
 		while( br.ready() )
 		{
 			String str = br.readLine();
@@ -171,7 +170,7 @@ public class EnvironmentalConditions extends LinkedHashMap<String, ReactionConst
 			if (fields.length < 3){ 
 				br.close();
 				fr.close();
-				throw new IOException ("Incomplete number of fields in Environmental conditions file " + inputFilename);
+				throw new IOException ("Incomplete number of fields in environmental conditions file [" + inputFilename+"] line: "+linecounter);
 			}
 			
 			double lowerBound = Double.parseDouble(fields[1]);
@@ -185,6 +184,8 @@ public class EnvironmentalConditions extends LinkedHashMap<String, ReactionConst
 			
 			if(errorNum == 0)
 				envCond.addReactionConstraint(fields[0], new ReactionConstraint(lowerBound, upperBound));
+			
+			linecounter++;
 		}
 		
 		if(errorNum > 0)
@@ -197,6 +198,7 @@ public class EnvironmentalConditions extends LinkedHashMap<String, ReactionConst
 		
 		br.close();
 		fr.close();
+		System.out.println("Finished reading environmental conditions from file ["+inputFilename+"].");
 		
 		return envCond;
 	}

@@ -9,42 +9,55 @@ public enum OptimizationStrategy {
 	/**
 	 * Gene knockouts
 	 */
-	GK{
+	GK {
 		@Override
-		public boolean isGeneBasedOptimization(){
+		public boolean isGeneBasedOptimization() {
 			return true;
 		}
 	},
 	/**
 	 * Reaction over/under expression
 	 */
-	ROU{
+	ROU {
 		@Override
-		public boolean isOverUnderExpressionOptimization(){
+		public boolean isOverUnderExpressionOptimization() {
 			return true;
 		}
 	},
 	/**
 	 * Gene over/under expression
 	 */
-	GOU{
+	GOU {
 		@Override
-		public boolean isGeneBasedOptimization(){
+		public boolean isGeneBasedOptimization() {
 			return true;
 		}
+		
 		@Override
-		public boolean isOverUnderExpressionOptimization(){
+		public boolean isOverUnderExpressionOptimization() {
 			return true;
-		}	
+		}
+	},
+	/**
+	 * Reaction knockout + reaction swap
+	 */
+	RKRS {
+		@Override
+		public boolean isReactionSwap(){
+			return true;
+		}
 	};
 	
-	public boolean isGeneBasedOptimization(){
+	public boolean isGeneBasedOptimization() {
 		return false;
 	}
 	
-	public boolean isOverUnderExpressionOptimization(){
+	public boolean isOverUnderExpressionOptimization() {
 		return false;
 	}
 	
-
+	public boolean isReactionSwap(){
+		return false;
+	}
+	
 }
