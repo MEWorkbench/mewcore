@@ -9,8 +9,8 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
 
 public abstract class AbstractObjTerm{
 
-	protected static double minValue = -10000.0;
-	protected static double maxValue = 10000.0;
+	protected static double minValue = -Double.MAX_VALUE;
+	protected static double maxValue = Double.MAX_VALUE;
 	
 	protected int varIndex;
 	protected double multiplier;
