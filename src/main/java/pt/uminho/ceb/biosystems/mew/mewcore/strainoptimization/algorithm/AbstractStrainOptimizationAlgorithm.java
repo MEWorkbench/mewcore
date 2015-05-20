@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.algorithm;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.configuration.IGenericConfiguration;
@@ -13,8 +14,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.optimizationresul
  * Base class To Create Algorithms
  * @param <T> extends JecoliGenericConfiguration
  */
-public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConfiguration>{
-    /**
+public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConfiguration> implements Serializable{
+    
+	private static final long	serialVersionUID	= -7010293912012187500L;
+	/**
      * Base configuration to be utilized by the method
      */
     protected T algorithmConfiguration;

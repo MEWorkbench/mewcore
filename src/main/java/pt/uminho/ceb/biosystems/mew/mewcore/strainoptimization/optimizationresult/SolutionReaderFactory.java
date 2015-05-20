@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.optimizationresult;
 
 import java.io.DataInputStream;
+import java.io.Serializable;
 import java.io.StringBufferInputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +17,11 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
 /**
  * Created by ptiago on 18-03-2015.
  */
-public class SolutionReaderFactory {
-    protected Map<String,IStrainOptimizationReader> readerMap;
+public class SolutionReaderFactory implements Serializable{
+	
+	private static final long	serialVersionUID	= -1080622571772060722L;
+	
+	protected Map<String,IStrainOptimizationReader> readerMap;
 
     public SolutionReaderFactory() {
         readerMap = new HashMap<>();

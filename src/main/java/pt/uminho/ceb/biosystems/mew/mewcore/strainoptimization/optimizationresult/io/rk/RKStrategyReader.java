@@ -14,7 +14,9 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class RKStrategyReader extends AbstractStrainOptimizationSolutionReader{
 
-    protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
+	private static final long	serialVersionUID	= -2431715307075316110L;
+
+	protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
         boolean isOverUnderExpression = configuration.getIsOverUnderExpression();
         boolean isGeneExpression = configuration.getIsGeneOptimization();
         List<String> modificationList = new ArrayList<>();

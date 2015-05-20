@@ -12,7 +12,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 18-03-2015.
  */
 public class ROUStrategyReader extends AbstractStrainOptimizationSolutionReader {
-    @Override
+    
+	private static final long	serialVersionUID	= 8987596486229633286L;
+
+	@Override
     protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
         String[] lineArray = geneticConditionString.split(",");
         List<String> modificationIdList = new ArrayList<>();
