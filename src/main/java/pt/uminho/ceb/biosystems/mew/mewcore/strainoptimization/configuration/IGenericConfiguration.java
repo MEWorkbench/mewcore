@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.configuration;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import java.util.Set;
 /**
  * Interface containing methods regrading generic configuration
  */
-public interface IGenericConfiguration {
+public interface IGenericConfiguration extends Serializable{
     /**
      * Returns the property registered in the configuration
      * @param propertyId name of the property - e.g. jecoli.ismaximization

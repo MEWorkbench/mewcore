@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizationalgorithms.jecoli.strategyconverter;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * @param <T> extension of JecoliGeneric Configuration
  * @param <E> extension of an IStrainOptimizationResult
  */
-public interface IJecoliOptimizationStrategyConverter<T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> {
+public interface IJecoliOptimizationStrategyConverter<T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> extends Serializable {
     /**
      * Creates a solution set based on a configuration and a list of solutions
      * @param configuration

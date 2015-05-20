@@ -1,10 +1,15 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizationalgorithms.jecoli;
 
+import java.io.Serializable;
+
 /**
  * Created by ptiago on 09-03-2015.
  */
-public class JecoliOptimizationProperties {
-    //Jecoli Top Level
+public class JecoliOptimizationProperties implements Serializable{
+	
+	private static final long	serialVersionUID	= 7229762984584481678L;
+	
+	//Jecoli Top Level
     public static final String OPTIMIZATION_STRATEGY = "jecoli.optimizationstrategy";
     public static final String IS_GENE_OPTIMIZATION = "jecoli.isgeneOptimization";
     public static final String IS_OVER_UNDER_EXPRESSION = "jecoli.isoverunderexpression";

@@ -17,7 +17,9 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.
  */
 public class RKSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
 
-    public RKSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
+	private static final long	serialVersionUID	= 313421910128768596L;
+
+	public RKSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
         super(configuration, simulationResultMap, solutionGeneticConditions);
     }
 

@@ -13,7 +13,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 18-03-2015.
  */
 public class GKStrategyReader extends AbstractStrainOptimizationSolutionReader {
-    @Override
+	
+	private static final long	serialVersionUID	= 1058254775446440786L;
+
+	@Override
     protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration, String geneticConditionString) throws Exception {
         List<String> modificationList = new ArrayList<>();
         String[] lineArray = geneticConditionString.split(",");

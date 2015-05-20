@@ -104,8 +104,6 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 			parsimoniousConstraint = createParsimoniousConstraint(objectiveValue);
 			problem.addConstraint(parsimoniousConstraint);
 			
-//			System.out.println("INTERNAL PROBLEM");
-//			System.out.println("Value = " + objectiveValue);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new WrongFormulationException(e);
@@ -241,8 +239,7 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 	}
 	
 	@Override
-	public String getObjectiveFunctionToString() {
-		
+	public String getObjectiveFunctionToString() {		
 		return "min Σ|V|";
 	}
 	
@@ -272,10 +269,14 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 				
 				if (key.equals(SimulationProperties.ENVIRONMENTAL_CONDITIONS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
+					if(problem!=null)
+						_updateParsimoniousConstraint = true;
 				}
 				
 				if (key.equals(SimulationProperties.GENETIC_CONDITIONS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
+					if(problem!=null)
+						_updateParsimoniousConstraint = true;
 				}
 				
 				if (key.equals(SimulationProperties.IS_OVERUNDER_SIMULATION)) {

@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.optimizationresult;
 
 import java.io.DataInputStream;
+import java.io.Serializable;
 
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizationalgorithms.jecoli.IJecoliConfiguration;
@@ -12,7 +13,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
 /**
  * Interface for the specific readers
  */
-public interface IStrainOptimizationReader {
+public interface IStrainOptimizationReader extends Serializable{
     /**
      *
      * @param inputStream to read data from (file,db,...)

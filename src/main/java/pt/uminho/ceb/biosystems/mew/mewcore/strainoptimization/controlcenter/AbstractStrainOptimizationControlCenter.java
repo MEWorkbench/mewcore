@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.controlcenter;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
@@ -15,8 +16,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.configuration.IGe
  * 
  * @param <T> The type of the result to return
  */
-public abstract class AbstractStrainOptimizationControlCenter<T> {
+public abstract class AbstractStrainOptimizationControlCenter<T> implements Serializable {
 	
+	private static final long	serialVersionUID	= 3319169095771191960L;
+
 	/**
 	 * Factory containing the methods that can be instantiated. The factory can
 	 * be updated in runtime

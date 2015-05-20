@@ -22,7 +22,10 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.
  * Created by ptiago on 04-03-2015.
  */
 public abstract class  AbstractStrainOptimizationResult<T extends JecoliGenericConfiguration> implements IStrainOptimizationResult {
-    protected T configuration;
+    
+	private static final long	serialVersionUID	= 7669850977218268115L;
+	
+	protected T configuration;
     protected Map<String,SteadyStateSimulationResult> simulationResultMap;
     protected GeneticConditions solutionGeneticConditions;
 

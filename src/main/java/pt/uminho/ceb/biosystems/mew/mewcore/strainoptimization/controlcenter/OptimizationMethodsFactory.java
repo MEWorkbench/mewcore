@@ -6,7 +6,10 @@ import java.util.Map;
  * Created by ptiago on 12-03-2015.
  */
 public class OptimizationMethodsFactory extends AbstractOptimizationMethodsFactory{
-    public OptimizationMethodsFactory(Map<String, Class<?>> mapMethods) {
+    
+	private static final long	serialVersionUID	= -5962836290165533414L;
+
+	public OptimizationMethodsFactory(Map<String, Class<?>> mapMethods) {
         super(mapMethods);
     }
 }

@@ -6,7 +6,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 25-03-2015.
  */
 public class JecoliSPEA2GeneOverUnderExpressionCSOM extends JecoliSPEA2ReactionOverUnderExpressionCSOM {
-    public JecoliSPEA2GeneOverUnderExpressionCSOM() {
+    
+	private static final long	serialVersionUID	= -3782699215552281314L;
+
+	public JecoliSPEA2GeneOverUnderExpressionCSOM() {
         super(new JecoliGOUConverter());
     }
 }

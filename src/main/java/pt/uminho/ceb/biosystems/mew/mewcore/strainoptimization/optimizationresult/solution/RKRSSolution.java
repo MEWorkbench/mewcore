@@ -22,8 +22,10 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
  * Created by ptiago on 23-03-2015.
  */
 public class RKRSSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
+    
+	private static final long	serialVersionUID	= -3257007892104006871L;
 
-    public RKRSSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
+	public RKRSSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
         super(configuration, simulationResultMap, solutionGeneticConditions);
     }
 

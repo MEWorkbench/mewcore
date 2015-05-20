@@ -10,8 +10,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 18-03-2015.
  */
 public abstract class AbstractStrainOptimizationSolutionReader implements IStrainOptimizationReader {
+    
+	private static final long	serialVersionUID	= 5429827712780750784L;
 
-    protected abstract GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception;
+	protected abstract GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception;
 
     @Override
     public GeneticConditions readSolutionFromStream(DataInputStream inputStream,IJecoliConfiguration configuration) throws Exception {

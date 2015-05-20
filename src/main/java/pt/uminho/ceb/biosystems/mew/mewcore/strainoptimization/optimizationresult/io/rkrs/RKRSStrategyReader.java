@@ -12,8 +12,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 23-03-2015.
  */
 public class RKRSStrategyReader extends AbstractStrainOptimizationSolutionReader {
+    
+	private static final long	serialVersionUID	= 949626724152048580L;
 
-    protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
+	protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
        List<String> modificationList = new ArrayList<>();
 
 

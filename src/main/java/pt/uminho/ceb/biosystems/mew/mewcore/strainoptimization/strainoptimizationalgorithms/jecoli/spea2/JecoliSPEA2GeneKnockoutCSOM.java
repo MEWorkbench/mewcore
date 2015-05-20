@@ -6,7 +6,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 25-03-2015.
  */
 public class JecoliSPEA2GeneKnockoutCSOM extends  JecoliSPEA2ReactionKnockoutCSOM {
-    public  JecoliSPEA2GeneKnockoutCSOM(){
+    
+	private static final long	serialVersionUID	= 8115692271925437121L;
+
+	public  JecoliSPEA2GeneKnockoutCSOM(){
         super(new JecoliGKConverter());
     }
 }
