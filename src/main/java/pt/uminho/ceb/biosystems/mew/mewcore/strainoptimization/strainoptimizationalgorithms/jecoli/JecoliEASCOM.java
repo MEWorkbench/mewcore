@@ -16,7 +16,6 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.set.S
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.solution.ISolutionFactory;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.statistics.StatisticsConfiguration;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.ITerminationCriteria;
-import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.NumberOfFunctionEvaluationsTerminationCriteria;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.EvolutionaryAlgorithm;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.EvolutionaryConfiguration;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.RecombinationParameters;
@@ -58,8 +57,7 @@ public abstract class JecoliEASCOM<E extends IJecoliOptimizationStrategyConverte
         configuration.setAlgorithmResultWriterList(new ArrayList<IAlgorithmResultWriter<SetRepresentation>>());
         configuration.setStatisticsConfiguration(new StatisticsConfiguration());
 
-        int numberOfFunctionEvaluations = algorithmConfiguration.getMaximumNumberOfFunctionEvaluations();
-        ITerminationCriteria terminationCriteria = new NumberOfFunctionEvaluationsTerminationCriteria(numberOfFunctionEvaluations);
+        ITerminationCriteria terminationCriteria = configuration.getTerminationCriteria();
         configuration.setTerminationCriteria(terminationCriteria);
 
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.NumFunctionEvaluationsListenerHybridTerminationCriteria;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.mewcore.model.components.EnvironmentalConditions;
@@ -57,7 +58,7 @@ public class JecoliEAGeneKnockoutCSOMTest {
         config.setIsMaximization(true);
         config.setMapOF2Sim(objectiveMap);
         config.setOu2StepApproach(true);
-        config.setProperty(JecoliOptimizationProperties.MAXIMUM_NUMBER_OF_FUNCTION_EVALUATIONS,100);
+        config.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA,new NumFunctionEvaluationsListenerHybridTerminationCriteria(100));
         config.setMaxSetSize(10);
         algorithm.setAlgorithmConfiguration(config);
         IStrainOptimizationResultSet resultSet = (IStrainOptimizationResultSet) algorithm.execute();
