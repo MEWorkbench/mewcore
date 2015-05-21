@@ -58,7 +58,7 @@ public abstract class JecoliSPEAIISCOM<E extends IJecoliOptimizationStrategyConv
 		configuration.setMaximumArchiveSize(archiveSize);
 		configuration.getStatisticConfiguration().setNumberOfBestSolutionsToKeepPerRun(archiveSize);
 		
-		ITerminationCriteria terminationCriteria = configuration.getTerminationCriteria();
+		ITerminationCriteria terminationCriteria = algorithmConfiguration.getTerminationCriteria();
 		configuration.setTerminationCriteria(terminationCriteria);
 		
 		int elitism = algorithmConfiguration.getNumberOfElitistIndividuals();

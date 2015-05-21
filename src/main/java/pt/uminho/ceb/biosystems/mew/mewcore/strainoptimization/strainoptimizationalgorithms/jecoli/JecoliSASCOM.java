@@ -48,7 +48,7 @@ public abstract class JecoliSASCOM<E extends IJecoliOptimizationStrategyConverte
         statconf.setVerbose(true);
         configuration.setStatisticsConfiguration(statconf);
 
-        ITerminationCriteria terminationCriteria = configuration.getTerminationCriteria();
+        ITerminationCriteria terminationCriteria = algorithmConfiguration.getTerminationCriteria();
         configuration.setTerminationCriteria(terminationCriteria);
         configuration.getStatisticConfiguration().setNumberOfBestSolutionsToKeepPerRun(15);
 

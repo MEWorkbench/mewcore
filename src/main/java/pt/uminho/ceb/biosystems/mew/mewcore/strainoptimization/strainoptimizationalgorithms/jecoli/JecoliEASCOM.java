@@ -57,7 +57,7 @@ public abstract class JecoliEASCOM<E extends IJecoliOptimizationStrategyConverte
         configuration.setAlgorithmResultWriterList(new ArrayList<IAlgorithmResultWriter<SetRepresentation>>());
         configuration.setStatisticsConfiguration(new StatisticsConfiguration());
 
-        ITerminationCriteria terminationCriteria = configuration.getTerminationCriteria();
+        ITerminationCriteria terminationCriteria = algorithmConfiguration.getTerminationCriteria();
         configuration.setTerminationCriteria(terminationCriteria);
 
 
