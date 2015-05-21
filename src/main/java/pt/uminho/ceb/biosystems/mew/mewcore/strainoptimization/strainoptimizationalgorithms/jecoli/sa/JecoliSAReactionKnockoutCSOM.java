@@ -16,7 +16,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
 public class JecoliSAReactionKnockoutCSOM extends JecoliSASCOM{
 
 
-	private static final long	serialVersionUID	= -4106228746502970144L;
+	private static final long	serialVersionUID	= 1L;
 
 	public JecoliSAReactionKnockoutCSOM() {
         super(new JecoliRKConverter());

@@ -23,7 +23,12 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 public class JecoliGenericConfiguration extends GenericConfiguration implements IJecoliConfiguration {
 
 
-    public JecoliGenericConfiguration() {
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	public JecoliGenericConfiguration() {
         super();
         mandatoryPropertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, String.class);
         mandatoryPropertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, String.class);

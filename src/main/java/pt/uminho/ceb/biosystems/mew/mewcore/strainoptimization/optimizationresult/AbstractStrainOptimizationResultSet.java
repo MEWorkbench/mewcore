@@ -17,7 +17,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.
 //public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGenericConfiguration, E extends  IStrainOptimizationResult<T>> implements IStrainOptimizationResultSet<T,E> {
 public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGenericConfiguration, E extends IStrainOptimizationResult> implements IStrainOptimizationResultSet<T, E> {
 	
-	private static final long	serialVersionUID	= -6563534580081467837L;
+	private static final long	serialVersionUID	= 1L;
 	
 	protected T							baseConfiguration;
 	protected List<E>					resultList;

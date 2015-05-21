@@ -16,7 +16,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.optimizationresul
  */
 public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConfiguration> implements Serializable{
     
-	private static final long	serialVersionUID	= -7010293912012187500L;
+	private static final long	serialVersionUID	= 1L;
 	/**
      * Base configuration to be utilized by the method
      */

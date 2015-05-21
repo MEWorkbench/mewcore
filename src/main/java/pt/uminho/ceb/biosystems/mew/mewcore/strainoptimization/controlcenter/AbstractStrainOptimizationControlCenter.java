@@ -18,7 +18,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.configuration.IGe
  */
 public abstract class AbstractStrainOptimizationControlCenter<T> implements Serializable {
 	
-	private static final long	serialVersionUID	= 3319169095771191960L;
+	private static final long	serialVersionUID	= 1L;
 
 	/**
 	 * Factory containing the methods that can be instantiated. The factory can

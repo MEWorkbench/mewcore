@@ -5,7 +5,12 @@ package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizati
  */
 public class JecoliPBILSCOMConfig extends JecoliGenericConfiguration{
 
-    public JecoliPBILSCOMConfig() {
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	public JecoliPBILSCOMConfig() {
         super();
         this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"PBIL");
     }

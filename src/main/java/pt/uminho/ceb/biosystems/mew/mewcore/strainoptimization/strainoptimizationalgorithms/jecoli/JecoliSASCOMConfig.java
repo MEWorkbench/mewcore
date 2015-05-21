@@ -8,6 +8,11 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.configuration.IGe
  * Created by ptiago on 05-03-2015.
  */
 public class JecoliSASCOMConfig extends JecoliGenericConfiguration implements IGenericConfiguration {
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
 	public JecoliSASCOMConfig() {
 		super();
 		this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, "SA");

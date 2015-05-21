@@ -18,7 +18,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
  */
 public class GOUSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
 
-	private static final long	serialVersionUID	= -2102148638959546298L;
+	private static final long	serialVersionUID	= 1L;
 
 	public GOUSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
         super(configuration, simulationResultMap, solutionGeneticConditions);

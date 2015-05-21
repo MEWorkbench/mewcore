@@ -22,7 +22,13 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 19-03-2015.
  */
 public class JecoliGKConverter <T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> implements IJecoliOptimizationStrategyConverter<T,E> {
-    @Override
+	
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	@Override
     public IStrainOptimizationResultSet createSolutionSet(T configuration,List<E> solutionList) {
         return new GKSolutionSet(configuration,solutionList);
     }

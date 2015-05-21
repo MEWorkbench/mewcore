@@ -6,7 +6,13 @@ package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizati
 public class JecoliEASCOMConfig extends JecoliGenericConfiguration{
 
 
-    public JecoliEASCOMConfig() {
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+
+	public JecoliEASCOMConfig() {
         super();
         this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"EA");
     }

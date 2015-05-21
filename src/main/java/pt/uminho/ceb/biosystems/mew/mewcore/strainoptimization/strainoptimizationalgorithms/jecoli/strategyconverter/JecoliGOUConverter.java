@@ -23,7 +23,12 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
  * Created by ptiago on 19-03-2015.
  */
 public class JecoliGOUConverter <T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> implements IJecoliOptimizationStrategyConverter<T,E> {
-    @Override
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	@Override
     public IStrainOptimizationResultSet createSolutionSet(T configuration,List<E> solutionList) {
         return new GOUSolutionSet(configuration,solutionList);
     }

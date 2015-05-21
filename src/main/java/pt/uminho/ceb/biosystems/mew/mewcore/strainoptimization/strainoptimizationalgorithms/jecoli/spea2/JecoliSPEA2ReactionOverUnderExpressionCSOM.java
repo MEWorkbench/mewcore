@@ -17,7 +17,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class JecoliSPEA2ReactionOverUnderExpressionCSOM extends JecoliSPEAIISCOM {
 
-    public  JecoliSPEA2ReactionOverUnderExpressionCSOM() {
+    
+	private static final long	serialVersionUID	= 1L;
+
+	public  JecoliSPEA2ReactionOverUnderExpressionCSOM() {
         super(new JecoliROUConverter());
     }
 

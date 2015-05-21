@@ -19,7 +19,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.configuration.IGe
  */
 public class AbstractOptimizationMethodsFactory implements Serializable {
 	
-	private static final long		serialVersionUID	= 7270903934647099527L;
+	private static final long		serialVersionUID	= 1L;
 	/**
 	 * Map of methods
 	 */

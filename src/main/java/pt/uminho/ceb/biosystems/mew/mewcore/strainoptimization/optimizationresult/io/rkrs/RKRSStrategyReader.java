@@ -1,5 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.optimizationresult.io.rkrs;
-
+ 
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class RKRSStrategyReader extends AbstractStrainOptimizationSolutionReader {
     
-	private static final long	serialVersionUID	= 949626724152048580L;
+	private static final long	serialVersionUID	= 1L;
 
 	protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
        List<String> modificationList = new ArrayList<>();

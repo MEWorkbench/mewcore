@@ -12,7 +12,9 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class ROUSolutionSet <T extends  JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,ROUSolution> {
 
-    public ROUSolutionSet(T baseConfiguration, List<ROUSolution> resultList) {
+	private static final long	serialVersionUID	= 1L;
+
+	public ROUSolutionSet(T baseConfiguration, List<ROUSolution> resultList) {
         super(baseConfiguration, resultList);
     }
 

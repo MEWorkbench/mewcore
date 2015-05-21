@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class OptimizationMethodsFactory extends AbstractOptimizationMethodsFactory{
     
-	private static final long	serialVersionUID	= -5962836290165533414L;
+	private static final long	serialVersionUID	= 1L;
 
 	public OptimizationMethodsFactory(Map<String, Class<?>> mapMethods) {
         super(mapMethods);

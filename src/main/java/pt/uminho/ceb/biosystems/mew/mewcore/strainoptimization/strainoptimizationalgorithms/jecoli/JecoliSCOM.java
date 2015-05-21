@@ -41,7 +41,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
  */
 public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T> {
 	
-	private static final long	serialVersionUID	= 7253597720491423015L;
+	private static final long	serialVersionUID	= 1L;
 	
 	protected SimulationSteadyStateControlCenter	simulationSteadyStateControlCenter;
 	protected E										optimizationStrategyConverter;

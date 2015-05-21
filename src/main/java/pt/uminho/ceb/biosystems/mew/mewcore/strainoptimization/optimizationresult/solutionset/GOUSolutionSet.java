@@ -11,7 +11,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 18-03-2015.
  */
 public class GOUSolutionSet<T extends  JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,GOUSolution> {
-    public GOUSolutionSet(T baseConfiguration, List<GOUSolution> resultList) {
+    
+	private static final long	serialVersionUID	= 1L;
+
+	public GOUSolutionSet(T baseConfiguration, List<GOUSolution> resultList) {
         super(baseConfiguration, resultList);
     }
 

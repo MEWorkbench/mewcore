@@ -7,7 +7,12 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class JecoliEAGeneKnockoutCSOM extends JecoliEAReactionKnockoutCSOM {
 
-    public JecoliEAGeneKnockoutCSOM() {
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	public JecoliEAGeneKnockoutCSOM() {
         super(new JecoliGKConverter());
     }
 }

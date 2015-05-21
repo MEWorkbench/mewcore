@@ -11,7 +11,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public abstract class AbstractStrainOptimizationSolutionReader implements IStrainOptimizationReader {
     
-	private static final long	serialVersionUID	= 5429827712780750784L;
+	private static final long	serialVersionUID	= 1L;
 
 	protected abstract GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception;
 

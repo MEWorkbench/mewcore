@@ -23,7 +23,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
  */
 public class RKRSSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
     
-	private static final long	serialVersionUID	= -3257007892104006871L;
+	private static final long	serialVersionUID	= 1L;
 
 	public RKRSSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
         super(configuration, simulationResultMap, solutionGeneticConditions);

@@ -24,7 +24,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class StrainOptimizationControlCenter extends AbstractStrainOptimizationControlCenter<IStrainOptimizationResultSet> {
 	
-	private static final long	serialVersionUID	= -3198352041436210627L;
+	private static final long	serialVersionUID	= 1L;
 
 	public StrainOptimizationControlCenter() {
 		super();

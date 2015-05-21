@@ -19,7 +19,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class SolutionReaderFactory implements Serializable{
 	
-	private static final long	serialVersionUID	= -1080622571772060722L;
+	private static final long	serialVersionUID	= 1L;
 	
 	protected Map<String,IStrainOptimizationReader> readerMap;
 

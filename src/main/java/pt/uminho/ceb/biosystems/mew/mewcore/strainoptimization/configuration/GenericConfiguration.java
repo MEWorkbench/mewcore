@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class GenericConfiguration implements IGenericConfiguration {
 	
-	private static final long	serialVersionUID	= 239732472236354284L;
+	private static final long	serialVersionUID	= 1L;
 	
 	private static Logger			logger	= Logger.getLogger(GenericConfiguration.class.getName());
 	protected Map<String, Class<?>>	mandatoryPropertyMap;

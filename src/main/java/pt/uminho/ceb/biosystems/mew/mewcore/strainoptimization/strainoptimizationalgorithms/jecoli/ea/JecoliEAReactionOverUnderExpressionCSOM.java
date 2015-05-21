@@ -17,7 +17,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class JecoliEAReactionOverUnderExpressionCSOM extends JecoliEASCOM {
 
-	private static final long	serialVersionUID	= -5578522760617551402L;
+	private static final long	serialVersionUID	= 1L;
 
 	public JecoliEAReactionOverUnderExpressionCSOM() {
         super(new JecoliROUConverter());

@@ -13,7 +13,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
 public class GKSolutionSet<T extends  JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,GKSolution> {
 	
     
-	private static final long	serialVersionUID	= -4933903343598563472L;
+	private static final long	serialVersionUID	= 1L;
 
 	public GKSolutionSet(T baseConfiguration, List<GKSolution> resultList) {
         super(baseConfiguration, resultList);

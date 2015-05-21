@@ -27,7 +27,12 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
 public abstract class JecoliSPEAIISCOM<E extends IJecoliOptimizationStrategyConverter>  extends JecoliSCOM<JecoliSPEAIISCOMConfig,E>{
 
 
-    public JecoliSPEAIISCOM(E optimizationStrategyConverter) {
+    /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	public JecoliSPEAIISCOM(E optimizationStrategyConverter) {
         super(optimizationStrategyConverter);
         algorithmConfiguration = new JecoliSPEAIISCOMConfig();
     }

@@ -14,7 +14,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  */
 public class GKStrategyReader extends AbstractStrainOptimizationSolutionReader {
 	
-	private static final long	serialVersionUID	= 1058254775446440786L;
+	private static final long	serialVersionUID	= 1L;
 
 	@Override
     protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration, String geneticConditionString) throws Exception {

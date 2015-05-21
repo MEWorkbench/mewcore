@@ -18,7 +18,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
  */
 public class GKSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
 	
-	private static final long	serialVersionUID	= -9142879059260296533L;
+	private static final long	serialVersionUID	= 1L;
 
 	public GKSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
         super(configuration, simulationResultMap, solutionGeneticConditions);

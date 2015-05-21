@@ -11,7 +11,10 @@ import pt.uminho.ceb.biosystems.mew.mewcore.strainoptimization.strainoptimizatio
  * Created by ptiago on 24-03-2015.
  */
 public class RKRSSolutionSet<T extends JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,RKRSSolution> {
-    public RKRSSolutionSet(T baseConfiguration, List<RKRSSolution> resultList) {
+    
+	private static final long	serialVersionUID	= 1L;
+
+	public RKRSSolutionSet(T baseConfiguration, List<RKRSSolution> resultList) {
         super(baseConfiguration, resultList);
     }
 
