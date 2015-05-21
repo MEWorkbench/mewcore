@@ -28,6 +28,8 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	
 	protected ListenerHashMap<String, Object>	methodProperties;
 	
+	public AbstractSimulationSteadyStateControlCenter(){}
+	
 	public AbstractSimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
 		super();

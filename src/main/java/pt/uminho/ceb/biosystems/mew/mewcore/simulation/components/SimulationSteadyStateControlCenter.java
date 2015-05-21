@@ -61,6 +61,8 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		factory = new SimulationMethodsFactory(mapMethods);
 	}
 	
+	public SimulationSteadyStateControlCenter(){super();}
+	
 	public SimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
 		super(environmentalConditions, geneticConditions, model, methodType);
