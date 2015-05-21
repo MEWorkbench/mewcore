@@ -52,7 +52,7 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 	
 	public ArchiveManager configureDefaultArchive(IAlgorithm optimizationAlgorithm, IEvaluationFunction evaluationFunction) {
 		
-		ArchiveManager<?,?> archive = new ArchiveManagerBestSolutions<>(
+		ArchiveManager archive = new ArchiveManagerBestSolutions(
 				optimizationAlgorithm, 
 				InsertionStrategy.ADD_ON_SINGLE_EVALUATION_FUNCTION_EVENT,
 				InsertionStrategy.ADD_SMART, 
