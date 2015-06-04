@@ -23,11 +23,6 @@
     </dependency>
     <dependency>
       <groupId>pt.uminho.ceb.biosystems.mew</groupId>
-      <artifactId>utilities</artifactId>
-      <version>0.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>pt.uminho.ceb.biosystems.mew</groupId>
       <artifactId>biocomponents</artifactId>
       <version>0.0.1</version>
     </dependency>
@@ -118,22 +113,22 @@
   <repositories>
 	  <repository>
 	    <id>hgthirdparty</id>
-	    <url>http://193.137.11.210:8081/nexus/content/repositories/hgthirdparty</url>
+	    <url>http://193.137.11.210/nexus/content/repositories/hgthirdparty</url>
 	  </repository>
 	  <repository>
 	    <id>biosystems-releases</id>
-	    <url>http://193.137.11.210:8081/nexus/content/repositories/biosystems-releases</url>
+	    <url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
 	  </repository>
   </repositories>
   
   <distributionManagement>
   	<snapshotRepository>
 	    <id>biosystems-snapshots</id>
-	    <url>http://193.137.11.210:8081/nexus/content/repositories/biosystems-snapshots</url>
+	    <url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
 	</snapshotRepository>
 	<repository>
 	    <id>biosystems-releases</id>
-		<url>http://193.137.11.210:8081/nexus/content/repositories/biosystems-releases</url>
+		<url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
 	</repository>
   </distributionManagement>
   
