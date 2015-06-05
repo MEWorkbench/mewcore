@@ -83,6 +83,7 @@ public class SteadyStateSimulationResult implements Serializable{
 		this.solverOutput = solverOutput;
 		OFvalue = oFvalue;
 		OFString = oFString;
+		this.solutionType = solutionType;
 	}
 
 	public ISteadyStateModel getModel() {
