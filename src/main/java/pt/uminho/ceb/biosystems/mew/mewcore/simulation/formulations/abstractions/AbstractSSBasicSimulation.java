@@ -500,7 +500,10 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			putReactionExtraInfo(solution, res);
 			res.setSolutionType(solution.getSolutionType());
 			res.setSolverOutput(solution.getSolverOutput());
-			res.setOFvalue(solution.getOfValue());
+			if(solution.getSolutionType().equals(LPSolutionType.OPTIMAL) || solution.getSolutionType().equals(LPSolutionType.FEASIBLE) || solution.getSolutionType().equals(LPSolutionType.UNKNOWN))
+				res.setOFvalue(solution.getOfValue());
+			else
+				res.setOFvalue(Double.NaN);
 		}
 		res.setEnvironmentalConditions(getEnvironmentalConditions());
 		res.setGeneticConditions(getGeneticConditions());
