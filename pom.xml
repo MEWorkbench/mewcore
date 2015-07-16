@@ -95,18 +95,18 @@
 		   </execution>
 		 </executions>
 	  </plugin>
-      <plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-javadoc-plugin</artifactId>
-		  <executions>
-		    <execution>
-		      <id>attach-javadocs</id>
-		      <goals>
-		        <goal>jar</goal>
-		      </goals>
-		    </execution>
-		  </executions>
-		</plugin>
+<!--       <plugin> -->
+<!-- 		  <groupId>org.apache.maven.plugins</groupId> -->
+<!-- 		  <artifactId>maven-javadoc-plugin</artifactId> -->
+<!-- 		  <executions> -->
+<!-- 		    <execution> -->
+<!-- 		      <id>attach-javadocs</id> -->
+<!-- 		      <goals> -->
+<!-- 		        <goal>jar</goal> -->
+<!-- 		      </goals> -->
+<!-- 		    </execution> -->
+<!-- 		  </executions> -->
+<!-- 		</plugin> -->
     </plugins>
   </build>
   
@@ -119,6 +119,10 @@
 	    <id>biosystems-releases</id>
 	    <url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
 	  </repository>
+	  <repository>
+	    <id>biosystems-snapshots</id>
+	    <url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
+  	</repository>
   </repositories>
   
   <distributionManagement>
