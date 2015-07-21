@@ -61,7 +61,9 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		factory = new SimulationMethodsFactory(mapMethods);
 	}
 	
-	public SimulationSteadyStateControlCenter(){super();}
+	public SimulationSteadyStateControlCenter() {
+		super();
+	}
 	
 	public SimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
@@ -148,7 +150,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		addProperty(SimulationProperties.ROOM_EPSILON, epsilon);
 	}
 	
-	public void setOverUnder2StepApproach(boolean ou2stepApproach){
+	public void setOverUnder2StepApproach(boolean ou2stepApproach) {
 		addProperty(SimulationProperties.OVERUNDER_2STEP_APPROACH, ou2stepApproach);
 	}
 	
@@ -175,7 +177,21 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 	}
 	
 	public static void registerMethod(String id, Class<?> method) {
-		factory.registerMethod(id, method);		
+		factory.registerMethod(id, method);
 	}
-		
+	
+	/**
+	 * <p>
+	 * Method must be used with caution. When using a persistent solver, calling
+	 * this option will inhibit the performance improvement granted by the
+	 * persistence option.
+	 * <p>
+	 * However, if building and releasing
+	 * <code>SimulationSteadyStateControlCenter</code> multiple times, this is
+	 * necessary in order to prevent degeneration of memory from non-native java
+	 * calls (e.g., C calls from CPLEX)
+	 */
+	public void forceSolverCleanup() {
+		if (lastMethod != null) lastMethod.forceSolverCleanup();
+	}
 }

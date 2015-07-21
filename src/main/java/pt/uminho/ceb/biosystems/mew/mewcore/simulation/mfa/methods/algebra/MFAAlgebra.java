@@ -118,5 +118,7 @@ public abstract class MFAAlgebra implements ISteadyStateSimulationMethod, IMFASi
 	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener){};
 	@Override
-	public void saveModelToMPS(String file, boolean includeTime){};
+	public void saveModelToMPS(String file, boolean includeTime){};	
+	@Override
+	public void forceSolverCleanup() {}
 }

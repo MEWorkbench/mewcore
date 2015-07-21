@@ -366,9 +366,16 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		unsetVariables(override);
 		_recreateProblem = false;
 		setRecreateOF(false);
+//		_solver.resetSolver();
 		
 		return solution;
 	}
+	
+	public void forceSolverCleanup(){
+		if(_solver!=null)
+			_solver.resetSolver();
+	}
+	
 	
 	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		

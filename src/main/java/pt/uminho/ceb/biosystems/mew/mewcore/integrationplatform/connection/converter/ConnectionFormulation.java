@@ -163,4 +163,7 @@ public abstract class ConnectionFormulation implements ISteadyStateSimulationMet
 	public IConverter getConverter() {
 		return converter;
 	}
+	
+	@Override
+	public void forceSolverCleanup() {}
 }
