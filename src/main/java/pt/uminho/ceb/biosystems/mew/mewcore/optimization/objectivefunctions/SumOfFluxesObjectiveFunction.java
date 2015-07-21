@@ -60,7 +60,7 @@ public class SumOfFluxesObjectiveFunction implements IObjectiveFunction, Seriali
 		double sumFluxes = 0.0;
 		
 		if(fluxesToSum==null)
-			fluxesToSum = simResult.getFluxValues().keySet();
+			fluxesToSum = new HashSet<>(simResult.getFluxValues().keySet());
 
 		for(String v: fluxesToSum)
 			sumFluxes += Math.abs(simResult.getFluxValues().getValue(v));

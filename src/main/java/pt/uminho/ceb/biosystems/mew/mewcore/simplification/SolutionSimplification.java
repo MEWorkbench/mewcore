@@ -16,6 +16,7 @@ import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationProp
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.mewcore.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
 
 public class SolutionSimplification implements Serializable {
 	
@@ -128,21 +129,25 @@ public class SolutionSimplification implements Serializable {
 		for (String id : optResultIN.getSimulationMap().keySet()) {
 			
 			SteadyStateSimulationResult resOrig = optResultIN.getSimulationResult(id);
-			SolutionSimplificationResult simp = null;
-			if (isGeneOpt)
-				simp = simplifyGenesSolution(resOrig.getGeneticConditions(), resOrig);
-			else
-				simp = simplifyReactionsSolution(resOrig.getGeneticConditions(), resOrig);
-			
-			if (simp != null) {
-				SteadyStateSimulationResult resOut = simp.getSimulationResult();
-				double[] fits = simp.getFitnesses();
+			LPSolutionType solutionType = resOrig.getSolutionType();
+
+			if(solutionType.equals(LPSolutionType.FEASIBLE) || solutionType.equals(LPSolutionType.OPTIMAL)){
+				SolutionSimplificationResult simp = null;
+				if (isGeneOpt)
+					simp = simplifyGenesSolution(resOrig.getGeneticConditions(), resOrig);
+				else
+					simp = simplifyReactionsSolution(resOrig.getGeneticConditions(), resOrig);
 				
-				ArrayList<Double> fitnesses = new ArrayList<Double>();
-				for (double f : fits)
-					fitnesses.add(f);
-				
-				optResultOut.addOptimizationResultNoRepeated(resOut, fitnesses);
+				if (simp != null) {
+					SteadyStateSimulationResult resOut = simp.getSimulationResult();
+					double[] fits = simp.getFitnesses();
+					
+					ArrayList<Double> fitnesses = new ArrayList<Double>();
+					for (double f : fits)
+						fitnesses.add(f);
+					
+					optResultOut.addOptimizationResultNoRepeated(resOut, fitnesses);
+				}
 			}
 		}
 		
