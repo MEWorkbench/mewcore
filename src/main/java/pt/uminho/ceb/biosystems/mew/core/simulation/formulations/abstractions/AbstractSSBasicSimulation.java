@@ -366,9 +366,16 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		unsetVariables(override);
 		_recreateProblem = false;
 		setRecreateOF(false);
+//		_solver.resetSolver();
 		
 		return solution;
 	}
+	
+	public void forceSolverCleanup(){
+		if(_solver!=null)
+			_solver.resetSolver();
+	}
+	
 	
 	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		
@@ -500,10 +507,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			putReactionExtraInfo(solution, res);
 			res.setSolutionType(solution.getSolutionType());
 			res.setSolverOutput(solution.getSolverOutput());
-			if(solution.getSolutionType().equals(LPSolutionType.OPTIMAL) || solution.getSolutionType().equals(LPSolutionType.FEASIBLE) || solution.getSolutionType().equals(LPSolutionType.UNKNOWN))
-				res.setOFvalue(solution.getOfValue());
-			else
-				res.setOFvalue(Double.NaN);
+			res.setOFvalue(solution.getOfValue());
 		}
 		res.setEnvironmentalConditions(getEnvironmentalConditions());
 		res.setGeneticConditions(getGeneticConditions());

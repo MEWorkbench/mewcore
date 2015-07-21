@@ -123,5 +123,5 @@ public class MFANullSpace extends MFAAlgebra implements IMultipleSolutionsMethod
 		for(FluxSet s : nullSpaceSolution.getAllSolutions())
 			sols.add(nullSpaceSolution.convertNullSpaceSolution(model, s));
 		return sols;
-	}
+	}	
 }

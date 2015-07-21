@@ -66,4 +66,6 @@ public interface ISteadyStateSimulationMethod {
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	
 	void saveModelToMPS(String file, boolean includeTime);
+	
+	void forceSolverCleanup();
 }
