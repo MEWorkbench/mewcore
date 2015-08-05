@@ -1,7 +1,8 @@
 package pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions;
 
-import java.awt.Container;
-
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.validation.chemestry.BalanceValidator;
+import pt.uminho.ceb.biosystems.mew.biocomponents.validation.chemestry.MetaboliteFormula;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.ModelConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IStateWiseObjectiveFunction;
