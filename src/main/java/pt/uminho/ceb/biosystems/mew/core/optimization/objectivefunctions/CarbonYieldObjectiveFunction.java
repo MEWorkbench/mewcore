@@ -1,14 +1,14 @@
 package pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions;
 
-import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
-import pt.uminho.ceb.biosystems.mew.biocomponents.validation.chemestry.BalanceValidator;
+import java.awt.Container;
+
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.ModelConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IStateWiseObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.utils.Debugger;
 
-public class CarbonYieldObjectiveFunction implements IObjectiveFunction {
+public class CarbonYieldObjectiveFunction implements IStateWiseObjectiveFunction {
 	
 	private static final long		serialVersionUID		= -7344676414875267981L;
 	protected static final String	CARBON					= "C";
@@ -19,16 +19,13 @@ public class CarbonYieldObjectiveFunction implements IObjectiveFunction {
 	protected int					_carbonContentSubstrate	= -1;
 	protected int					_carbonContentTarget	= -1;
 	protected Container				_container				= null;
+	protected int					_state					= -1;
 	
 	public CarbonYieldObjectiveFunction(String substrateID, String targetID, String modelConfigFile) throws Exception {
 		
 		_substrateID = substrateID;
 		_targetID = targetID;
 		_configurationFile = modelConfigFile;
-		ModelConfiguration modelConfiguration = new ModelConfiguration(modelConfigFile);
-		_container = modelConfiguration.getContainer();
-		if (!_container.metabolitesHasFormula())
-			throw new Exception(getClass().getCanonicalName() + ": model [" + modelConfiguration.getModelFile() + "] do not contain metabolite formulas. Formulas are required to calculate the carbon content of the metabolites.");
 	}
 	
 	@Override
@@ -58,6 +55,15 @@ public class CarbonYieldObjectiveFunction implements IObjectiveFunction {
 	}
 	
 	protected void init(SteadyStateSimulationResult simResult) throws Exception {
+		if(_state<0)
+			throw new Exception("StateWiseObjectiveFunction: state is not set. Must set state via setState()");
+		
+		ModelConfiguration modelConfiguration = new ModelConfiguration(_configurationFile);
+		modelConfiguration.setCurrentState(_state);
+		_container = modelConfiguration.getContainer();
+		if (!_container.metabolitesHasFormula())
+			throw new Exception(getClass().getCanonicalName() + ": model [" + modelConfiguration.getModelFile() + "] do not contain metabolite formulas. Formulas are required to calculate the carbon content of the metabolites.");
+		
 		ISteadyStateModel model = simResult.getModel();
 		int substrateDrainIndex = model.getReactionIndex(_substrateID);
 		int targetDrainIndex = model.getReactionIndex(_targetID);
@@ -65,13 +71,20 @@ public class CarbonYieldObjectiveFunction implements IObjectiveFunction {
 		int targetIndex = model.getMetaboliteFromDrainIndex(targetDrainIndex);
 		BalanceValidator validator = new BalanceValidator(_container);
 		validator.setFormulasFromContainer();
-		_carbonContentSubstrate = validator.getformula(model.getMetaboliteId(substrateIndex)).getValue(CARBON);
-		_carbonContentTarget = validator.getformula(model.getMetaboliteId(targetIndex)).getValue(CARBON);
+		String metSubstrate = model.getMetaboliteId(substrateIndex);
+		String metTarget = model.getMetaboliteId(targetIndex);
+		System.out.println("Sub [" + _substrateID + "/" + substrateDrainIndex + "/" + substrateIndex + "/" + metSubstrate + "]");
+		System.out.println("Targ [" + _targetID + "/" + targetDrainIndex + "/" + targetIndex + "/" + metTarget + "]");
+		MetaboliteFormula metFormulaSubstrate = validator.getformula(metSubstrate);
+		MetaboliteFormula metFormulaTarget = validator.getformula(metTarget);
+		System.out.println(metFormulaSubstrate.getOriginalFormula());
+		System.out.println(metFormulaTarget.getOriginalFormula());
+		_carbonContentSubstrate = metFormulaSubstrate.getValue(CARBON);
+		_carbonContentTarget = metFormulaTarget.getValue(CARBON);
 		if (_carbonContentSubstrate <= 0) throw new Exception("[" + _substrateID + "] has carbon content of zero (0). Please verify formula in the model.");
 		if (_carbonContentTarget <= 0) throw new Exception("[" + _targetID + "] has carbon content of zero (0). Please verify formula in the model.");
 		
 		_container = null;
-		//		System.out.println("Sub ["+_substrateID+"] C="+_carbonContentSubstrate+" / Targ ["+_targetID+"] C="+_carbonContentTarget);
 	}
 	
 	@Override
@@ -112,6 +125,16 @@ public class CarbonYieldObjectiveFunction implements IObjectiveFunction {
 	@Override
 	public String getBuilderString() {
 		return getType() + "(" + _substrateID + "," + _targetID + "," + _configurationFile + ")";
+	}
+	
+	@Override
+	public int getState() {
+		return _state;
+	}
+	
+	@Override
+	public void setState(int state) {
+		_state = state;
 	}
 	
 }
