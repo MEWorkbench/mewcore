@@ -82,7 +82,7 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 		List<IObjectiveFunction> objectiveFunctionList = mapOf2Sim.getIndexArray();
 		for (IObjectiveFunction objectiveFunction : objectiveFunctionList) {
 			String simulationMethod = mapOf2Sim.get(objectiveFunction);
-			newSolution.getFluxDistribution(simulationMethod);
+			newSolution.getSimulationResultForMethod(simulationMethod);
 		}
 	}
 	

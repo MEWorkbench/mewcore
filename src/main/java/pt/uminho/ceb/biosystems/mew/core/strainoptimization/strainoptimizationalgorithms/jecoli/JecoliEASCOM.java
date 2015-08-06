@@ -55,7 +55,7 @@ public abstract class JecoliEASCOM<E extends IJecoliOptimizationStrategyConverte
         configuration.setAlgorithmStateFile("nullFile");
         configuration.setSaveAlgorithmStateDirectoryPath("nullDirectory");
         configuration.setAlgorithmResultWriterList(new ArrayList<IAlgorithmResultWriter<SetRepresentation>>());
-        configuration.setStatisticsConfiguration(new StatisticsConfiguration());
+        configuration.setStatisticsConfiguration(new StatisticsConfiguration(true));
 
         ITerminationCriteria terminationCriteria = algorithmConfiguration.getTerminationCriteria();
         configuration.setTerminationCriteria(terminationCriteria);

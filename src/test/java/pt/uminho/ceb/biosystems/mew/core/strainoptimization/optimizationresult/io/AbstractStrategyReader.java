@@ -21,7 +21,7 @@ public class AbstractStrategyReader {
 			Pair<Double, List<Pair<String, Double>>> solutionTuple = solutionListList.get(i);
 			double objectiveFunctionValue = solutionTuple.getA();
 			List<Pair<String, Double>> solutionRepresentationList = solutionTuple.getB();
-			SteadyStateSimulationResult simulationResult = result.getFluxDistribution("FBA");
+			SteadyStateSimulationResult simulationResult = result.getSimulationResultForMethod("FBA");
 			double originalValue = simulationResult.getOFvalue();
 			if (Math.abs(objectiveFunctionValue - originalValue) > THRESHOLD) return false;
 			

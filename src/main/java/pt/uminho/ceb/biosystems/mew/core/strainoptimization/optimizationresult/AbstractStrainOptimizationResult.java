@@ -44,7 +44,7 @@ public abstract class  AbstractStrainOptimizationResult<T extends JecoliGenericC
 
 
     @Override
-    public SteadyStateSimulationResult getFluxDistribution(String method) throws Exception {
+    public SteadyStateSimulationResult getSimulationResultForMethod(String method) throws Exception {
         SteadyStateSimulationResult result = simulationResultMap.get(method);
         if(result == null){
             Map<String,Object> propertyMap = configuration.getPropertyMapCopy();
@@ -89,10 +89,10 @@ public abstract class  AbstractStrainOptimizationResult<T extends JecoliGenericC
         int counter = 0;
         for(IObjectiveFunction objectiveFunction:mapOf2SimMap.keySet()) {
             String simulationMethod = mapOf2SimMap.get(objectiveFunction);
-            SteadyStateSimulationResult simulationResult = getFluxDistribution(simulationMethod);
+            SteadyStateSimulationResult simulationResult = getSimulationResultForMethod(simulationMethod);
             if(counter > 0)
                 outputStream.write(",");
-            outputStream.write(String.valueOf(simulationResult.getOFvalue()));
+            outputStream.write(String.valueOf(objectiveFunction.evaluate(simulationResult)));
             counter++;
         }
         outputStream.write(",");

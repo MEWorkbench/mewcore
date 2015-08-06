@@ -25,7 +25,7 @@ public interface IStrainOptimizationResult extends IStrainOptimizationWriter {
 	 * @throws Exception if the method is not defined or is not possible to
 	 *             compute the result
 	 */
-	SteadyStateSimulationResult getFluxDistribution(String method) throws Exception;
+	SteadyStateSimulationResult getSimulationResultForMethod(String method) throws Exception;
 	
 	/**
 	 * 
