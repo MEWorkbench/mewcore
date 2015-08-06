@@ -105,8 +105,8 @@
 
 	<repositories>
 		<repository>
-			<id>hgthirdparty</id>
-			<url>http://193.137.11.210/nexus/content/repositories/hgthirdparty</url>
+			<id>thirdparty</id>
+			<url>http://193.137.11.210/nexus/content/repositories/thirdparty</url>
 		</repository>
 		<repository>
 			<id>biosystems-releases</id>
