@@ -88,7 +88,7 @@ public class ModelConfiguration extends SmartProperties {
 	}
 	
 	public Container getContainer() {
-		if (_container == null) {
+//		if (_container == null) {
 			ContainerSource containerSource = getModelSource();
 			IndexedHashMap<String, Object> map = new IndexedHashMap<String, Object>();
 			switch (containerSource) {
@@ -108,12 +108,12 @@ public class ModelConfiguration extends SmartProperties {
 					break;
 			}
 			_container = containerSource.read(getModelName(), map);
-		}
+//		}
 		return _container;
 	}
 	
 	public ISteadyStateModel getModel() throws InvalidSteadyStateModelException {
-		if (_model == null) {
+//		if (_model == null) {
 			Container container = getContainer();
 			Set<String> toRemove = container.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
 			container.removeMetabolites(toRemove);
@@ -122,7 +122,7 @@ public class ModelConfiguration extends SmartProperties {
 			ISteadyStateModel model = ContainerConverter.convert(container);
 			model.setBiomassFlux(getModelBiomass());
 			_model = model;
-		}
+//		}
 		return _model;
 	}
 	
