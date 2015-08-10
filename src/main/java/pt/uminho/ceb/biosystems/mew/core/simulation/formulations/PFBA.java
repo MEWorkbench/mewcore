@@ -28,7 +28,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.Lis
 
 public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends AbstractSSBasicSimulation<LPProblem> {
 	
-	public static final double	DEFAULT_RELAX					= 0.99999;
+	public static final double	DEFAULT_RELAX					= 1;
 	
 	protected T					internalProblem					= null;
 	protected LPConstraint		parsimoniousConstraint			= null;
@@ -114,8 +114,18 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 	}
 	
 	protected LPConstraint createParsimoniousConstraint(double objectiveValue) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
+		
+		LPConstraintType type = LPConstraintType.LESS_THAN; 
+//		double value = objectiveValue;
+		
+		if(getInternalProblem().getProblem().getObjectiveFunction().isMaximization()){
+			type = LPConstraintType.GREATER_THAN; 
+		}
+		
 		LPProblemRow fbaRow = getInternalProblem().getProblem().getObjectiveFunction().getRow();
-		return new LPConstraint(LPConstraintType.EQUALITY, fbaRow, objectiveValue);
+		LPConstraint cont = new LPConstraint(type, fbaRow, objectiveValue);
+		
+		return cont;
 	}
 	
 	@SuppressWarnings("unchecked")
