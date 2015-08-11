@@ -50,6 +50,7 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 		this.optimizationStrategyConverter = optimizationStrategyConverter;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ArchiveManager configureDefaultArchive(IAlgorithm optimizationAlgorithm, IEvaluationFunction evaluationFunction) {
 		
 		ArchiveManager archive = new ArchiveManagerBestSolutions(
@@ -61,9 +62,9 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 		
 		archive.setMaximumArchiveSize(100);
 		
-		ITrimmingFunction trimmer = (evaluationFunction.getNumberOfObjectives() > 1) ? new ZitzlerTruncation(archive.getMaximumArchiveSize(), evaluationFunction) : new SelectionValueTrimmer(archive.getMaximumArchiveSize(), 0.000002);
-		
+		ITrimmingFunction trimmer = (evaluationFunction.getNumberOfObjectives() > 1) ? new ZitzlerTruncation(archive.getMaximumArchiveSize(), evaluationFunction) : new SelectionValueTrimmer(archive.getMaximumArchiveSize(), 0.000002);		
 		archive.addTrimmingFunction(trimmer);
+		
 		return archive;
 	}
 	

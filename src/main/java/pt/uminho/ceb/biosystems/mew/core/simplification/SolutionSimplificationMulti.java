@@ -10,9 +10,7 @@ import java.util.Set;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateMTOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateMultiSimulationResult;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
@@ -255,5 +253,11 @@ public class SolutionSimplificationMulti implements Serializable {
 		}
 		
 		return res;
+	}
+	
+	public void forceSolverCleanup(){
+		Set<String> keys = ccs.keySet();
+		for(String k: keys)
+			ccs.get(k).forceSolverCleanup();
 	}
 }
