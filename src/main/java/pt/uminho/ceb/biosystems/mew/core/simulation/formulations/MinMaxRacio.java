@@ -6,6 +6,7 @@ import java.util.Map;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReactionBounds;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
@@ -66,7 +67,12 @@ public class MinMaxRacio extends FBA{
 		int varDividendIdx = model.getReactionIndex(getDividendVariable());
 		
 		LPVariable v = problem.getVariable(varDividendIdx);
-		ReactionConstraint rc = model.getReactionConstraint(varDividendIdx); //was overrideRC
+//		ReactionConstraint rc = model.getReactionConstraint(varDividendIdx); //was overrideRC
+		IOverrideReactionBounds overrideRC = createModelOverride();
+        ReactionConstraint rc = overrideRC.getReactionConstraint(varDividendIdx);
+//        
+//        System.out.println(getDividendVariable()+"\t"+ rc);
+//         ReactionConstraint rc = model.getReactionConstraint(varDividendIdx); //was overrideRC
 		if(getDividendSense()>0){
 			
 			double upperLimit = rc.getUpperLimit();
@@ -124,8 +130,9 @@ public class MinMaxRacio extends FBA{
 		int varcIdx = model.getReactionIndex(getDivisorVariable());
 		for(int i =0; i < numberReactions; i++){
 			if(i==varcIdx) continue;
-			
-			ReactionConstraint rc = model.getReactionConstraint(i); //was overrideRC
+			IOverrideReactionBounds overrideRC = createModelOverride();
+	        ReactionConstraint rc = overrideRC.getReactionConstraint(i);
+//			ReactionConstraint rc = model.getReactionConstraint(i); //was overrideRC
 			
 			try {
 				LPProblemRow rowLow = new LPProblemRow();
