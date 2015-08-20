@@ -56,11 +56,11 @@ public class WeightedBPCYObjectiveFunction implements IObjectiveFunction, Serial
 				ec.putAll(simResult.getEnvironmentalConditions());
 			ec.addReactionConstraint(biomassId, new ReactionConstraint(biomassFluxValue,100000.0));
 			
-//			if(center==null){
+			if(center==null){
 				center = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
 				center.setSolver(lpSolver);
 				center.setFBAObjSingleFlux(desiredFluxId, 1.0);
-//			}
+			}
 			center.setGeneticConditions(gc);
 			center.setEnvironmentalConditions(ec);
 			center.setMaximization(true);

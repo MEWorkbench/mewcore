@@ -122,9 +122,10 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 			type = LPConstraintType.GREATER_THAN; 
 		}
 		
-		LPProblemRow fbaRow = getInternalProblem().getProblem().getObjectiveFunction().getRow();
+		LPProblemRow fbaRow = getInternalProblem().getProblem().getObjectiveFunction().getRow().clone();
 		LPConstraint cont = new LPConstraint(type, fbaRow, objectiveValue);
 		
+		System.out.println("CREATE CONSTRAINT = "+cont.toString()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().isMaximization()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().toString()+"\t"+getRelaxCoef()+"\t[v="+getProblem().getNumberVariables()+"\\c="+getProblem().getNumberConstraints());
 		return cont;
 	}
 	
@@ -210,7 +211,7 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 		return value;
 	}
 	
-	protected double getRelaxCoef() {
+	protected double getRelaxCoef() throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		
 		Double coef = null;
 		try {
@@ -222,7 +223,11 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 			coef = DEFAULT_RELAX;
 		}
 		
-		setProperty(SimulationProperties.RELAX_COEF, coef);
+//		System.out.println(">>>>>>>RELAX = "+coef);
+		
+//		setProperty(SimulationProperties.RELAX_COEF, coef);
+		
+		coef = (getInternalProblem().getProblem().getObjectiveFunction().isMaximization()) ? coef : 1+(1-coef);
 		
 		return coef;
 	}
@@ -313,7 +318,8 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 				
 				if (key.equals(SimulationProperties.IS_MAXIMIZATION)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-					_updateParsimoniousConstraint = true;
+//					_updateParsimoniousConstraint = true;
+					_replaceParsimoniousConstraint = true;
 				}
 				
 				if (key.equals(SimulationProperties.OBJECTIVE_FUNCTION)) {

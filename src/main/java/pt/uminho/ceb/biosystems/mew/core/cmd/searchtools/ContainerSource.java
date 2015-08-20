@@ -16,6 +16,7 @@ public enum ContainerSource {
 		@Override
 		public Container read(String name, Map<String, Object> files) {
 			try {
+//				System.out.println(files.get(ModelConfiguration.MODEL_FILE).toString());
 				JSBMLReader reader = new JSBMLReader(
 						files.get(ModelConfiguration.MODEL_FILE).toString(),
 						name,

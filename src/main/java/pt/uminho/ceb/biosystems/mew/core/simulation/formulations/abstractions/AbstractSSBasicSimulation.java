@@ -568,10 +568,17 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			double value = Double.NaN;
 			if (varValueList != null) value = varValueList.get(idx);
 			
-			if (solution != null && !(solution.getSolutionType().equals(LPSolutionType.OPTIMAL) || solution.getSolutionType().equals(LPSolutionType.FEASIBLE) || solution.getSolutionType().equals(LPSolutionType.UNKNOWN))) value = Double.NaN;
+			if (solution != null && !(solution.getSolutionType().equals(LPSolutionType.OPTIMAL) || solution.getSolutionType().equals(LPSolutionType.FEASIBLE) || solution.getSolutionType().equals(LPSolutionType.UNKNOWN))){
+				value = Double.NaN;
+			}
 			
 			fluxValues.put(rId, value);
 		}
+		
+		if (debug && solution != null && !(solution.getSolutionType().equals(LPSolutionType.OPTIMAL) || solution.getSolutionType().equals(LPSolutionType.FEASIBLE) || solution.getSolutionType().equals(LPSolutionType.UNKNOWN))){
+			System.out.println(">>>>>>>>>NAN = "+solution.getProblem().getNumberVariables()+"~"+solution.getProblem().getNumberConstraints()+" / "+this.getClass()+" / "+solution.getSolutionType().toString());
+		}
+		
 		return fluxValues;
 	}
 	

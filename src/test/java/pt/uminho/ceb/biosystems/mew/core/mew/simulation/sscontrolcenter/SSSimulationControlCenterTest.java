@@ -3723,17 +3723,17 @@ public class SSSimulationControlCenterTest {
 	static {
 		
 		_solvers = new IndexedHashMap<String, SolverType>();
-		_solvers.put("GLPK", SolverType.GLPK);
-		_solvers.put("CLP", SolverType.CLP);
-		_solvers.put("CPLEX", SolverType.CPLEX3);
+//		_solvers.put("GLPK", SolverType.GLPK);
+//		_solvers.put("CLP", SolverType.CLP);
+		_solvers.put("CPLEX", SolverType.CPLEX);
 		
 		_methods = new IndexedHashMap<String, String>();
 		_methods.put("FBA", SimulationProperties.FBA);
 		_methods.put("PFBA", SimulationProperties.PFBA);
-		_methods.put("MOMA", SimulationProperties.MOMA);
-		_methods.put("LMOMA", SimulationProperties.LMOMA);
-		_methods.put("ROOM", SimulationProperties.ROOM);
-		_methods.put("MIMBL", SimulationProperties.MIMBL);
+//		_methods.put("MOMA", SimulationProperties.MOMA);
+//		_methods.put("LMOMA", SimulationProperties.LMOMA);
+//		_methods.put("ROOM", SimulationProperties.ROOM);
+//		_methods.put("MIMBL", SimulationProperties.MIMBL);
 		
 		HashMap<String, double[]> map_GLPK_FBA = new HashMap<String, double[]>();
 		map_GLPK_FBA.put(WT_AEROBIC, new double[] { 1.275895306, 1.2759, 0.0 });
