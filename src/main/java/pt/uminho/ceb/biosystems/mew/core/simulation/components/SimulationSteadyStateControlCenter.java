@@ -87,7 +87,6 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		if (isUnderOverSimulation() && getUnderOverRef() == null && !isUnderOver2StepApproach()) {
 			addUnderOverRef();
 		}
-		
 		if (lastMethod == null || forceRecreate) {
 			lastMethod = getFactory().getMethod(this.methodType, methodProperties, model);
 			if(lastMethod!=null && IConvexSteadyStateSimulationMethod.class.isAssignableFrom(lastMethod.getClass())){
@@ -97,7 +96,6 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		} else {
 			lastMethod.putAllProperties(methodProperties);
 		}
-		
 		return lastMethod.simulate();
 	}
 	
