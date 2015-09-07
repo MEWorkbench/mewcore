@@ -2,6 +2,7 @@ package pt.uminho.ceb.biosystems.mew.core.simplification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class SolutionSimplificationMulti implements Serializable {
 			origRes = initialRes;
 		
 		double[] initialFitnesses = evaluateSolution(origRes);
-		//			System.out.println("InitFit: "+Arrays.toString(initialFitnesses));
+//					System.out.println("InitFit: "+Arrays.toString(initialFitnesses));
 		
 		Set<String> reactionIds = initialSolution.getReactionList().getReactionIds();
 		

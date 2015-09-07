@@ -27,6 +27,7 @@ import java.util.Set;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.DSPP_LMOMA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.LMOMA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.MOMA;
@@ -57,6 +58,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		mapMethods.put(SimulationProperties.NORM_LMOMA, NormLMoma.class);
 		mapMethods.put(SimulationProperties.ROOM, ROOM.class);
 		mapMethods.put(SimulationProperties.MIMBL, MiMBl.class);
+		mapMethods.put(SimulationProperties.DSPP_LMOMA, DSPP_LMOMA.class);
 		
 		factory = new SimulationMethodsFactory(mapMethods);
 	}

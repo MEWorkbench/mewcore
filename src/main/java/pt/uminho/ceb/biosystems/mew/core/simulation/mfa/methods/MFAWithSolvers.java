@@ -43,7 +43,7 @@ public abstract class MFAWithSolvers<T extends LPProblem> extends AbstractSSBasi
 	}
 	
 	@Override
-	protected IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
+	public IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
 		EnvironmentalConditions environmentalConditions = getEnvironmentalConditions();
 		GeneticConditions geneticConditions = getGeneticConditions();
 		ExpMeasuredFluxes measuredFluxes = getMeasuredFluxes();

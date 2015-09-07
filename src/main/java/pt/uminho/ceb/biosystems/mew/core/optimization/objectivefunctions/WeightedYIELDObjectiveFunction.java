@@ -52,7 +52,7 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 			ec.putAll(simResult.getEnvironmentalConditions());
 		ec.addReactionConstraint(biomassId, new ReactionConstraint(biomassFluxValue,100000.0));
 		
-		if(center==null){
+		if(center==null){			
 			center = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
 			center.setSolver(lpSolver);
 			center.setFBAObjSingleFlux(desiredFluxId, 1.0);
@@ -78,6 +78,7 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 			
 			try {
 				fvaMinResult = (SteadyStateSimulationResult) center.simulate();
+//				center.forceSolverCleanup();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

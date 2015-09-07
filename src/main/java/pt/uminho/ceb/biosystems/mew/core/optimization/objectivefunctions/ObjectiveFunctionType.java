@@ -26,6 +26,7 @@ package pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions;
 import java.lang.reflect.Constructor;
 import java.util.Set;
 
+import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.dspp.DSPP_BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.utils.Evaluator;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
@@ -473,7 +474,33 @@ public enum ObjectiveFunctionType {
 			return "([alternative1, alternative2, ..., alternativeN], desiredFluxId, modelConfigurationFile, solver, useCountsInsteadOfCarbons, maximize)";
 		}
 	
-	}	
+	},
+	DSPP_BPCY{
+		@Override
+		public String toString(){
+			return "DSPP_BPCY: Biomass-Product Coupled Yield (dual stage)";
+		}
+		
+		@Override
+		protected Class<?>[] getArgumentsClasses() {
+			Class<?>[] argumentsClasses = {
+					String.class,
+					String.class,
+					String.class
+			};
+			return argumentsClasses;
+		}
+
+		@Override
+		protected Class<?> getObjectiveFunctionClass() {
+			return DSPP_BPCYObjectiveFunction.class;
+		}
+
+		@Override
+		protected String toStringArgumentsHelp() {
+			return "(biomassId, desiredFluxId, substrateId)";
+		}
+	}
 	;
 
 	@Override
@@ -521,10 +548,5 @@ public enum ObjectiveFunctionType {
 		}
 
 		return of;	
-	}
-	
-//	public static void main(String ... args){
-//		
-//	}
-
+	}	
 }

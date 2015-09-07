@@ -64,7 +64,7 @@ public class MFAQP extends MFAWithSolvers<QPProblem>{
 	}
 	
 	@Override
-	protected IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
+	public IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
 		EnvironmentalConditions environmentalConditions = getEnvironmentalConditions();
 		GeneticConditions geneticConditions = getGeneticConditions();
 		FluxRatioConstraintList ratioConstraints = getFluxRatioConstraints();

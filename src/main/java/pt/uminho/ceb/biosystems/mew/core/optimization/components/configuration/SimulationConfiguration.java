@@ -28,6 +28,8 @@ public class SimulationConfiguration extends ModelConfiguration {
 	
 	public static final String	SIM_INIT_GC				= "simulation.initialgeneticcondition";
 	
+	public static final String 	SIM_DSPP_FIRST_STAGE_EC	= "simulation.method.dspp.firststageec";
+	
 	public SimulationConfiguration(String properties) throws Exception {
 		super(properties);
 		analyzeSimulationProperties();
@@ -95,6 +97,19 @@ public class SimulationConfiguration extends ModelConfiguration {
 		if (file != null && !file.isEmpty()) {
 			try {
 				return FluxValueMap.loadFromFile(file, ENV_COND_DELIMITER);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else
+			return null;
+	}
+	
+	public EnvironmentalConditions getDSPPFirstStageEnvironmentalConditions() {
+		String file = getProperty(SIM_DSPP_FIRST_STAGE_EC, currentState, true);
+		if (file != null && !file.isEmpty()) {
+			try {
+				return EnvironmentalConditions.readFromFile(file, ENV_COND_DELIMITER);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.exceptions.ErrorLog;
 
 public class MFARobustnessResult extends SteadyStateSimulationResult {
 	
@@ -24,6 +25,8 @@ public class MFARobustnessResult extends SteadyStateSimulationResult {
 	
 	protected int numberOfIntervals;
 	
+	/** Used if the first simulation (the objective one) do not run properly */
+	protected ErrorLog errorLog;
 	
 	public MFARobustnessResult(ISteadyStateModel model, String method, int percentageInterval){
 		super(model, method, null);
@@ -69,4 +72,6 @@ public class MFARobustnessResult extends SteadyStateSimulationResult {
 	public void setPercentageInterval(int percentageInterval) {this.percentageInterval = percentageInterval;}
 	public int getNumberOfIntervals(){return numberOfIntervals;}
 	public void setNumberOfIntervals(int numberOfIntervals) {this.numberOfIntervals = numberOfIntervals;}
+	public ErrorLog getErrorLog() {return errorLog;}
+	public void setErrorLog(ErrorLog errorLog) {this.errorLog = errorLog;}
 }

@@ -52,7 +52,6 @@ public abstract class AbstractSSReferenceSimulation<T extends LPProblem> extends
 					if(debug) System.out.print("["+getClass().getSimpleName()+"] event [COMPUTING WT REFERENCE]...");
 					if(debug_times) initTime = System.currentTimeMillis();
 					wtReference = SimulationProperties.simulateWT(model, envCond, solver);
-//					wtReference.saveToFile("files/ROOM_TESTS/reference_"+getClass().getName()+"_"+TimeUtils.formatMillis(System.currentTimeMillis())+".csv");
 					if(debug) System.out.println("done!");
 					if(debug_times) times.put("AbstractSSReferenceSimulation.getWTReference", System.currentTimeMillis() - initTime);
 				} catch (Exception e) {

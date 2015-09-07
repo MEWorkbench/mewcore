@@ -67,7 +67,7 @@ public class FVASenseObjectiveFunction implements IObjectiveFunction, Serializab
 		SteadyStateSimulationResult fvaResult = null;
 		try {
 			fvaResult = (SteadyStateSimulationResult) getControlCenter(model).simulate();
-			System.out.println(fvaResult.getEnvironmentalConditions().toString());
+//			System.out.println(fvaResult.getEnvironmentalConditions().toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

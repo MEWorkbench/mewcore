@@ -20,6 +20,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.Mand
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ExpMeasuredFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.MFARatiosOverrideModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.exceptions.ErrorLog;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.MFAWithSolvers;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.linearprogramming.MFALP;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFAProperties;
@@ -36,13 +37,13 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 	 * The formulation maximize/minimize the flux to be fixed, for instance the
 	 * minimum value of Biomass
 	 */
-	protected T			internalProblem				= null;
-	protected boolean	recomputeObjectiveProblem	= true;
-	private static final double RELAX = 0.00001;
+	protected T					internalProblem				= null;
+	protected boolean			recomputeObjectiveProblem	= true;
+	private static final double	RELAX						= 0.00001;
 	
 	public MFARobustnessAnalysis(ISteadyStateModel model) {
 		super(model);
-				
+		
 		mandatoryProperties.add(MFAProperties.ROBUSTNESS_PERCENTAGE_INTERVAL);
 		mandatoryProperties.add(MFAProperties.ROBUSTNESS_SELECTED_FLUXES);
 		optionalProperties.add(MFAProperties.ROBUSTNESS_OBJECTIVE_PROBLEM);
@@ -74,39 +75,42 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 	
 	// Run the simulation for the objective problem
 	private void runObjectiveProblem() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, IOException, SolverException {
-		SteadyStateSimulationResult result = getInternalProblem().simulate();		
+		SteadyStateSimulationResult result = getInternalProblem().simulate();
 		
 		List<String> selectedFluxes = getSelectedFluxes();
 		try {
-			if(selectedFluxes!=null)
-			{
+			if (selectedFluxes != null) {
 				Map<String, Double> origValues = new HashMap<String, Double>();
-				for(String fluxId : selectedFluxes)
-				{
+				for (String fluxId : selectedFluxes) {
 					double fluxValue = result.getFluxValues().getValue(fluxId);
 					origValues.put(fluxId, fluxValue);
 				}
 				setProperty(MFAProperties.ROBUSTNESS_SELECTED_FLUXES_INITVALUES, origValues);
 				setProperty(MFAProperties.ROBUSTNESS_WT_OBJECTIVE_VALUE, result.getOFvalue());
 			}
-		} catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		recomputeObjectiveProblem = false;
 	}
 	
-	/** @return the values of the selected fluxes in the solution of the initial objective problem */
+	/**
+	 * @return the values of the selected fluxes in the solution of the initial
+	 *         objective problem
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Map<String, Double> getInicProblemFluxValues() throws Exception{
+	public Map<String, Double> getInicProblemFluxValues() throws Exception {
 		
-		if(recomputeObjectiveProblem)
-			runObjectiveProblem();
+		if (recomputeObjectiveProblem) runObjectiveProblem();
 		
 		Map<String, Double> value = null;
 		try {
 			value = (Map) ManagerExceptionUtils.testCast(properties, Map.class, MFAProperties.ROBUSTNESS_SELECTED_FLUXES_INITVALUES, true);
 		} catch (PropertyCastException e) {
 			System.err.println("Property ignored! Reason: " + e.getMessage());
-		} catch (MandatoryPropertyException e) {}
+		} catch (MandatoryPropertyException e) {
+		}
 		return value;
 	}
 	
@@ -117,7 +121,8 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 			value = (List) ManagerExceptionUtils.testCast(properties, List.class, MFAProperties.ROBUSTNESS_SELECTED_FLUXES, true);
 		} catch (PropertyCastException e) {
 			System.err.println("Property ignored! Reason: " + e.getMessage());
-		} catch (MandatoryPropertyException e) {}
+		} catch (MandatoryPropertyException e) {
+		}
 		
 		return value;
 	}
@@ -132,32 +137,35 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 		return null;
 	}
 	
-	/** @return The interval for the percentage of the selected fluxes that will be used vary the its values and to perform the analysis */
-	public Integer getPercentageInterval(){
+	/**
+	 * @return The interval for the percentage of the selected fluxes that will
+	 *         be used vary the its values and to perform the analysis
+	 */
+	public Integer getPercentageInterval() {
 		Integer value = null;
 		try {
 			value = (Integer) ManagerExceptionUtils.testCast(properties, Integer.class, MFAProperties.ROBUSTNESS_PERCENTAGE_INTERVAL, true);
 		} catch (PropertyCastException e) {
 			System.err.println("Property ignored! Reason: " + e.getMessage());
-		} catch (MandatoryPropertyException e) {}
+		} catch (MandatoryPropertyException e) {
+		}
 		
 		return value;
 	}
 	
 	protected double simulateForFluxPercentage(String fluxID, double fluxInitValue, double fluxPercentage) throws PropertyCastException, MandatoryPropertyException {
 		double fluxValue = fluxInitValue * fluxPercentage / 100.0d;
-	
+		
 		EnvironmentalConditions origEnv = getEnvironmentalConditions();
 		EnvironmentalConditions newEnv = origEnv.copy();
 		
-		ReactionConstraint rc = new ReactionConstraint(fluxValue-RELAX, fluxValue+RELAX);
+		ReactionConstraint rc = new ReactionConstraint(fluxValue - RELAX, fluxValue + RELAX);
 		try {
 			newEnv.addReplaceReactionContraint(fluxID, rc);
 			setEnvironmentalConditions(newEnv);
 		} catch (SolverException e) {
 			e.printStackTrace();
 		}
-		
 		
 		SteadyStateSimulationResult res;
 		double value = 0.0;
@@ -179,27 +187,26 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 		int i = 0;
 		double[] objValues = new double[numberOfIntervals];
 		
-//		objValues[i] = fluxInitValue; // 100% of the flux value 
-		while(p>0)
-		{
-//			if(p==100)
-//				objValues[i] = simulateForFluxPercentage(fluxId, fluxInitValue, 99.999);
-//			else
-				objValues[i] = simulateForFluxPercentage(fluxId, fluxInitValue, p);
+		//		objValues[i] = fluxInitValue; // 100% of the flux value 
+		while (p > 0) {
+			//			if(p==100)
+			//				objValues[i] = simulateForFluxPercentage(fluxId, fluxInitValue, 99.999);
+			//			else
+			objValues[i] = simulateForFluxPercentage(fluxId, fluxInitValue, p);
 			p -= percentageInterval;
-			if(p>0) i++;
+			if (p > 0) i++;
 		}
 		
 		// For the first position. By decreasing the percentage, if the last percentage value is less than zero, the percentage is converted to zero.
 		// If it is equal to zero, the zero value is used. This happens because depending on the flux percentage interval choosen, it might happen that
 		// the first interval is not equal to the choosen interval.
-		objValues[i+1] = simulateForFluxPercentage(fluxId, fluxInitValue, 0);
+		objValues[i + 1] = simulateForFluxPercentage(fluxId, fluxInitValue, 0);
 		
 		return objValues;
 	}
 	
 	@Override
-	protected IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
+	public IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
 		EnvironmentalConditions environmentalConditions = getEnvironmentalConditions();
 		GeneticConditions geneticConditions = getGeneticConditions();
 		ExpMeasuredFluxes measuredFluxes = getMeasuredFluxes();
@@ -210,10 +217,11 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 	}
 	
 	@Override
-	public MFARobustnessResult simulate() throws PropertyCastException, MandatoryPropertyException  {
-
+	public MFARobustnessResult simulate() throws PropertyCastException, MandatoryPropertyException {
+		
 		int percentageInterval = getPercentageInterval();
 		MFARobustnessResult result = new MFARobustnessResult(model, getMethod(), percentageInterval);
+		ErrorLog errorLog = new ErrorLog();
 		
 		boolean proceed = true;
 		try {
@@ -221,28 +229,35 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			proceed = false;
+			errorLog.appendError("The problem could not be created. Reason:\n" + e1.getMessage());
 		}
-
-		if(proceed)
-		{
+		
+		if (proceed) {
 			int numberOfIntervals = result.calculateNumberOfIntervals();
 			Map<String, Double> fluxInicValues;
 			
 			try {
 				fluxInicValues = getInicProblemFluxValues();
 				
-				for(String fId : fluxInicValues.keySet())
-				{
+				for (String fId : fluxInicValues.keySet()) {
 					double[] objValues = null;
 					try {
 						objValues = simulateForFluxVariation(fId, fluxInicValues.get(fId), numberOfIntervals);
-					} catch (Exception e) {e.printStackTrace();}
+					} catch (Exception e) {
+						errorLog.appendError("The objective problem could not be ran. Reason:\n" + e.toString());
+						errorLog.addException(e);
+						e.printStackTrace();
+					}
 					
 					result.setFluxPercentageSolutions(fId, objValues);
 				}
-			} catch (Exception e1) {e1.printStackTrace();}
+			} catch (Exception e1) {
+				errorLog.appendError("The objective problem could not be ran. Reason:\n" + e1.toString());
+				errorLog.addException(e1);
+				e1.printStackTrace();
+			}
 		}
-		
+		result.setErrorLog(errorLog);
 		result.setEnvironmentalConditions(getEnvironmentalConditions());
 		result.setGeneticConditions(getGeneticConditions());
 		result.setOFString(getObjectiveFunctionToString());
@@ -251,18 +266,20 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 		return result;
 	}
 	
-	public Double getOfValue(){
+	public Double getOfValue() {
 		Double ofValue = null;
 		
 		try {
 			ofValue = (Double) ManagerExceptionUtils.testCast(properties, Double.class, MFAProperties.ROBUSTNESS_WT_OBJECTIVE_VALUE, true);
-
-		} catch (PropertyCastException e) {e.printStackTrace();
-		} catch (MandatoryPropertyException e) {e.printStackTrace();}
+			
+		} catch (PropertyCastException e) {
+			e.printStackTrace();
+		} catch (MandatoryPropertyException e) {
+			e.printStackTrace();
+		}
 		
 		return ofValue;
 	}
-	
 	
 	@Override
 	public LPProblem constructEmptyProblem() {
@@ -321,13 +338,13 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 				
 				if (key.equals(SimulationProperties.ENVIRONMENTAL_CONDITIONS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-//					if(problem!=null)
-//						setRecomputeObjectiveProblem(true);
+					//					if(problem!=null)
+					//						setRecomputeObjectiveProblem(true);
 				}
 				
 				if (key.equals(SimulationProperties.GENETIC_CONDITIONS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-					if(problem!=null){
+					if (problem != null) {
 						setRecomputeObjectiveProblem(true);
 						setRecreateOF(true);
 					}
@@ -347,7 +364,7 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 				
 				if (key.equals(MFAProperties.MEASURED_FLUXES)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-					if(problem!=null){
+					if (problem != null) {
 						setRecomputeObjectiveProblem(true);
 						setRecreateOF(true);
 					}
@@ -355,12 +372,12 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 				
 				if (key.equals(MFAProperties.FLUX_RATIO_CONSTRAINTS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-					if(problem!=null){
+					if (problem != null) {
 						setUpdateFRConstraints(true);
 						setRecomputeObjectiveProblem(true);
 						setRecreateOF(true);
 					}
-						
+					
 				}
 				
 				break;
@@ -432,7 +449,7 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 			}
 			default:
 				break;
-		
+				
 		}
 	}
 	
@@ -441,8 +458,8 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 	}
 	
 	public void preSimulateActions() {
-		super.preSimulateActions();		
-				
+		super.preSimulateActions();
+		
 		if (recomputeObjectiveProblem) {
 			try {
 				runObjectiveProblem();

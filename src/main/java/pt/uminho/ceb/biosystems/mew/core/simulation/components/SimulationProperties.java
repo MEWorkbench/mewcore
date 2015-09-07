@@ -53,6 +53,7 @@ public class SimulationProperties {
 	public static final String	LMOMA								= "LMOMA";
 	public static final String	NORM_LMOMA							= "NLMOMA";
 	public static final String	MIMBL								= "MIMBL";
+	public static final String	DSPP_LMOMA							= "DSPP_LMOMA";
 	
 	/** turnovers */
 	public static final String	METHOD_NAME							= "METHOD_NAME";
@@ -74,8 +75,7 @@ public class SimulationProperties {
 	
 	/***********************
 	 * Turnover properties *
-	 **********************/
-	
+	 **********************/	
 	public static final String	USE_2OPT							= "USE_2OPT";
 	
 	/** Identify the turnover reference */
@@ -86,6 +86,15 @@ public class SimulationProperties {
 	
 	/** Identify the flux distribution for the first optimization */
 	public static final String	MIMBL_FIRST_OPTIMIZATION_FLUXVALUE	= "MIMBL_FIRST_OPTIMIZATION_FLUXVALUE";
+	
+	
+	/***********************
+	 *   PPEC properties   *
+	 **********************/
+	public static final String DSPP_FIRST_STAGE_ENV_COND = "DSPP_FIRST_STAGE_ENV_CONDITION";
+	
+	
+	
 	
 	public static FluxValueMap simulateWT(ISteadyStateModel model, EnvironmentalConditions envCond, SolverType solver) throws Exception {
 		

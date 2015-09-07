@@ -258,7 +258,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		}
 	}
 	
-	protected IOverrideReactionBounds createModelOverride() throws MandatoryPropertyException, PropertyCastException, WrongFormulationException {
+	public IOverrideReactionBounds createModelOverride() throws MandatoryPropertyException, PropertyCastException, WrongFormulationException {
 		
 		boolean isOverUnder = false;
 		IOverrideReactionBounds overrideRC;

@@ -169,7 +169,7 @@ public class MFAFluxVariabilityAnalysis<T extends MFAWithSolvers<?>> extends MFA
 	}
 	
 	@Override
-	protected IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
+	public IOverrideReactionBounds createModelOverride() throws PropertyCastException, MandatoryPropertyException {
 		EnvironmentalConditions environmentalConditions = getEnvironmentalConditions();
 		GeneticConditions geneticConditions = getGeneticConditions();
 		ExpMeasuredFluxes measuredFluxes = getMeasuredFluxes();
