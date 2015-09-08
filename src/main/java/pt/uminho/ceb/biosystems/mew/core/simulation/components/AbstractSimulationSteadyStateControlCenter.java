@@ -2,6 +2,7 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -12,8 +13,10 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyState
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.KeyPropertyChangeEvent;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.ListenerHashMap;
 
-public abstract class AbstractSimulationSteadyStateControlCenter implements PropertyChangeListener {
+public abstract class AbstractSimulationSteadyStateControlCenter implements PropertyChangeListener, Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public static final boolean _debug = false;
 	
 	protected ISteadyStateModel model;
@@ -26,10 +29,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	
 	protected abstract AbstractSimulationMethodsFactory getFactory();
 	
-	public abstract void addUnderOverRef() throws Exception;
-	
-	public AbstractSimulationSteadyStateControlCenter() {
-	}
+	public abstract void addUnderOverRef() throws Exception;	
 	
 	public AbstractSimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		

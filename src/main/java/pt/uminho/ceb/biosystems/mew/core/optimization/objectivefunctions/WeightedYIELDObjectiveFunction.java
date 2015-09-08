@@ -24,7 +24,7 @@ public class WeightedYIELDObjectiveFunction implements IObjectiveFunction, Seria
 	protected double alpha;
 	protected SolverType lpSolver = null;
 	protected double minBiomassValue;
-	protected SimulationSteadyStateControlCenter center = null;
+	volatile protected SimulationSteadyStateControlCenter center = null;
 	
 	
 	public WeightedYIELDObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, SolverType lpSolver, Double minBiomassValue) {
