@@ -18,7 +18,6 @@
  */
 package pt.uminho.ceb.biosystems.mew.core.simulation.components;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,7 +38,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.turnover.MiMBl;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 
-public class SimulationSteadyStateControlCenter extends AbstractSimulationSteadyStateControlCenter implements Serializable {
+public class SimulationSteadyStateControlCenter extends AbstractSimulationSteadyStateControlCenter {
 	
 	private static final long					serialVersionUID	= 1L;
 	
@@ -61,10 +60,6 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		mapMethods.put(SimulationProperties.DSPP_LMOMA, DSPP_LMOMA.class);
 		
 		factory = new SimulationMethodsFactory(mapMethods);
-	}
-	
-	public SimulationSteadyStateControlCenter() {
-		super();
 	}
 	
 	public SimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {

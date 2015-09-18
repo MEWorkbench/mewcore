@@ -22,6 +22,7 @@
  */
 package pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.Reaction;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
-public interface ISteadyStateModel  extends IModel, IModelInformation {
+public interface ISteadyStateModel  extends IModel, IModelInformation, Serializable {
 	
 	IStoichiometricMatrix getStoichiometricMatrix();
 	
