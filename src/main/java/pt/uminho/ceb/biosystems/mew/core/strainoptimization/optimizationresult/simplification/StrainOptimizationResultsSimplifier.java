@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.core.simplificationnew.IGeneticConditionsSimplifiedResult;
-import pt.uminho.ceb.biosystems.mew.core.simplificationnew.ISimplifierGeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.IGeneticConditionsSimplifiedResult;
+import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;

@@ -24,18 +24,17 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.archivetrimming.SelectionValueTrimmer;
 import pt.uminho.ceb.biosystems.mew.core.optimization.decoder.ISteadyStateDecoder;
-import pt.uminho.ceb.biosystems.mew.core.optimization.evalutionfunction.StrainOptimizationEvaluationFunction;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.algorithm.AbstractStrainOptimizationAlgorithm;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.evaluationfunction.StrainOptimizationEvaluationFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.strategyconverter.IJecoliOptimizationStrategyConverter;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 /**
  * Created by ptiago on 03-03-2015.

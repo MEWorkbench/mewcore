@@ -18,81 +18,84 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.tracker.EvolutionTra
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.tracker.IEvolutionTracker;
 import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.SimulationMethodsEnum;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationStrategy;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.InvalidFieldException;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.ObjectiveFunctionType;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidFieldException;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionsFactory;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
 
 public class OptimizationConfiguration extends SimulationConfiguration {
 	
-	private static final long		serialVersionUID		= 1L;
+	private static final long serialVersionUID = 1L;
 	
-	private static final Pattern	TERM_FE_PATT			= Pattern.compile("[fF][eE]\\(([0-9]+?)\\)");
+	protected ObjectiveFunctionsFactory ofFactory;
 	
-	private static final Pattern	TERM_IT_PATT			= Pattern.compile("[iI][tT]\\(([0-9]+?)\\)");
+	private static final Pattern TERM_FE_PATT = Pattern.compile("[fF][eE]\\(([0-9]+?)\\)");
 	
-	private static final Pattern	OF_PATTERN				= Pattern.compile("([A-Za-z0-9_]+\\d?)\\((.+)\\)");
+	private static final Pattern TERM_IT_PATT = Pattern.compile("[iI][tT]\\(([0-9]+?)\\)");
 	
-	private static final Pattern	LINK_PATTERN			= Pattern.compile("LINK\\((.+?)\\s*,\\s*(.+?)\\)");
+	private static final Pattern OF_PATTERN = Pattern.compile("([A-Za-z0-9_]+\\d?)\\((.+)\\)");
 	
-	private static final Pattern	TRACKER_FILE			= Pattern.compile("^FILE");
+	private static final Pattern LINK_PATTERN = Pattern.compile("LINK\\((.+?)\\s*,\\s*(.+?)\\)");
 	
-	private static final Pattern	MAX_MEM_PATTERN			= Pattern.compile("(\\d+)([KMG])");
+	private static final Pattern TRACKER_FILE = Pattern.compile("^FILE");
 	
-	private static final Pattern	OU_RANGE_PATTERN		= Pattern.compile("\\s*\\[\\s*(-?\\d+)\\s*,\\s*(-?\\d+)\\s*\\]\\s*");
+	private static final Pattern MAX_MEM_PATTERN = Pattern.compile("(\\d+)([KMG])");
 	
-	private static final String		OF_DELIMITER			= Delimiter.SEMICOLON.toString();
+	private static final Pattern OU_RANGE_PATTERN = Pattern.compile("\\s*\\[\\s*(-?\\d+)\\s*,\\s*(-?\\d+)\\s*\\]\\s*");
 	
-	private static final String		SWAPS_MAP_DELIMITER		= Delimiter.COMMA.toString();
+	private static final String OF_DELIMITER = Delimiter.SEMICOLON.toString();
 	
-	private static final int		ARCHIVE_DEFAULT_SIZE	= 100;
+	private static final String SWAPS_MAP_DELIMITER = Delimiter.COMMA.toString();
 	
-	private static final int		DEFAULT_MAX_THREADS		= 1;
+	private static final int ARCHIVE_DEFAULT_SIZE = 100;
 	
-	public static final String		OPT_PREFIX				= "optimization";
+	private static final int DEFAULT_MAX_THREADS = 1;
 	
-	public static final String		OPT_STRATEGY			= "optimization.strategy";
+	public static final String OPT_PREFIX = "optimization";
 	
-	public static final String		OPT_STRATEGY_OU_RANGE	= "optimization.strategy.ou.range";
+	public static final String OPT_STRATEGY = "optimization.strategy";
 	
-	public static final String		OPT_STRATEGY_OU_2STEP	= "optimization.strategy.ou.2step";
+	public static final String OPT_STRATEGY_OU_RANGE = "optimization.strategy.ou.range";
 	
-	public static final String		OPT_STRATEGY_SWAP_MAP	= "optimization.strategy.swap.map";
+	public static final String OPT_STRATEGY_OU_2STEP = "optimization.strategy.ou.2step";
 	
-	public static final String		OPT_STRATEGY_SWAP_MAX	= "optimization.strategy.swap.maxswaps";
+	public static final String OPT_STRATEGY_SWAP_MAP = "optimization.strategy.swap.map";
 	
-	public static final String		OPT_ALGORITHM			= "optimization.algorithm";
+	public static final String OPT_STRATEGY_SWAP_MAX = "optimization.strategy.swap.maxswaps";
 	
-	public static final String		OPT_ALG_MAXTHREADS		= "optimization.algorithm.maxthreads";
+	public static final String OPT_ALGORITHM = "optimization.algorithm";
 	
-	public static final String		OPT_ALG_TERM			= "optimization.algorithm.termination";
+	public static final String OPT_ALG_MAXTHREADS = "optimization.algorithm.maxthreads";
 	
-	public static final String		OPT_ALG_TRACKER			= "optimization.algorithm.tracker";
+	public static final String OPT_ALG_TERM = "optimization.algorithm.termination";
 	
-	public static final String		OPT_OBJ_FUNC			= "optimization.objectivefunction";
+	public static final String OPT_ALG_TRACKER = "optimization.algorithm.tracker";
 	
-	public static final String		OPT_SOL_VARSIZE			= "optimization.solution.varsize";
+	public static final String OPT_OBJ_FUNC = "optimization.objectivefunction";
 	
-	public static final String		OPT_SOL_MAXSIZE			= "optimization.solution.maxsize";
+	public static final String OPT_SOL_VARSIZE = "optimization.solution.varsize";
 	
-	public static final String		OPT_ARCHIVE_SIZE		= "optimization.archive.size";
+	public static final String OPT_SOL_MAXSIZE = "optimization.solution.maxsize";
 	
-	public static final String		OPT_RUN					= "optimization.run";
+	public static final String OPT_ARCHIVE_SIZE = "optimization.archive.size";
 	
-	public static final String		OPT_MAX_MEM				= "optimization.maxmem";
+	public static final String OPT_RUN = "optimization.run";
 	
-	public static final String		REDIRECT_OUTPUT			= "optimization.redirect.output";
+	public static final String OPT_MAX_MEM = "optimization.maxmem";
 	
-	public static final String		OPT_MANUAL_CRITICALS	= "optimization.critical.manual";
+	public static final String REDIRECT_OUTPUT = "optimization.redirect.output";
 	
-	public static final String		ALLOW_REMOTE_MONITOR	= "optimization.remote";
+	public static final String OPT_MANUAL_CRITICALS = "optimization.critical.manual";
+	
+	public static final String ALLOW_REMOTE_MONITOR = "optimization.remote";
 	
 	public OptimizationConfiguration(String properties) throws Exception {
 		super(properties);
 		analyzeOptimizationProperties();
+		ofFactory = new ObjectiveFunctionsFactory();
 	}
 	
 	protected void analyzeOptimizationProperties() throws Exception {
@@ -105,17 +108,15 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		
 		if (!containsKey(OPT_SOL_MAXSIZE)) throw new Exception("Illegal OptimizationProperties definition. Must define a [" + OPT_SOL_MAXSIZE + "] property.");
 		
-		if (!containsKey(OPT_STRATEGY)) 
+		if (!containsKey(OPT_STRATEGY))
 			throw new Exception("Illegal OptimizationProperties definition. Must define a [" + OPT_STRATEGY + "] property.");
-		else{
+		else {
 			OptimizationStrategy strategy = getOptimizationStrategy();
 			switch (strategy) {
 				case RKRS:
-					if(!containsKey(OPT_STRATEGY_SWAP_MAP) )
-						throw new Exception("Illegal OptimizationProperties definition. Strategy ["+strategy.name()+"] requires a [" + OPT_STRATEGY_SWAP_MAP+ "] property.");
-					if(!containsKey(OPT_STRATEGY_SWAP_MAX) )
-						throw new Exception("Illegal OptimizationProperties definition. Strategy ["+strategy.name()+"] requires a [" + OPT_STRATEGY_SWAP_MAX+ "] property.");
-					break;				
+					if (!containsKey(OPT_STRATEGY_SWAP_MAP)) throw new Exception("Illegal OptimizationProperties definition. Strategy [" + strategy.name() + "] requires a [" + OPT_STRATEGY_SWAP_MAP + "] property.");
+					if (!containsKey(OPT_STRATEGY_SWAP_MAX)) throw new Exception("Illegal OptimizationProperties definition. Strategy [" + strategy.name() + "] requires a [" + OPT_STRATEGY_SWAP_MAX + "] property.");
+					break;
 				default:
 					break;
 			}
@@ -133,10 +134,9 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 	
 	public AlgorithmTypeEnum getAlgorithm() {
 		String tag = getProperty(OPT_ALGORITHM, currentState, true);
-		if (tag != null){
+		if (tag != null) {
 			return AlgorithmTypeEnum.valueOf(tag.trim().toUpperCase());
-		}
-		else
+		} else
 			return null;
 	}
 	
@@ -168,7 +168,7 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		Matcher matcher = LINK_PATTERN.matcher(ofString);
 		// System.out.println(">>>>>>>>>>OBJECTIVE FUNCTION="+ofString);
 		if (matcher.matches()) {
-			String simMethodTag = matcher.group(1);			
+			String simMethodTag = matcher.group(1);
 			String simMethod = getSimulationMethod(simMethodTag);
 			String objFuncTag = matcher.group(2);
 			
@@ -183,12 +183,15 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		matcher.matches();
 		String ofTag = matcher.group(1);
 		String ofArgs = matcher.group(2);
-		ObjectiveFunctionType oft = ObjectiveFunctionType.valueOf(ofTag);
+		//		ObjectiveFunctionType oft = ObjectiveFunctionType.valueOf(ofTag);
 		String[] argsList = ofArgs.split(Delimiter.COMMA.toString());
 		String[] trimmedArgsList = new String[argsList.length];
-		for (int i = 0; i < argsList.length; i++)
-			trimmedArgsList[i] = argsList[i].trim();
-		return oft.getObjectiveFunction(trimmedArgsList);
+		for (int i = 0; i < argsList.length; i++){
+			trimmedArgsList[i] = argsList[i].trim();			
+		}
+		
+		IObjectiveFunction of = ofFactory.getObjectiveFunction(ofTag.trim(),trimmedArgsList);
+		return of;
 	}
 	
 	private String getSimulationMethod(String sm) throws Exception {
@@ -230,11 +233,12 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		return Integer.valueOf(getProperty(OPT_SOL_MAXSIZE, currentState, true));
 	}
 	
-	public int getMaxSwaps(){
-		String prop = getProperty(OPT_STRATEGY_SWAP_MAX, currentState, true); 
-		if(prop!=null)
+	public int getMaxSwaps() {
+		String prop = getProperty(OPT_STRATEGY_SWAP_MAX, currentState, true);
+		if (prop != null)
 			return Integer.valueOf(getProperty(OPT_STRATEGY_SWAP_MAX, currentState, true));
-		else return -1;
+		else
+			return -1;
 	}
 	
 	public List<String> getOptimizationCriticalIDs() throws Exception {
@@ -268,9 +272,9 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		}
 		
 		List<String> manuals = getOptimizationManualCriticalIDs();
-		if(manuals!=null && !manuals.isEmpty()){
-			int total = critical.size()+manuals.size();
-			System.out.println("Merging criticals, total = "+total+" ... done!");
+		if (manuals != null && !manuals.isEmpty()) {
+			int total = critical.size() + manuals.size();
+			System.out.println("Merging criticals, total = " + total + " ... done!");
 			critical.addAll(manuals);
 		}
 		
@@ -296,35 +300,34 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 			br.close();
 			fr.close();
 			System.out.println("done with " + i + " manual criticals!");
-		}else
+		} else
 			System.out.println("... not found!");
-		
+			
 		return critical;
 	}
 	
-	public Map<String,List<String>> getSwapsMap() throws Exception{
-		HashMap<String,List<String>> toret = null;
+	public Map<String, List<String>> getSwapsMap() throws Exception {
+		HashMap<String, List<String>> toret = null;
 		String swapsFile = getProperty(OPT_STRATEGY_SWAP_MAP, currentState, true);
 		System.out.print("Loading swaps map ");
-		if(swapsFile!=null && !swapsFile.isEmpty()){
+		if (swapsFile != null && !swapsFile.isEmpty()) {
 			toret = new HashMap<String, List<String>>();
-			System.out.print("["+swapsFile+"]...");
+			System.out.print("[" + swapsFile + "]...");
 			BufferedReader br = new BufferedReader(new FileReader(swapsFile));
 			
 			int i = 0;
 			while (br.ready()) {
 				String str = br.readLine().trim();
 				String tokens[] = str.split(SWAPS_MAP_DELIMITER);
-				if(tokens.length<2){
+				if (tokens.length < 2) {
 					br.close();
-					throw new Exception("\nLoading swaps map file ["+swapsFile+"] at line "+i+". Lines must always contain at least two elements separated by ["+SWAPS_MAP_DELIMITER+"].");
-				}
-				else{
+					throw new Exception("\nLoading swaps map file [" + swapsFile + "] at line " + i + ". Lines must always contain at least two elements separated by [" + SWAPS_MAP_DELIMITER + "].");
+				} else {
 					String original = tokens[0];
 					List<String> swapList = new ArrayList<String>();
-					for(int j=1; j<tokens.length; j++)
+					for (int j = 1; j < tokens.length; j++)
 						swapList.add(tokens[j]);
-					
+						
 					toret.put(original, swapList);
 				}
 				i++;
@@ -334,7 +337,7 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 			System.out.println("done with " + i + " possible swaps!");
 		} else
 			System.out.println("... not found!");
-		
+			
 		return toret;
 	}
 	
@@ -362,20 +365,20 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 				throw new Exception("Invalid evolution tracker property[" + tag + "]. Must be one of [FILE,BD]");
 		} else
 			return null;
-		
+			
 	}
 	
-	public Pair<Integer,Integer> getOURange() throws Exception{
+	public Pair<Integer, Integer> getOURange() throws Exception {
 		String tag = getProperty(OPT_STRATEGY_OU_RANGE, currentState, true);
 		if (tag != null) {
 			Matcher m = OU_RANGE_PATTERN.matcher(tag);
 			if (m.matches()) {
 				int min = Integer.parseInt(m.group(1));
 				int max = Integer.parseInt(m.group(2));
-				if(max < min) 
+				if (max < min)
 					throw new Exception("Invalid over/under range property " + tag + ". Max value must be greater than min value.");
-				else 
-					return new Pair<Integer,Integer>(min,max);
+				else
+					return new Pair<Integer, Integer>(min, max);
 			} else
 				throw new Exception("Invalid over/under range property " + tag + ". Format must be [ (-) min,max]");
 		} else

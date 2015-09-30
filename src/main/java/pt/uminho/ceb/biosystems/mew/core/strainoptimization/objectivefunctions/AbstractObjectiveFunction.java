@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
-
-public abstract class AbstractObjectiveFunction implements IObjectiveFunctionNew, Serializable {
+public abstract class AbstractObjectiveFunction implements IObjectiveFunction, Serializable {
 	
 	private static final long	serialVersionUID		= 1L;
 	public static final String	OBJECTIVE_FUNCTION_ID	= "objectiveFunctionID";

@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
@@ -17,7 +16,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ObjectiveFunctionsFactory {
 	
-	protected static Map<String, Class<? extends IObjectiveFunctionNew>> mapObjectiveFunctions = new HashMap<>();
+	protected static Map<String, Class<? extends IObjectiveFunction>> mapObjectiveFunctions = new HashMap<>();
 	
 	static {
 		mapObjectiveFunctions.put(BPCYObjectiveFunction.ID, BPCYObjectiveFunction.class);
@@ -36,7 +35,7 @@ public class ObjectiveFunctionsFactory {
 		return setOFs;
 	}
 	
-	public void registerOF(String id, Class<? extends IObjectiveFunctionNew> objectiveFunction) {
+	public void registerOF(String id, Class<? extends IObjectiveFunction> objectiveFunction) {
 		mapObjectiveFunctions.put(id, objectiveFunction);
 	}
 	
@@ -44,31 +43,31 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.remove(id);
 	}
 	
-	public IObjectiveFunctionNew getObjectiveFunction(String ofID, Map<String, Object> configuration)
+	public IObjectiveFunction getObjectiveFunction(String ofID, Map<String, Object> configuration)
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		Class<? extends IObjectiveFunctionNew> ofKlazz = mapObjectiveFunctions.get(ofID);
+		Class<? extends IObjectiveFunction> ofKlazz = mapObjectiveFunctions.get(ofID);
 		configuration.put(AbstractObjectiveFunction.OBJECTIVE_FUNCTION_ID, ofID);
-		IObjectiveFunctionNew instance = ofKlazz.getConstructor(Map.class).newInstance(configuration);
+		IObjectiveFunction instance = ofKlazz.getConstructor(Map.class).newInstance(configuration);
 		return instance;
 	}
 	
-	public IObjectiveFunctionNew getObjectiveFunction(Map<String, Object> configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public IObjectiveFunction getObjectiveFunction(Map<String, Object> configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		String ofID = (String) configuration.get(AbstractObjectiveFunction.OBJECTIVE_FUNCTION_ID);
-		Class<? extends IObjectiveFunctionNew> ofKlazz = mapObjectiveFunctions.get(ofID);
-		IObjectiveFunctionNew instance = ofKlazz.getConstructor(Map.class).newInstance(configuration);
+		Class<? extends IObjectiveFunction> ofKlazz = mapObjectiveFunctions.get(ofID);
+		IObjectiveFunction instance = ofKlazz.getConstructor(Map.class).newInstance(configuration);
 		return instance;
 	}
 	
-	public IObjectiveFunctionNew getObjectiveFunction(String ofID, Object... initArgs) throws InvalidObjectiveFunctionConfiguration {
+	public IObjectiveFunction getObjectiveFunction(String ofID, Object... initArgs) throws InvalidObjectiveFunctionConfiguration {
 		
-		Class<? extends IObjectiveFunctionNew> klazz = mapObjectiveFunctions.get(ofID);
+		Class<? extends IObjectiveFunction> klazz = mapObjectiveFunctions.get(ofID);
 		Class<?>[] argsClasses = getArgumentsClasses(initArgs);
-		IObjectiveFunctionNew of;
+		IObjectiveFunction of;
 		try {
 			
 			Constructor<?> constructor = klazz.getConstructor(argsClasses);
 			Object unTypedOF = constructor.newInstance(initArgs);
-			of = IObjectiveFunctionNew.class.cast(unTypedOF);
+			of = IObjectiveFunction.class.cast(unTypedOF);
 		} catch (Exception e) {
 			throw new InvalidObjectiveFunctionConfiguration(initArgs, argsClasses, klazz, e);
 		}
@@ -90,9 +89,9 @@ public class ObjectiveFunctionsFactory {
 	 * @throws InstantiationException 
 	 */
 	public Map<String, ObjectiveFunctionParameterType> getObjectiveFunctionParameterTypes(String ofID) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		Class<? extends IObjectiveFunctionNew> ofKlazz = mapObjectiveFunctions.get(ofID);
+		Class<? extends IObjectiveFunction> ofKlazz = mapObjectiveFunctions.get(ofID);
 		Object untypedObj = ofKlazz.newInstance();
-		IObjectiveFunctionNew of = IObjectiveFunctionNew.class.cast(untypedObj);
+		IObjectiveFunction of = IObjectiveFunction.class.cast(untypedObj);
 		Map<String, ObjectiveFunctionParameterType> types = (Map<String, ObjectiveFunctionParameterType>) of.mandatoryParameters();
 		return types;
 	}

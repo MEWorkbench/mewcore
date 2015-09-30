@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
@@ -93,12 +93,6 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 		}
 	}
 
-//	public IStrainOptimizationResultSet simplify() throws Exception {
-//		String strategy = baseConfiguration.getOptimizationStrategy();
-//		IStrainOptimizationSolutionSimplifier simplifier = solutionSimplificationFactory.getSolutionSimplifier(strategy);
-//		return simplifier.simplifySolutionSet(baseConfiguration, this);
-//	}
-	
 	public void recalculateFitness(IndexedHashMap<IObjectiveFunction, String> ofs) throws Exception{
 		Map<String, SimulationSteadyStateControlCenter> ccs = createAllCCs(ofs);
 		

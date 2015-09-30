@@ -13,10 +13,10 @@ import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalG
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationStrategy;
-import pt.uminho.ceb.biosystems.mew.core.simplification.EquivalentFluxes;
-import pt.uminho.ceb.biosystems.mew.core.simplification.FVAZeroValueFluxes;
-import pt.uminho.ceb.biosystems.mew.core.simplification.StructuralAnalysisFunctions;
-import pt.uminho.ceb.biosystems.mew.core.simplification.ZeroValueFluxes;
+import pt.uminho.ceb.biosystems.mew.core.simplification.model.EquivalentFluxes;
+import pt.uminho.ceb.biosystems.mew.core.simplification.model.FVAZeroValueFluxes;
+import pt.uminho.ceb.biosystems.mew.core.simplification.model.StructuralAnalysisFunctions;
+import pt.uminho.ceb.biosystems.mew.core.simplification.model.ZeroValueFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.fva.FBAFluxVariabilityAnalysis;

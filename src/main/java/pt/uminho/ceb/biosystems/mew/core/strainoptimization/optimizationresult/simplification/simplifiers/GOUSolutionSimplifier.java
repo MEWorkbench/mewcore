@@ -3,8 +3,8 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.
 import java.util.List;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.core.simplificationnew.GenesSimplifier;
-import pt.uminho.ceb.biosystems.mew.core.simplificationnew.ISimplifierGeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.GenesSimplifier;
+import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;

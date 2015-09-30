@@ -4,10 +4,6 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.SimulationConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.FVAObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.FVASenseObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.FluxValueObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.dspp.DSPP_BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
@@ -15,6 +11,9 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimula
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.DSPP_LMOMA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FVAObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.dspp.DSPP_BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
