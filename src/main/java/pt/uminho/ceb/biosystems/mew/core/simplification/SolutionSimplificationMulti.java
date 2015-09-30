@@ -2,7 +2,6 @@ package pt.uminho.ceb.biosystems.mew.core.simplification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +10,11 @@ import java.util.Set;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
@@ -81,7 +80,7 @@ public class SolutionSimplificationMulti implements Serializable {
 					e.printStackTrace();
 				}
 			}
-			origRes = new SteadyStateMultiSimulationResult("sol", initialSolution, envConds, results);
+			origRes = new SteadyStateMultiSimulationResult(/*"sol",*/ initialSolution, /*envConds,*/ results);
 		} else
 			origRes = initialRes;
 		
@@ -113,7 +112,7 @@ public class SolutionSimplificationMulti implements Serializable {
 					e.printStackTrace();
 				}
 			}
-			SteadyStateMultiSimulationResult res = new SteadyStateMultiSimulationResult("sol", initialSolution, envConds, results);
+			SteadyStateMultiSimulationResult res = new SteadyStateMultiSimulationResult(/*"sol",*/ initialSolution, /*envConds, */results);
 			
 			double[] simpfitnesses = evaluateSolution(res);
 			
@@ -177,7 +176,7 @@ public class SolutionSimplificationMulti implements Serializable {
 					e.printStackTrace();
 				}
 			}
-			origRes = new SteadyStateMultiSimulationResult("sol", initialSolution, envConds, results);
+			origRes = new SteadyStateMultiSimulationResult(/*"sol", */initialSolution, /*envConds, */results);
 		} else
 			origRes = initialRes;
 		
@@ -208,7 +207,7 @@ public class SolutionSimplificationMulti implements Serializable {
 					e.printStackTrace();
 				}
 			}
-			SteadyStateMultiSimulationResult res = new SteadyStateMultiSimulationResult("sol", initialSolution, envConds, results);
+			SteadyStateMultiSimulationResult res = new SteadyStateMultiSimulationResult(/*"sol", */initialSolution, /*envConds, */results);
 			
 			double[] simpfitnesses = evaluateSolution(res);
 			

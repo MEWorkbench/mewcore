@@ -1,44 +1,44 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution;
 
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResult;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractSolution;
 
 /**
  * Created by ptiago on 18-03-2015.
  */
-public class RKSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
+public class RKSolution extends AbstractSolution {
 
 	private static final long	serialVersionUID	= 1L;
 
-	public RKSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
-        super(configuration, simulationResultMap, solutionGeneticConditions);
+	public RKSolution(GeneticConditions solutionGeneticConditions) {
+        super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
     }
 
-    public RKSolution(JecoliGenericConfiguration configuration, GeneticConditions solutionGeneticConditions) {
-        super(configuration, solutionGeneticConditions);
+    public RKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
+        super(solutionGeneticConditions, simulationResultMap);
     }
 
     @Override
     public void write(OutputStreamWriter outputStream) throws Exception {
         ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
         List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();
-        IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap = configuration.getMapOf2Sim();
-        writeMapOf2SimMap(outputStream,mapOf2SimMap);
+//        IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap = configuration.getObjectiveFunctionsMap();
+//        writeMapOf2SimMap(outputStream,mapOf2SimMap);
 
         for(String reactionKnockout:reactionKnockoutList)
             outputStream.write(","+reactionKnockout);
 
-        outputStream.write("\n");
+//        outputStream.write("\n");
     }
+
+
 
 
 }

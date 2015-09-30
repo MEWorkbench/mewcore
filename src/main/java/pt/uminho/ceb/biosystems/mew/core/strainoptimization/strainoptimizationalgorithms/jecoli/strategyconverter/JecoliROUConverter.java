@@ -34,7 +34,7 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
 
     @Override
     public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new ROUSolution(configuration,simulations,gc);
+        return new ROUSolution(gc, simulations);
     }
 
     @Override
@@ -42,7 +42,10 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
         ISteadyStateModel model = configuration.getSteadyStateModel();
         List<String>  notAllowedIDs = configuration.getNonAllowedIds();
         ISteadyStateDecoder decoder = new SteadyStateUnderOverExp2Decoder(model);;
-        decoder.addNotAllowedIds(notAllowedIDs);
+        if(notAllowedIDs != null) {
+        	decoder.addNotAllowedIds(notAllowedIDs);
+        }
+
         return decoder;
     }
 

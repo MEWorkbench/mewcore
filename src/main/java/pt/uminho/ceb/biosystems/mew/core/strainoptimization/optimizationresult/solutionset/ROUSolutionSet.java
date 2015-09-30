@@ -4,6 +4,8 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.rou.ROUStrategyReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.ROUSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
@@ -23,9 +25,12 @@ public class ROUSolutionSet <T extends  JecoliGenericConfiguration> extends Abst
     }
 
     @Override
-    public ROUSolution createSolution(JecoliGenericConfiguration baseConfiguration, double[] objectiveFunctionValueArray, GeneticConditions gc) throws Exception {
-        ROUSolution newSolution = new ROUSolution(baseConfiguration,gc);
-        constructSimulationResultMap(baseConfiguration, newSolution);
-        return newSolution;
+    public ROUSolution createSolution(GeneticConditions gc) {
+    	return new ROUSolution(gc);
     }
+
+	@Override
+	public IStrainOptimizationReader getSolutionReaderInstance() {
+		return new ROUStrategyReader();
+	}
 }

@@ -40,15 +40,16 @@ public interface IStrainOptimizationResultSet<T extends JecoliGenericConfigurati
       * @param file input file
      * @throws Exception
      */
-    void  readSolutionsFromFile(String file) throws Exception;
+    void readSolutionsFromFile(String file) throws Exception;
 
     /**
      * Creates a solution given a configuration given a set of objective values and a genetic condition
-     * @param baseConfiguration
-     * @param objectiveFunctionValueArray
+     * 
      * @param gc
+     * @param result
      * @return
      * @throws Exception
      */
-    E createSolution(T baseConfiguration, double[] objectiveFunctionValueArray, GeneticConditions gc) throws Exception;
+    E createSolution(GeneticConditions gc);
+
 }

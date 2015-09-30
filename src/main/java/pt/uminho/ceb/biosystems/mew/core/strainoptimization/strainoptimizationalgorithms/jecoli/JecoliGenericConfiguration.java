@@ -35,13 +35,15 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, Boolean.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.STEADY_STATE_MODEL, ISteadyStateModel.class);
 		
-		mandatoryPropertyMap.put(JecoliOptimizationProperties.ENVIRONMENTAL_CONDITIONS, EnvironmentalConditions.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.SOLVER, SolverType.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.SIMULATION_METHOD_LIST, List.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.IS_MAXIMIZATION, Boolean.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.MAP_OF2_SIM, IndexedHashMap.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.TERMINATION_CRITERIA, ITerminationCriteria.class);
 		
+		// Recent change - It was mandatory
+		optionalPropertyMap.put(JecoliOptimizationProperties.NOT_ALLOWED_IDS, List.class);
+		optionalPropertyMap.put(JecoliOptimizationProperties.ENVIRONMENTAL_CONDITIONS, EnvironmentalConditions.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.REFERENCE_FLUX_DISTRIBUITION, FluxValueMap.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.OU_2_STEP_APPROACH, Boolean.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.STATISTICS_CONFIGURATION, StatisticsConfiguration.class);
@@ -75,7 +77,7 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		return (ISteadyStateModel) propertyMap.get(JecoliOptimizationProperties.STEADY_STATE_MODEL);
 	}
 	
-	public ISteadyStateGeneReactionModel getGebeSteadyStateModel() {
+	public ISteadyStateGeneReactionModel getGeneReactionSteadyStateModel() {
 		return (ISteadyStateGeneReactionModel) propertyMap.get(JecoliOptimizationProperties.STEADY_STATE_GENE_REACTION_MODEL);
 	}
 	
@@ -103,12 +105,12 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		return (Boolean) propertyMap.get(JecoliOptimizationProperties.OU_2_STEP_APPROACH);
 	}
 	
-	public IndexedHashMap<IObjectiveFunction, String> getMapOf2Sim() {
+	public IndexedHashMap<IObjectiveFunction, String> getObjectiveFunctionsMap() {
 		return (IndexedHashMap<IObjectiveFunction, String>) propertyMap.get(JecoliOptimizationProperties.MAP_OF2_SIM);
 	}
 	
 	public int getNumberOfObjectives() {
-		return getMapOf2Sim().size();
+		return getObjectiveFunctionsMap().size();
 	}
 	
 	public int getMaxSetSize() {

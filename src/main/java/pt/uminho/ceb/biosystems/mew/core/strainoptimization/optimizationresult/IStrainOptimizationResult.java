@@ -1,8 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult;
 
 import java.io.OutputStreamWriter;
-import java.util.Map;
-import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
@@ -29,20 +27,16 @@ public interface IStrainOptimizationResult extends IStrainOptimizationWriter {
 	
 	/**
 	 * 
+	 * @param method
+	 * @param result
+	 */
+	void addSimulationResultForMethod(String method, SteadyStateSimulationResult result);
+	
+	/**
+	 * 
 	 * @return The solution genetic conditions
 	 */
 	GeneticConditions getGeneticConditions();
-	
-	//1 conf por metodo de sim
-	//No futuro refactoring do Map<String,Object> para config
-	
-	/**
-	 * In the future this method will be deprecated. Only for compatibility with
-	 * simulation control center
-	 * 
-	 * @return
-	 */
-	Set<Map<String, Object>> getConfigurationSetForSimulation();
 	
 	/**
 	 * Writes a solution to a supplied stream
@@ -52,4 +46,5 @@ public interface IStrainOptimizationResult extends IStrainOptimizationWriter {
 	 */
 	@Override
 	void write(OutputStreamWriter outputStream) throws Exception;
+	
 }

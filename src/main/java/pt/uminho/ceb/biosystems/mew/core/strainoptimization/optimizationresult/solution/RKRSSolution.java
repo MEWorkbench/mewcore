@@ -2,97 +2,100 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.
 
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResult;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractSolution;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 /**
  * Created by ptiago on 23-03-2015.
  */
-public class RKRSSolution extends AbstractStrainOptimizationResult<JecoliGenericConfiguration> {
-    
-	private static final long	serialVersionUID	= 1L;
+public class RKRSSolution extends AbstractSolution {
 
-	public RKRSSolution(JecoliGenericConfiguration configuration, Map<String, SteadyStateSimulationResult> simulationResultMap, GeneticConditions solutionGeneticConditions) {
-        super(configuration, simulationResultMap, solutionGeneticConditions);
-    }
+	private static final long serialVersionUID = 1L;
+	private Map<String, List<String>> swapsMap;
 
-    public RKRSSolution(JecoliGenericConfiguration configuration, GeneticConditions solutionGeneticConditions) {
-        super(configuration, solutionGeneticConditions);
-    }
+	public RKRSSolution(GeneticConditions solutionGeneticConditions, Map<String, List<String>> swapsMap) {
+		this(solutionGeneticConditions, swapsMap, new HashMap<String, SteadyStateSimulationResult>());
+	}
 
-    @Override
-    public void write(OutputStreamWriter outputStream) throws Exception {
-        ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
-        List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();
-        IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap = configuration.getMapOf2Sim();
-        writeMapOf2SimMap(outputStream,mapOf2SimMap);
+	public RKRSSolution(GeneticConditions solutionGeneticConditions, Map<String, List<String>> swapsMap,
+			Map<String, SteadyStateSimulationResult> simulationResultMap) {
+		super(solutionGeneticConditions, simulationResultMap);
+		this.swapsMap = swapsMap;
+	}
 
-        for(String reactionKnockout:reactionKnockoutList)
-            outputStream.write(","+reactionKnockout);
+	@Override
+	public void write(OutputStreamWriter outputStream) throws Exception {
+		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
+		List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();
+		// IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap =
+		// configuration.getObjectiveFunctionsMap();
+		// writeMapOf2SimMap(outputStream,mapOf2SimMap);
 
-        outputStream.write("\n");
-    }
+		for (String reactionKnockout : reactionKnockoutList)
+			outputStream.write("," + reactionKnockout);
 
-    public List<Pair<String, String>> getReactionSwapList(Map<String,List<String>> swapMap,GeneticConditions gc) {
-        List<Pair<String,String>> swapList = new ArrayList<>();
+		// outputStream.write("\n");
+	}
 
-        MapStringNum map = (gc.isGenes()) ? gc.getGeneList() : gc.getReactionList();
+	public List<Pair<String, String>> getReactionSwapList(Map<String, List<String>> swapMap, GeneticConditions gc) {
+		List<Pair<String, String>> swapList = new ArrayList<>();
 
-        for (String k : map.keySet()) {
-            if (swapMap.containsKey(k)) {
-                List<String> k_swaps = swapMap.get(k);
-                Set<String> diff = CollectionUtils.getSetDiferenceValues(k_swaps, map.keySet());
-                if (diff.size() > 0) {
-                    for(String reactionId:diff)
-                        swapList.add(new Pair<String, String>(k,reactionId));
-                }
-            }
-        }
+		MapStringNum map = (gc.isGenes()) ? gc.getGeneList() : gc.getReactionList();
 
-        return swapList;
-    }
+		for (String k : map.keySet()) {
+			if (swapMap.containsKey(k)) {
+				List<String> k_swaps = swapMap.get(k);
+				Set<String> diff = CollectionUtils.getSetDiferenceValues(k_swaps, map.keySet());
+				if (diff.size() > 0) {
+					for (String reactionId : diff)
+						swapList.add(new Pair<String, String>(k, reactionId));
+				}
+			}
+		}
 
+		return swapList;
+	}
 
-    public List<Pair<String,String>> getReactionSwapList() {
-        Map<String,List<String>> swapMap = configuration.getReactionSwapMap();
-        return getReactionSwapList(swapMap,solutionGeneticConditions);
-    }
+	public List<Pair<String, String>> getReactionSwapList() {		
+		return getReactionSwapList(swapsMap, solutionGeneticConditions);
+	}
 
-    public Set<String> getKnockoutSet() {
-        Map<String, List<String>> swapMap = configuration.getReactionSwapMap();
-        Set<String> knockoutSet = new HashSet<>();
-        MapStringNum map = (solutionGeneticConditions.isGenes()) ? solutionGeneticConditions.getGeneList() : solutionGeneticConditions.getReactionList();
-        for (String k : map.keySet()) {
-            if (!swapMap.containsKey(k)) {
-                boolean isKeyOnSwap = false;
-                for(Map.Entry<String,List<String>> swapEntry:swapMap.entrySet())
-                    for(String swapReaction:swapEntry.getValue()) {
-                        if (isKeyOnSwap) break;
+	public Set<String> getKnockoutSet() {
+		Set<String> knockoutSet = new HashSet<>();
+		MapStringNum map = (solutionGeneticConditions.isGenes()) ? solutionGeneticConditions.getGeneList() : solutionGeneticConditions.getReactionList();
+		for (String k : map.keySet()) {
+			if (!swapsMap.containsKey(k)) {
+				boolean isKeyOnSwap = false;
+				for (Map.Entry<String, List<String>> swapEntry : swapsMap.entrySet())
+					for (String swapReaction : swapEntry.getValue()) {
+						if (isKeyOnSwap)
+							break;
 
-                        if (swapReaction.compareTo(k) == 0) {
-                            isKeyOnSwap = true;
-                            break;
-                        }
-                    }
-                if(!isKeyOnSwap)
-                    knockoutSet.add(k);
-            }
-        }
-        return knockoutSet;
-    }
+						if (swapReaction.compareTo(k) == 0) {
+							isKeyOnSwap = true;
+							break;
+						}
+					}
+				if (!isKeyOnSwap)
+					knockoutSet.add(k);
+			}
+		}
+		return knockoutSet;
+	}
 
+	public Map<String, List<String>> getSwapsMap() {
+				return swapsMap;
+			}
 
 }

@@ -126,17 +126,8 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 		List<String> simulationMethodList = configuration.getSimulationMethodList();
 		FluxValueMap referenceFD = configuration.getReferenceFluxDistribution();
 		Boolean isMaximization = configuration.getIsMaximization();
-		Boolean ou2stepApproach = configuration.getOu2StepApproach();
-		Map<IObjectiveFunction, String> mapOF2Sim = configuration.getMapOf2Sim();
-		
-//		System.out.println(getClass().getName());
-//		System.out.println("MODEL: "+model==null ? "null": "model");
-//		System.out.println("SIM_METHOD: "+simulationMethodList==null ? "null": simulationMethodList.toString());
-//		System.out.println("REFERENCE_FD: "+referenceFD==null ? "null": "reference");
-//		System.out.println("MAX: "+isMaximization==null ? "null": isMaximization);
-//		System.out.println("2STEP: "+ou2stepApproach==null ? "null": ou2stepApproach);
-//		System.out.println("MAP_OF: "+mapOF2Sim==null ? "null": MapUtils.prettyToString(mapOF2Sim));
-		
+		Boolean ou2stepApproach = (configuration.getOu2StepApproach() != null) ? configuration.getOu2StepApproach() : false;
+		Map<IObjectiveFunction, String> mapOF2Sim = configuration.getObjectiveFunctionsMap();
 		return new StrainOptimizationEvaluationFunction(model, decoder, environmentalConditions, solver, simulationMethodList, mapOF2Sim, referenceFD, isMaximization, 1, ou2stepApproach);
 	}
 	

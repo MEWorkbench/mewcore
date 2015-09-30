@@ -36,7 +36,7 @@ public class JecoliRKRSConverter<T extends JecoliGenericConfiguration> implement
 
     @Override
     public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new RKRSSolution(configuration,simulations,gc);
+        return new RKRSSolution(gc, configuration.getReactionSwapMap(), simulations);
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.util.List;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.AbstractStrainOptimizationSolutionReader;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.IJecoliConfiguration;
 
 /**
  * Created by ptiago on 18-03-2015.
@@ -16,7 +15,7 @@ public class ROUStrategyReader extends AbstractStrainOptimizationSolutionReader 
 	private static final long	serialVersionUID	= 1L;
 
 	@Override
-    protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration,String geneticConditionString) throws Exception {
+    protected GeneticConditions processGeneticConditions(String geneticConditionString) throws Exception {
         String[] lineArray = geneticConditionString.split(",");
         List<String> modificationIdList = new ArrayList<>();
         List<Double> modificationValueList = new ArrayList<>();
