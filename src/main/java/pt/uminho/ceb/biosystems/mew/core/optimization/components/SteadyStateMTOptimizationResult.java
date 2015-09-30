@@ -14,6 +14,7 @@ import java.util.Map;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.AlgorithmTypeEnum;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.objectivefunctions.interfaces.IObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 /**
@@ -59,7 +60,7 @@ public class SteadyStateMTOptimizationResult extends SteadyStateMultiSimulationS
 		for(SteadyStateMultiSimulationResult res : this.getSimulationsMap().values())
 			if(res.getGeneticConditions().equals(result.getGeneticConditions())){
 				for(String method : result.getSimulations().keySet())
-					if(!res.simulations.keySet().contains(method))
+					if(!res.getSimulations().keySet().contains(method))
 						containsAll = false;										
 			}else
 				sameGC = false;
@@ -152,5 +153,4 @@ public class SteadyStateMTOptimizationResult extends SteadyStateMultiSimulationS
 		bw.close();			
 		fw.close();		
 	}
-
 }

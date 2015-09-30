@@ -1,10 +1,9 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult;
 
-import java.io.DataInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.IJecoliConfiguration;
 
 /**
  * Created by ptiago on 17-03-2015.
@@ -21,5 +20,5 @@ public interface IStrainOptimizationReader extends Serializable{
      * @return a solution genetic condition based on a specific jecoli configuration and an input stream
      * @throws Exception
      */
-    GeneticConditions readSolutionFromStream(DataInputStream inputStream,IJecoliConfiguration configuration) throws Exception;
+    GeneticConditions readSolutionFromStream(InputStream inputStream) throws Exception;
 }

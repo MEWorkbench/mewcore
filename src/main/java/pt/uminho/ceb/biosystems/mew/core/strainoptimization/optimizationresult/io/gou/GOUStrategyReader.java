@@ -3,11 +3,10 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.AbstractStrainOptimizationSolutionReader;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.IJecoliConfiguration;
 
 /**
  * Created by ptiago on 18-03-2015.
@@ -15,9 +14,15 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 public class GOUStrategyReader extends AbstractStrainOptimizationSolutionReader{
     
 	private static final long	serialVersionUID	= 1L;
+	private ISteadyStateGeneReactionModel model;
+	
+	public GOUStrategyReader(ISteadyStateGeneReactionModel model) {
+		super();
+		this.model = model;
+	}
 
 	@Override
-    protected GeneticConditions computeGeneticConditions(IJecoliConfiguration configuration, String geneticConditionString) throws Exception {
+    protected GeneticConditions processGeneticConditions(String geneticConditionString) throws Exception {
         List<String> geneIdmodificationList = new ArrayList<>();
         List<Double> geneExpressionModificationList = new ArrayList<>();
 
@@ -30,6 +35,6 @@ public class GOUStrategyReader extends AbstractStrainOptimizationSolutionReader{
         }
 
         GeneChangesList geneChangesList = new GeneChangesList(geneIdmodificationList,geneExpressionModificationList);
-        return new GeneticConditions(geneChangesList,new ReactionChangesList(),true);
+        return new GeneticConditions(geneChangesList, model, true);
     }
 }

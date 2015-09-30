@@ -33,15 +33,15 @@ public class JecoliRKConverter<T extends JecoliGenericConfiguration> implements 
 
     @Override
     public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new RKSolution(configuration,simulations,gc);
+        return new RKSolution(gc, simulations);
     }
 
     @Override
     public ISteadyStateDecoder createDecoder(T configuration) throws Exception {
         ISteadyStateModel model = configuration.getSteadyStateModel();
         List<String>  notAllowedIDs = configuration.getNonAllowedIds();
-        ISteadyStateDecoder decoder = new SteadyStateKnockoutDecoder(model);;
-        decoder.addNotAllowedIds(notAllowedIDs);
+        ISteadyStateDecoder decoder = new SteadyStateKnockoutDecoder(model);
+        if(notAllowedIDs != null) decoder.addNotAllowedIds(notAllowedIDs);
         return decoder;
     }
 

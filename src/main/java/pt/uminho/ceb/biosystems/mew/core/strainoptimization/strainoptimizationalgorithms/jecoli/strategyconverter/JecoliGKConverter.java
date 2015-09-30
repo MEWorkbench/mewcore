@@ -35,7 +35,7 @@ public class JecoliGKConverter <T extends JecoliGenericConfiguration,E extends I
 
     @Override
     public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new GKSolution(configuration,simulations,gc);
+        return new GKSolution(gc, simulations);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class JecoliGKConverter <T extends JecoliGenericConfiguration,E extends I
         ISteadyStateModel model = configuration.getSteadyStateModel();
         List<String>  notAllowedIDs = configuration.getNonAllowedIds();
         ISteadyStateDecoder decoder =  new GeneReactionKnockoutDecoder((ISteadyStateGeneReactionModel) model);
-        decoder.addNotAllowedIds(notAllowedIDs);
+        if(notAllowedIDs != null) decoder.addNotAllowedIds(notAllowedIDs);
         return decoder;
     }
 

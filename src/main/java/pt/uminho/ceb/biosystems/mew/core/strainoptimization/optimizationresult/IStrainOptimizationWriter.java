@@ -8,6 +8,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 /**
  * Created by ptiago on 17-03-2015.
  */
-public interface IStrainOptimizationWriter<T extends JecoliGenericConfiguration,E extends AbstractStrainOptimizationResult<T>> extends Serializable {
+public interface IStrainOptimizationWriter<T extends JecoliGenericConfiguration,E extends AbstractSolution> extends Serializable {
     void write(OutputStreamWriter outputStream) throws Exception;
 }

@@ -3,6 +3,8 @@ package pt.uminho.ceb.biosystems.mew.core.optimization.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
+
 public class SteadyStateMultiSimulationSet {
 
 	

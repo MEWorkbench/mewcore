@@ -68,7 +68,6 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateMTOptimizationResult;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.archivetrimming.SelectionValueTrimmer;
 import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.OptimizationConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.optimization.decoder.GeneReactionKnockoutDecoder;
@@ -83,6 +82,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.InvalidConfigurationException;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
@@ -755,7 +755,7 @@ public class StrainOptimizationControlCenter {
 				simulations.put(simMethod, res);
 			}
 			
-			SteadyStateMultiSimulationResult mres = new SteadyStateMultiSimulationResult(id, gc, environmentalConditions, simulations);
+			SteadyStateMultiSimulationResult mres = new SteadyStateMultiSimulationResult(/*id, */gc, /*environmentalConditions, */simulations);
 			
 			// retrieve fitnesses
 			ArrayList<Double> fitnesses = new ArrayList<Double>();

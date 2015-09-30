@@ -4,6 +4,8 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.gk.GKStrategyReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.GKSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
@@ -12,7 +14,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
  */
 public class GKSolutionSet<T extends  JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,GKSolution> {
 	
-    
 	private static final long	serialVersionUID	= 1L;
 
 	public GKSolutionSet(T baseConfiguration, List<GKSolution> resultList) {
@@ -23,10 +24,13 @@ public class GKSolutionSet<T extends  JecoliGenericConfiguration> extends Abstra
         super(baseConfiguration);
     }
 
-    @Override
-    public GKSolution createSolution(JecoliGenericConfiguration baseConfiguration, double[] objectiveFunctionValueArray, GeneticConditions gc) throws Exception {
-        GKSolution newSolution = new GKSolution(baseConfiguration,gc);
-        constructSimulationResultMap(baseConfiguration,newSolution);
-        return newSolution;
-    }
+	@Override
+	public GKSolution createSolution(GeneticConditions gc) {
+		return new GKSolution(gc);
+	}
+
+	@Override
+	public IStrainOptimizationReader getSolutionReaderInstance() {
+		return new GKStrategyReader(baseConfiguration.getGeneReactionSteadyStateModel());
+	}
 }
