@@ -21,12 +21,14 @@ public class GenericConfiguration implements IGenericConfiguration {
 	protected Map<String, Object>	propertyMap;
 	
 	public GenericConfiguration() {
-		mandatoryPropertyMap = new HashMap<>();
-		optionalPropertyMap = new HashMap<>();
-		propertyMap = new HashMap<>();
+		this(new HashMap<String,Object>());
 	}
 	
-	
+	public GenericConfiguration(Map<String,Object> propertyMapToCopy){
+		mandatoryPropertyMap = new HashMap<>();
+		optionalPropertyMap = new HashMap<>();
+		propertyMap = propertyMapToCopy;
+	}
 	
 	@Override
 	public Object getProperty(String propertyId) {
@@ -48,6 +50,7 @@ public class GenericConfiguration implements IGenericConfiguration {
 			if (value == null) {
 				nonDefinedPropertyList.add(propertyId);
 			} else {
+				System.out.println("property id = "+propertyId);
 				propertyObject.cast(value);
 			}
 		}

@@ -8,7 +8,6 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.hybri
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.solution.ISolutionFactory;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.optimization.decoder.ISteadyStateDecoder;
-import pt.uminho.ceb.biosystems.mew.core.optimization.decoder.SteadyStateKnockoutDecoder;
 import pt.uminho.ceb.biosystems.mew.core.optimization.decoder.SteadyStateUnderOverExp2Decoder;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
@@ -42,7 +41,7 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
     public ISteadyStateDecoder createDecoder(T configuration) throws Exception {
         ISteadyStateModel model = configuration.getSteadyStateModel();
         List<String>  notAllowedIDs = configuration.getNonAllowedIds();
-        ISteadyStateDecoder decoder = new SteadyStateKnockoutDecoder(model);;
+        ISteadyStateDecoder decoder = new SteadyStateUnderOverExp2Decoder(model);;
         decoder.addNotAllowedIds(notAllowedIDs);
         return decoder;
     }

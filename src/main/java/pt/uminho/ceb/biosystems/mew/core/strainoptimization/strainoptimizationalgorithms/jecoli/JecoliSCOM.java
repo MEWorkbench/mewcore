@@ -35,6 +35,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.I
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.strategyconverter.IJecoliOptimizationStrategyConverter;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 /**
  * Created by ptiago on 03-03-2015.
@@ -74,12 +75,12 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 		ISolutionSet<IElementsRepresentation<?>> finalSolutionSet = archive.getArchive();
 		ISteadyStateModel model = configuration.getSteadyStateModel();
 		
-		int k = 0;
+//		int k = 0;
 		List<IStrainOptimizationResult> strainOptimizationSolutionList = new ArrayList<>();
 		for (int j = 0; j < finalSolutionSet.getNumberOfSolutions(); j++) {
 			ISolution solution = finalSolutionSet.getSolution(j);
 			
-			String id = "Solution_" + k;
+//			String id = "Solution_" + k;
 			
 			Map<String, SteadyStateSimulationResult> simulations = new HashMap<String, SteadyStateSimulationResult>();
 			
@@ -104,7 +105,7 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 			
 			IStrainOptimizationResult strainOptimizationResult = createSolutionResult(configuration, simulations, gc);
 			strainOptimizationSolutionList.add(strainOptimizationResult);
-			k++;
+//			k++;
 		}
 		return createSolutionSet(configuration, strainOptimizationSolutionList);
 	}
@@ -127,6 +128,15 @@ public abstract class JecoliSCOM<T extends JecoliGenericConfiguration, E extends
 		Boolean isMaximization = configuration.getIsMaximization();
 		Boolean ou2stepApproach = configuration.getOu2StepApproach();
 		Map<IObjectiveFunction, String> mapOF2Sim = configuration.getMapOf2Sim();
+		
+//		System.out.println(getClass().getName());
+//		System.out.println("MODEL: "+model==null ? "null": "model");
+//		System.out.println("SIM_METHOD: "+simulationMethodList==null ? "null": simulationMethodList.toString());
+//		System.out.println("REFERENCE_FD: "+referenceFD==null ? "null": "reference");
+//		System.out.println("MAX: "+isMaximization==null ? "null": isMaximization);
+//		System.out.println("2STEP: "+ou2stepApproach==null ? "null": ou2stepApproach);
+//		System.out.println("MAP_OF: "+mapOF2Sim==null ? "null": MapUtils.prettyToString(mapOF2Sim));
+		
 		return new StrainOptimizationEvaluationFunction(model, decoder, environmentalConditions, solver, simulationMethodList, mapOF2Sim, referenceFD, isMaximization, 1, ou2stepApproach);
 	}
 	

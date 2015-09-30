@@ -20,6 +20,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 public class OverUnderSolutionSet {
+	
 	public static Double						FIT_THRESHOLD		= 0.00001;
 	public static Double						THRESH_2			= 0.00002;
 	protected List<List<Pair<String, Double>>>	solutions;

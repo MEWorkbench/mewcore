@@ -125,7 +125,7 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 		LPProblemRow fbaRow = getInternalProblem().getProblem().getObjectiveFunction().getRow().clone();
 		LPConstraint cont = new LPConstraint(type, fbaRow, objectiveValue);
 		
-		System.out.println("CREATE CONSTRAINT = "+cont.toString()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().isMaximization()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().toString()+"\t"+getRelaxCoef()+"\t[v="+getProblem().getNumberVariables()+"\\c="+getProblem().getNumberConstraints());
+//		System.out.println("CREATE CONSTRAINT = "+cont.toString()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().isMaximization()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().toString()+"\t"+getRelaxCoef()+"\t[v="+getProblem().getNumberVariables()+"\\c="+getProblem().getNumberConstraints());
 		return cont;
 	}
 	
