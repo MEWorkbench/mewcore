@@ -3,7 +3,7 @@ package pt.uminho.ceb.biosystems.mew.core.cmd.searchtools;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.OptimizationConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.OptimizationConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
 import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 import cern.colt.Arrays;

@@ -6,7 +6,6 @@ import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationStrategy;
 
 public interface IOptimizationTargetsStrategy {
 	
@@ -34,7 +33,7 @@ public interface IOptimizationTargetsStrategy {
 	
 	Set<String> identifyExperimental(Set<String> ignore) throws Exception;
 	
-	OptimizationStrategy getOptimizationStrategy();
+	String getOptimizationStrategy();
 	
 	Set<String> findHighCarbonMetabolites();
 	

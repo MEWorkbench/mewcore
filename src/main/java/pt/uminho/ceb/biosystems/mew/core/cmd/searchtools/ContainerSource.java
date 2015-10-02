@@ -7,7 +7,7 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.BioOptFil
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.FlatFilesReader;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.MetatoolReader;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.ModelConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
 
 
 public enum ContainerSource {

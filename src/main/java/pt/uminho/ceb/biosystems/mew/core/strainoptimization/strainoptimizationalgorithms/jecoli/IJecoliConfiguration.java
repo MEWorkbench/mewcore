@@ -10,6 +10,4 @@ public interface IJecoliConfiguration extends IGenericConfiguration{
     boolean getIsOverUnderExpression();
     boolean getIsGeneOptimization();
     boolean getIsVariableSizeGenome();
-
-
 }

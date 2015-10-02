@@ -79,6 +79,11 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	public static final Pattern									ALIAS_PATTERN			= Pattern.compile("^~(.+?)");
 	
 	/**
+	 * Internal method call pattern (only null argument methods for now)
+	 */
+	public static final Pattern									INTERNAL_METHOD_PATTERN	= Pattern.compile("@FUNC\\[(.+?)\\]");
+	
+	/**
 	 * Combination multiplexer symbol
 	 */
 	public static final String									COMBINATION_DELIMITER	= "\\*";
@@ -946,18 +951,6 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		}
 	}
 	
-	public static void main(String... args) throws Exception {
-		String test = "${LALA}%";
-		
-		Matcher m = VAR_ASS_PATT.matcher(test);
-		
-		if (m.matches()) {
-			System.out.println("match");
-		} else {
-			System.out.println("no match");
-		}
-		
-	}
 	
 	/**
 	 * @return the currentState
@@ -972,6 +965,35 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	 */
 	public void setCurrentState(int currentState) {
 		this.currentState = currentState;
+	}
+	
+//	@Test
+	public void testVarAssPattern() throws Exception {
+		String test = "${LALA}%";
+		
+		Matcher m = VAR_ASS_PATT.matcher(test);
+		
+		if (m.matches()) {
+			System.out.println("match");
+		} else {
+			System.out.println("no match");
+		}
+		
+	}
+	
+//	@Test
+	public static void main(String... args) throws Exception {
+		String test = "@FUNC[getContainer]";
+		
+		Matcher m = INTERNAL_METHOD_PATTERN.matcher(test);
+		
+		if (m.matches()) {
+			String group1 = m.group(1);			
+			System.out.println("match = "+group1);
+		} else {
+			System.out.println("no match");
+		}
+		
 	}
 	
 }

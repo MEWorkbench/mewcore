@@ -89,7 +89,7 @@ public class SimulationProperties {
 	
 	
 	/***********************
-	 *   PPEC properties   *
+	 *   DSPP properties   *
 	 **********************/
 	public static final String DSPP_FIRST_STAGE_ENV_COND = "DSPP_FIRST_STAGE_ENV_CONDITION";
 	

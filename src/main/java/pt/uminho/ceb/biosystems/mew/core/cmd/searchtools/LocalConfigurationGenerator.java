@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.OptimizationConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.OptimizationConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.utils.SmartProperties;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.tree.generictree.TreeNode;

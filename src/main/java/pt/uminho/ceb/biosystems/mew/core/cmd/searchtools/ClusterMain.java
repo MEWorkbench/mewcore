@@ -3,7 +3,7 @@ package pt.uminho.ceb.biosystems.mew.core.cmd.searchtools;
 import java.io.File;
 import java.io.IOException;
 
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.OptimizationConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.OptimizationConfiguration;
 
 public class ClusterMain {
 	

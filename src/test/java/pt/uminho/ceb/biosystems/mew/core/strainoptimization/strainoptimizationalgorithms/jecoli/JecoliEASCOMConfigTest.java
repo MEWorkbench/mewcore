@@ -3,7 +3,7 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationa
 import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.InvalidConfigurationException;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliEASCOMConfig;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEACSOMConfig;
 
 
 /**
@@ -13,31 +13,31 @@ public class JecoliEASCOMConfigTest {
 
     @Test(expected = InvalidConfigurationException.class)
     public void eaDefaultConfigurationsTest() throws InvalidConfigurationException {
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.validate();
     }
 
     @Test
     public void eaDefaultConfigurationsPopulationSizeTest() throws InvalidConfigurationException {
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         assert(100 == config.getPopulationSize());
     }
 
     @Test
     public void eaDefaultConfigurationsNumberOfElitistIndividualsTest() throws InvalidConfigurationException {
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         assert(1 == config.getNumberOfElitistIndividuals());
     }
 
     @Test
     public void eaDefaultConfigurationsNumberOfDefaultSurvirosTest() throws InvalidConfigurationException {
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         assert(49 == config.getNumberOfSurvivors());
     }
 
     @Test
     public void eaDefaultConfigurationsOffSpringSizeTest() throws InvalidConfigurationException {
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         assert(50 == config.getOffSpringSize());
     }
 

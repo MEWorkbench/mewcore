@@ -8,29 +8,20 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationStrategy;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
 
 public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsStrategy {
 	
-	public static final OptimizationStrategy	OPTIMIZATION_STRATEGY			= OptimizationStrategy.GK;
+	public static final String GK_OPTIMIZATION_STRATEGY = "GK";
 	
-	private RKOptimizationTargetsStrategy		_rkOptimizationTargetsStrategy	= null;
+	private RKOptimizationTargetsStrategy _rkOptimizationTargetsStrategy = null;
 	
-	public GKOptimizationTargetsStrategy(
-			Container container,
-			ISteadyStateModel model,
-			EnvironmentalConditions environmentalConditions,
-			SolverType solver,
-			Set<String> ignoredPathways,
-			Set<String> ignoredCofactors,
-			Integer carbonOffset) {
+	public GKOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, SolverType solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
 		
 		super(container, model, environmentalConditions, solver, ignoredPathways, ignoredCofactors, carbonOffset);
-		_rkOptimizationTargetsStrategy = new RKOptimizationTargetsStrategy(container, model, environmentalConditions,
-				solver, ignoredPathways, ignoredCofactors, carbonOffset);
+		_rkOptimizationTargetsStrategy = new RKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, ignoredPathways, ignoredCofactors, carbonOffset);
 	}
 	
 	@Override
@@ -42,7 +33,7 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	
 	@Override
 	public Set<String> getTargets() {
-		try {			
+		try {
 			_rkOptimizationTargetsStrategy.processNonTargets();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,15 +43,14 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 		for (String r : targetReactions)
 			targetGenes.addAll(_container.getReactions().get(r).getGenesIDs());
 		Set<String> criticalGenes = _flags_data.get(TargetIDStrategy.IDENTIFY_CRITICAL);
-		if(criticalGenes==null)
-			criticalGenes = new HashSet<String>();
+		if (criticalGenes == null) criticalGenes = new HashSet<String>();
 		
 		return CollectionUtils.getSetDiferenceValues(targetGenes, criticalGenes);
 	}
 	
 	public void processNonTargets() throws Exception {
-
-		TreeSet<String> nonTargetsSoFar = new TreeSet<String>(); 
+		
+		TreeSet<String> nonTargetsSoFar = new TreeSet<String>();
 		
 		for (TargetIDStrategy f : _flags.keySet()) {
 			if (_flags.get(f).isOn()) {
@@ -88,8 +78,8 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 						break;
 				}
 				
-//				_flags.get(f).off();
-				System.out.println("GK flag = "+_flags.get(f).get_strategy()+" / "+tempIds.size()+" ("+TimeUtils.formatMillis(System.currentTimeMillis() - inittime)+")");
+				//				_flags.get(f).off();
+				System.out.println("GK flag = " + _flags.get(f).get_strategy() + " / " + tempIds.size() + " (" + TimeUtils.formatMillis(System.currentTimeMillis() - inittime) + ")");
 				_flags_data.put(f, tempIds);
 				nonTargetsSoFar.addAll(getNonTargets());
 			}
@@ -110,25 +100,25 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Set<String> identifyNonGeneAssociated(Set<String> ignore) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Set<String> identifyDrainsTransports() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Set<String> identifyPathwayRelated() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Set<String> identifyHighCarbonRelated(Set<String> ignore) {
 		// TODO Auto-generated method stub
@@ -144,10 +134,10 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	public Set<String> identifyNoFluxWT(Set<String> ignore) throws Exception {
 		return null;
 	}
-
-	public Set<String> identifyExperimental(Set<String> ignoredReactions) throws Exception{
+	
+	public Set<String> identifyExperimental(Set<String> ignoredReactions) throws Exception {
 		Set<String> toIgnore = new HashSet<String>();
-		for(IExperimentalGeneEssentiality exp: _experimental){
+		for (IExperimentalGeneEssentiality exp : _experimental) {
 			Set<String> essential = exp.getEssentialGenesFromModel(_model);
 			toIgnore.addAll(essential);
 		}
@@ -155,8 +145,8 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	}
 	
 	@Override
-	public OptimizationStrategy getOptimizationStrategy() {
-		return OPTIMIZATION_STRATEGY;
+	public String getOptimizationStrategy() {
+		return GK_OPTIMIZATION_STRATEGY;
 	}
 	
 	public void addPathways(String... pathways) {
@@ -174,8 +164,8 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 		_rkOptimizationTargetsStrategy.setEnvironmentalConditions(environmentalConditions);
 	}
 	
-	public void setCarbonOffset(int carbonOffset) {		
-		_rkOptimizationTargetsStrategy.setCarbonOffset(carbonOffset);		
-	}	
+	public void setCarbonOffset(int carbonOffset) {
+		_rkOptimizationTargetsStrategy.setCarbonOffset(carbonOffset);
+	}
 	
 }

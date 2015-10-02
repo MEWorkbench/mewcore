@@ -12,7 +12,6 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.ReactionC
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationStrategy;
 import pt.uminho.ceb.biosystems.mew.core.simplification.model.EquivalentFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simplification.model.FVAZeroValueFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simplification.model.StructuralAnalysisFunctions;
@@ -26,16 +25,9 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
 
 public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsStrategy {
 	
-	public static final OptimizationStrategy	OPTIMIZATION_STRATEGY	= OptimizationStrategy.RK;
+	public static final String RK_OPTIMIZATION_STRATEGY = "RK";
 	
-	public RKOptimizationTargetsStrategy(
-			Container container,
-			ISteadyStateModel model,
-			EnvironmentalConditions environmentalConditions,
-			SolverType solver,
-			Set<String> ignoredPathways,
-			Set<String> ignoredCofactors,
-			Integer carbonOffset) {
+	public RKOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, SolverType solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
 		super(container, model, environmentalConditions, solver, ignoredPathways, ignoredCofactors, carbonOffset);
 	}
 	
@@ -44,8 +36,7 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 		TreeSet<String> nonTargets = new TreeSet<String>();
 		for (TargetIDStrategy opttarget : _flags.keySet()) {
 			Set<String> nt = _flags_data.get(opttarget);
-			if (nt != null && !nt.isEmpty())
-				nonTargets.addAll(nt);
+			if (nt != null && !nt.isEmpty()) nonTargets.addAll(nt);
 		}
 		
 		return nonTargets;
@@ -99,29 +90,28 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 					default:
 						break;
 				}
-//				_flags.get(f).off();
-				System.out.println("RK flag = "+_flags.get(f).get_strategy()+" / "+tempIds.size()+" ("+TimeUtils.formatMillis(System.currentTimeMillis() - inittime)+")");
+				//				_flags.get(f).off();
+				System.out.println("RK flag = " + _flags.get(f).get_strategy() + " / " + tempIds.size() + " (" + TimeUtils.formatMillis(System.currentTimeMillis() - inittime) + ")");
 				_flags_data.put(f, tempIds);
 				nonTargetsSoFar.addAll(getNonTargets());
 			}
 		}
 	}
 	
-	public Set<String> identifyExperimental(Set<String> ignoredReactions) throws Exception{
+	public Set<String> identifyExperimental(Set<String> ignoredReactions) throws Exception {
 		Set<String> toIgnore = new HashSet<String>();
-		for(IExperimentalGeneEssentiality exp: _experimental){
+		for (IExperimentalGeneEssentiality exp : _experimental) {
 			Set<String> essential = exp.getEssentialReactionsFromModel(_model);
 			toIgnore.addAll(essential);
 		}
 		return toIgnore;
 	}
 	
-	public Set<String> identifyNoFluxWT(Set<String> ignoredReactions) throws Exception{
+	public Set<String> identifyNoFluxWT(Set<String> ignoredReactions) throws Exception {
 		Set<String> toignore = new HashSet<String>();
 		FluxValueMap wtMap = SimulationProperties.simulateWT(_model, _environmentalConditions, _solver);
-		for(String s: wtMap.keySet()){
-			if(wtMap.get(s)==0.0)
-				toignore.add(s);
+		for (String s : wtMap.keySet()) {
+			if (wtMap.get(s) == 0.0) toignore.add(s);
 		}
 		return toignore;
 	}
@@ -162,9 +152,9 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 			Set<String> set = listEquiv.get(i);
 			
 			boolean skipedOne = false;
-			for(String eq: set){
-				if(!ignoreReactions.contains(eq)){
-					if(skipedOne)
+			for (String eq : set) {
+				if (!ignoreReactions.contains(eq)) {
+					if (skipedOne)
 						toIgnore.add(eq);
 					else
 						skipedOne = true;
@@ -180,9 +170,8 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 		Map<String, ReactionCI> reactionMap = _container.getReactions();
 		Set<String> toIgnore = new HashSet<String>();
 		for (String id : reactionMap.keySet())
-			if (!ignoreReactions.contains(id) && reactionMap.get(id).getGenesIDs().isEmpty())
-				toIgnore.add(id);
-		
+			if (!ignoreReactions.contains(id) && reactionMap.get(id).getGenesIDs().isEmpty()) toIgnore.add(id);
+			
 		return toIgnore;
 	}
 	
@@ -190,12 +179,10 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	public Set<String> identifyDrainsTransports() {
 		Set<String> toIgnore = new HashSet<String>();
 		toIgnore.addAll(_container.getDrains());
-		if(!_onlyDrains)
-			toIgnore.addAll(_container.identifyTransportReactions());
+		if (!_onlyDrains) toIgnore.addAll(_container.identifyTransportReactions());
 		
 		return toIgnore;
 	}
-	
 	
 	@Override
 	public Set<String> identifyPathwayRelated() {
@@ -227,7 +214,7 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	}
 	
 	@Override
-	public OptimizationStrategy getOptimizationStrategy() {
-		return OPTIMIZATION_STRATEGY;
+	public String getOptimizationStrategy() {
+		return RK_OPTIMIZATION_STRATEGY;
 	}
 }

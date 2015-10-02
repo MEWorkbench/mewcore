@@ -9,11 +9,11 @@ import java.util.Set;
 
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.ConstrainedReaction;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.OptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.converter.ConnectionFormulation;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.ConstrainedReaction;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 

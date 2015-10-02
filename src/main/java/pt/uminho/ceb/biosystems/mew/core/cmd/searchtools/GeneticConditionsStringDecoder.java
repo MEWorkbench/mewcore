@@ -2,8 +2,8 @@ package pt.uminho.ceb.biosystems.mew.core.cmd.searchtools;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IRepresentation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.solution.decoder.ISolutionDecoder;
-import pt.uminho.ceb.biosystems.mew.core.optimization.decoder.ISteadyStateDecoder;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
 
 public class GeneticConditionsStringDecoder implements ISolutionDecoder<IRepresentation, String> {
 	

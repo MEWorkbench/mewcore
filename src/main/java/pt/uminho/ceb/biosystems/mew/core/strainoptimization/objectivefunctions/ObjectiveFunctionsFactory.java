@@ -10,6 +10,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.CYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
@@ -22,6 +23,7 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.put(BPCYObjectiveFunction.ID, BPCYObjectiveFunction.class);
 		mapObjectiveFunctions.put(WeightedBPCYObjectiveFunction.ID, WeightedBPCYObjectiveFunction.class);
 		mapObjectiveFunctions.put(WeightedYIELDObjectiveFunction.ID, WeightedYIELDObjectiveFunction.class);
+		mapObjectiveFunctions.put(CYIELDObjectiveFunction.ID, CYIELDObjectiveFunction.class);
 	}
 	
 	public ObjectiveFunctionsFactory() {
@@ -61,6 +63,9 @@ public class ObjectiveFunctionsFactory {
 	public IObjectiveFunction getObjectiveFunction(String ofID, Object... initArgs) throws InvalidObjectiveFunctionConfiguration {
 		
 		Class<? extends IObjectiveFunction> klazz = mapObjectiveFunctions.get(ofID);
+		if(klazz==null){
+			throw new InvalidObjectiveFunctionConfiguration("Unknown objective function ["+ofID+"]. Please make sure it has been registered in the respective factory or contact the admin.");
+		}
 		Class<?>[] argsClasses = getArgumentsClasses(initArgs);
 		IObjectiveFunction of;
 		try {

@@ -16,9 +16,9 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.I
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.GKSolutionSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliEASCOMConfig;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.strategyconverter.JecoliGKConverter;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.JecoliGKConverter;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGKCSOM;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
@@ -29,9 +29,9 @@ public class JecoliEAGeneKnockoutCSOMTest {
 
     @Test
     public void executeAlgorithmTest() throws Exception {
-        JecoliEAGeneKnockoutCSOM algorithm = new JecoliEAGeneKnockoutCSOM();
+        JecoliEAGKCSOM algorithm = new JecoliEAGKCSOM();
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"SA");
 
         String modelFile = "/home/ptiago/Silico/IPCRES/Propanediol/iMM904_Methylglyoxal.xml";

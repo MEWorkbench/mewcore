@@ -15,7 +15,6 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateMode
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter.StrainOptimizationControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliEASCOMConfig;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
@@ -27,7 +26,7 @@ public class JecoliEAReactionKnockoutCSOMTest {
 
     public void executeAlgorithm(String algorithm,String strategy) throws Exception {
         StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,algorithm);
         config.setOptimizationStrategy(strategy);
         String modelFile = "/home/ptiago/Silico/IPCRES/Propanediol/iMM904_Methylglyoxal.xml";

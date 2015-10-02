@@ -18,9 +18,9 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.I
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.RKRSSolutionSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliEASCOMConfig;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.strategyconverter.JecoliGKConverter;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.JecoliGKConverter;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEACSOMConfig;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
@@ -33,7 +33,7 @@ public class RKRSStrategyReaderTest extends AbstractStrategyReader {
     public void readSolutionFile() throws Exception {
         List<Pair<Double,List<Pair<String,Double>>>>  originalSolutionList =createOriginalSolutionList();
         StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"SA");
         String resultFileLocation = "./TestData/RKRS.data";
         String modelFile = "./TestModel/iJO1366_swaps.xml";

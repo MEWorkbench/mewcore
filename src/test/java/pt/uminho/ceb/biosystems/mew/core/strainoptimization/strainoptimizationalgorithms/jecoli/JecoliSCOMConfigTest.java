@@ -13,6 +13,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateMode
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.InvalidConfigurationException;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEACSOMConfig;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
@@ -23,7 +24,7 @@ public class JecoliSCOMConfigTest {
 
     @Test(expected = InvalidConfigurationException.class)
     public void eaDefaultConfigurations() throws InvalidConfigurationException {
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.validate();
     }
 
@@ -40,7 +41,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -60,7 +61,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setEnvironmentalConditions(new EnvironmentalConditions());
@@ -85,7 +86,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         //config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -111,7 +112,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         //config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -137,7 +138,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -163,7 +164,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -189,7 +190,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -215,7 +216,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
@@ -241,7 +242,7 @@ public class JecoliSCOMConfigTest {
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
 
-        JecoliEASCOMConfig config = new JecoliEASCOMConfig();
+        JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);

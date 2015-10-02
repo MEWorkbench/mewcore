@@ -7,9 +7,9 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.CompartmentCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.MetaboliteCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.ReactionCI;
+import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.configuration.ModelConfiguration;
 
 public class DeadEnds {
 	

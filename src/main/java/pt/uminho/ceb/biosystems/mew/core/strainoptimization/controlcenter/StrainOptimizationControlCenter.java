@@ -3,21 +3,21 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEAGeneKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEAGeneOverUnderExpressionCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEAReactionKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEAReactionOverUnderExpressionCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEAReactionSwapReactionKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.JecoliSAGeneKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.JecoliSAGeneOverUnderExpressionCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.JecoliSAReactionKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.JecoliSAReactionOverUnderExpressionSCOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.JecoliSAReactionSwapReactionKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.JecoliSPEA2GeneKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.JecoliSPEA2GeneOverUnderExpressionCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.JecoliSPEA2ReactionKnockoutCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.JecoliSPEA2ReactionOverUnderExpressionCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.JecoliSPEA2ReactionSwapReactionKnockoutCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGKCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGOUCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAROUCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKRSCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAGKCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAGOUCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSARKCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAROUSCOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSARKRSCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2GKCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2GOUCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2RKCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2ROUCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2RKRSCSOM;
 
 /**
  * Created by ptiago on 23-02-2015.
@@ -29,25 +29,25 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 	public StrainOptimizationControlCenter() {
 		super();
 		//EA Based Methods
-		factory.registerMethod("EARK", JecoliEAReactionKnockoutCSOM.class);
-		factory.registerMethod("EAGK", JecoliEAGeneKnockoutCSOM.class);
-		factory.registerMethod("EAROU", JecoliEAReactionOverUnderExpressionCSOM.class);
-		factory.registerMethod("EAGOU", JecoliEAGeneOverUnderExpressionCSOM.class);
-		factory.registerMethod("EARKRS", JecoliEAReactionSwapReactionKnockoutCSOM.class);
+		factory.registerMethod("EARK", JecoliEARKCSOM.class);
+		factory.registerMethod("EAGK", JecoliEAGKCSOM.class);
+		factory.registerMethod("EAROU", JecoliEAROUCSOM.class);
+		factory.registerMethod("EAGOU", JecoliEAGOUCSOM.class);
+		factory.registerMethod("EARKRS", JecoliEARKRSCSOM.class);
 		
 		//SA Based Methods
-		factory.registerMethod("SARK", JecoliSAReactionKnockoutCSOM.class);
-		factory.registerMethod("SAGK", JecoliSAGeneKnockoutCSOM.class);
-		factory.registerMethod("SAROU", JecoliSAReactionOverUnderExpressionSCOM.class);
-		factory.registerMethod("SAGOU", JecoliSAGeneOverUnderExpressionCSOM.class);
-		factory.registerMethod("SARKRS", JecoliSAReactionSwapReactionKnockoutCSOM.class);
+		factory.registerMethod("SARK", JecoliSARKCSOM.class);
+		factory.registerMethod("SAGK", JecoliSAGKCSOM.class);
+		factory.registerMethod("SAROU", JecoliSAROUSCOM.class);
+		factory.registerMethod("SAGOU", JecoliSAGOUCSOM.class);
+		factory.registerMethod("SARKRS", JecoliSARKRSCSOM.class);
 		
 		//SPEA2 Based Methods
-		factory.registerMethod("SPEA2RK", JecoliSPEA2ReactionKnockoutCSOM.class);
-		factory.registerMethod("SPEA2GK", JecoliSPEA2GeneKnockoutCSOM.class);
-		factory.registerMethod("SPEA2ROU", JecoliSPEA2ReactionOverUnderExpressionCSOM.class);
-		factory.registerMethod("SPEA2GOU", JecoliSPEA2GeneOverUnderExpressionCSOM.class);
-		factory.registerMethod("SPEA2RKRS", JecoliSPEA2ReactionSwapReactionKnockoutCSOM.class);
+		factory.registerMethod("SPEA2RK", JecoliSPEA2RKCSOM.class);
+		factory.registerMethod("SPEA2GK", JecoliSPEA2GKCSOM.class);
+		factory.registerMethod("SPEA2ROU", JecoliSPEA2ROUCSOM.class);
+		factory.registerMethod("SPEA2GOU", JecoliSPEA2GOUCSOM.class);
+		factory.registerMethod("SPEA2RKRS", JecoliSPEA2RKRSCSOM.class);
 		
 		//PBIL Based Methods
 	}

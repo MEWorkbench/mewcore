@@ -8,14 +8,15 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import matlabcontrol.MatlabConnectionException;
-import matlabcontrol.MatlabInvocationException;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import matlabcontrol.MatlabConnectionException;
+import matlabcontrol.MatlabInvocationException;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.ConstrainedReaction;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.OptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.matlab.CommandExecutionException;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.formulations.cobra.optimization.CobraOptKnockFormulation;
@@ -23,10 +24,6 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.ConstrainedReaction;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.SteadyStateOptimizationResult;
-import pt.uminho.ceb.biosystems.mew.core.optimization.controlcenter.OptimizationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;

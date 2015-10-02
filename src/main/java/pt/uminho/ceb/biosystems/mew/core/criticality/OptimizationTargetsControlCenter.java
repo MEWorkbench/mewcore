@@ -8,7 +8,6 @@ import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalG
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.components.OptimizationStrategy;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 /**
@@ -35,11 +34,11 @@ import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
  */
 public class OptimizationTargetsControlCenter {
 	
-	public static final String				CARBON							= "C";
+	public static final String CARBON = "C";
 	
-	private static final int				DEFAULT_CARBON_OFFSET			= 7;
+	private static final int DEFAULT_CARBON_OFFSET = 7;
 	
-	protected IOptimizationTargetsStrategy	_optimizationTargetsStrategy	= null;
+	protected IOptimizationTargetsStrategy _optimizationTargetsStrategy = null;
 	
 	/**
 	 * Default constructor
@@ -50,21 +49,14 @@ public class OptimizationTargetsControlCenter {
 	 * @param environmentalConditions
 	 * @throws InvalidSteadyStateModelException
 	 */
-	public OptimizationTargetsControlCenter(
-			OptimizationStrategy strategy,
-			SolverType solver,
-			Container container,
-			ISteadyStateModel model,
-			EnvironmentalConditions environmentalConditions,
-			Set<String> pathways,
-			Set<String> cofactors,
-			Integer carbonOffset) throws InvalidSteadyStateModelException {
-		
+	public OptimizationTargetsControlCenter(String strategy, SolverType solver, Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, Set<String> pathways, Set<String> cofactors, Integer carbonOffset)
+			throws InvalidSteadyStateModelException {
+			
 		switch (strategy) {
-			case GK:
+			case GKOptimizationTargetsStrategy.GK_OPTIMIZATION_STRATEGY:
 				_optimizationTargetsStrategy = new GKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, pathways, cofactors, (carbonOffset == null ? DEFAULT_CARBON_OFFSET : carbonOffset));
 				break;
-			case RK:
+			case RKOptimizationTargetsStrategy.RK_OPTIMIZATION_STRATEGY:
 				_optimizationTargetsStrategy = new RKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, pathways, cofactors, (carbonOffset == null ? DEFAULT_CARBON_OFFSET : carbonOffset));
 				break;
 			default:
@@ -96,7 +88,7 @@ public class OptimizationTargetsControlCenter {
 		_optimizationTargetsStrategy.addExperimentalValidations(experimental);
 	}
 	
-	public void setOnlyDrains(boolean onlyDrains){
+	public void setOnlyDrains(boolean onlyDrains) {
 		_optimizationTargetsStrategy.setOnlyDrains(onlyDrains);
 	}
 	
@@ -126,15 +118,15 @@ public class OptimizationTargetsControlCenter {
 			_optimizationTargetsStrategy.getFlags().get(strategy).off();
 	}
 	
-	public boolean isEnabled(TargetIDStrategy strategy){
+	public boolean isEnabled(TargetIDStrategy strategy) {
 		return _optimizationTargetsStrategy.getFlags().get(strategy).isOn();
 	}
 	
-	public boolean isOnlyDrains(){
+	public boolean isOnlyDrains() {
 		return _optimizationTargetsStrategy.isOnlyDrains();
 	}
 	
-	public void setCarbonOffSet(int carbonOffSet){
+	public void setCarbonOffSet(int carbonOffSet) {
 		_optimizationTargetsStrategy.setCarbonOffset(carbonOffSet);
 	}
 	
