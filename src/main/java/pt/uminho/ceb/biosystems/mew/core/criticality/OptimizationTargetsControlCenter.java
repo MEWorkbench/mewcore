@@ -108,14 +108,14 @@ public class OptimizationTargetsControlCenter {
 		if (!_optimizationTargetsStrategy.getFlags().containsKey(strategy))
 			throw new Exception("Invalid strategy [" + strategy + "]");
 		else
-			_optimizationTargetsStrategy.getFlags().get(strategy).on();
+			_optimizationTargetsStrategy.enable(strategy);;
 	}
 	
 	public void disable(TargetIDStrategy strategy) throws Exception {
 		if (!_optimizationTargetsStrategy.getFlags().containsKey(strategy))
 			throw new Exception("Invalid strategy [" + strategy + "]");
 		else
-			_optimizationTargetsStrategy.getFlags().get(strategy).off();
+			_optimizationTargetsStrategy.disable(strategy);
 	}
 	
 	public boolean isEnabled(TargetIDStrategy strategy) {
@@ -128,6 +128,14 @@ public class OptimizationTargetsControlCenter {
 	
 	public void setCarbonOffSet(int carbonOffSet) {
 		_optimizationTargetsStrategy.setCarbonOffset(carbonOffSet);
+	}
+
+	public Set<String> getNonTargets(Set<String> targets) {
+		return _optimizationTargetsStrategy.getNonTargets(targets);
+	}
+
+	public void saveNonTargetsToFile(String file, Set<String> nonTargets) throws IOException {
+		_optimizationTargetsStrategy.saveNonTargetsToFile(file,nonTargets);
 	}
 	
 }

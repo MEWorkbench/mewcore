@@ -108,6 +108,7 @@ public class ModelConfiguration extends SmartProperties {
 					break;
 			}
 			_container = containerSource.read(getModelName(), map);
+			_container.setBiomassId(getModelBiomass());
 //		}
 		return _container;
 	}

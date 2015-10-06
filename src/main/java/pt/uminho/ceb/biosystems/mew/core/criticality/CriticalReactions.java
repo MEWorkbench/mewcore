@@ -124,7 +124,9 @@ public class CriticalReactions implements Serializable {
 		for (int i = 0; i < model.getNumberOfReactions(); i++) {
 			String reactionId = model.getReactionId(i);
 			
-			if ((ignore==null || !ignore.contains(reactionId)) && wildTypeFluxes.getValue(reactionId) != 0.0 && isReactionCritical(reactionId)) criticalReactionIds.add(reactionId);
+			if ((ignore==null || !ignore.contains(reactionId)) && wildTypeFluxes.getValue(reactionId) != 0.0 && isReactionCritical(reactionId)){
+				criticalReactionIds.add(reactionId);
+			}
 		}
 	}
 
@@ -139,8 +141,9 @@ public class CriticalReactions implements Serializable {
 		for(int i=0; i < model.getNumberOfReactions(); i++)
 		{
 			String reactionId = model.getReactionId(i);
-			if(wildTypeFluxes.getValue(reactionId) != 0.0 && isReactionCritical(reactionId, targetId))
-				criticalReactionIds.add(reactionId);
+			if(wildTypeFluxes.getValue(reactionId) != 0.0 && isReactionCritical(reactionId, targetId)){
+				criticalReactionIds.add(reactionId);				
+			}
 		}
 	}
 

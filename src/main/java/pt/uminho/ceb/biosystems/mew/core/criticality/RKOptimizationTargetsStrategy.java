@@ -43,6 +43,14 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	}
 	
 	@Override
+	public Set<String> getNonTargets(Set<String> targets){
+		Set<String> totalReactions = _container.getReactions().keySet();
+		Set<String> targetReactions = targets == null ? getTargets() : targets;
+		return CollectionUtils.getSetDiferenceValues(totalReactions, targetReactions);
+		
+	}
+	
+	@Override
 	public Set<String> getTargets() {
 		Set<String> totalReactions = _container.getReactions().keySet();
 		Set<String> nonTargets = getNonTargets();
@@ -93,16 +101,18 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 				//				_flags.get(f).off();
 				System.out.println("RK flag = " + _flags.get(f).get_strategy() + " / " + tempIds.size() + " (" + TimeUtils.formatMillis(System.currentTimeMillis() - inittime) + ")");
 				_flags_data.put(f, tempIds);
-				nonTargetsSoFar.addAll(getNonTargets());
+				nonTargetsSoFar.addAll(tempIds);
 			}
 		}
 	}
 	
 	public Set<String> identifyExperimental(Set<String> ignoredReactions) throws Exception {
 		Set<String> toIgnore = new HashSet<String>();
-		for (IExperimentalGeneEssentiality exp : _experimental) {
-			Set<String> essential = exp.getEssentialReactionsFromModel(_model);
-			toIgnore.addAll(essential);
+		if(_experimental!=null){
+			for (IExperimentalGeneEssentiality exp : _experimental) {
+				Set<String> essential = exp.getEssentialReactionsFromModel(_model);
+				toIgnore.addAll(essential);
+			}			
 		}
 		return toIgnore;
 	}
@@ -119,7 +129,7 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	@Override
 	public Set<String> identifyCritical(Set<String> ignoreReactions) throws Exception {
 		Set<String> toignore = new HashSet<String>();
-		pt.uminho.ceb.biosystems.mew.core.criticality.CriticalReactions critical = new pt.uminho.ceb.biosystems.mew.core.criticality.CriticalReactions(_model, _environmentalConditions, _solver);
+		CriticalReactions critical = new CriticalReactions(_model, _environmentalConditions, _solver);
 		critical.identifyCriticalReactionIgnoring(ignoreReactions);
 		toignore.addAll(critical.getCriticalReactionIds());
 		return toignore;
@@ -216,5 +226,15 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	@Override
 	public String getOptimizationStrategy() {
 		return RK_OPTIMIZATION_STRATEGY;
+	}
+
+	@Override
+	public void enable(TargetIDStrategy strategy) {
+		getFlags().get(strategy).on();
+	}
+
+	@Override
+	public void disable(TargetIDStrategy strategy) {
+		getFlags().get(strategy).off();
 	}
 }

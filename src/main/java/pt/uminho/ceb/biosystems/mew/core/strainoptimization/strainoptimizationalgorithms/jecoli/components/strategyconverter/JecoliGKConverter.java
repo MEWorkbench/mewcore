@@ -21,7 +21,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 /**
  * Created by ptiago on 19-03-2015.
  */
-public class JecoliGKConverter <T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> implements IJecoliOptimizationStrategyConverter<T,E> {
+public class JecoliGKConverter <T extends JecoliGenericConfiguration> implements IJecoliOptimizationStrategyConverter<T,GKSolution> {
 	
     /**
 	 * 
@@ -29,8 +29,8 @@ public class JecoliGKConverter <T extends JecoliGenericConfiguration,E extends I
 	private static final long	serialVersionUID	= 1L;
 
 	@Override
-    public IStrainOptimizationResultSet createSolutionSet(T configuration,List<E> solutionList) {
-        return new GKSolutionSet(configuration,solutionList);
+    public IStrainOptimizationResultSet<T,GKSolution> createSolutionSet(T configuration,List<GKSolution> solutionList) {
+        return new GKSolutionSet<T>(configuration,solutionList);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class JecoliGKConverter <T extends JecoliGenericConfiguration,E extends I
     }
 
     @Override
-    public ISolutionFactory createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction evaluationFunction) {
+    public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
         int maxSetValue = decoder.getNumberVariables();
         int maxSetSize = configuration.getMaxSetSize();
         return new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());

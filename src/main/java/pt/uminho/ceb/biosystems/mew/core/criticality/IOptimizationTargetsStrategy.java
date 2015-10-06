@@ -71,9 +71,18 @@ public interface IOptimizationTargetsStrategy {
 	
 	void saveNonTargetsToFile(String file) throws IOException;
 	
+	void saveNonTargetsToFile(String file, Set<String> nonTargets) throws IOException;
+	
 	void saveNonTargetsPerStrategyToFile(String file,boolean includeConfiguration) throws IOException;
 
 	void setOnlyDrains(boolean onlyDrains);
 	
 	boolean isOnlyDrains();
+
+	void enable(TargetIDStrategy strategy);
+	
+	void disable(TargetIDStrategy strategy);
+
+	Set<String> getNonTargets(Set<String> targets);
+
 }

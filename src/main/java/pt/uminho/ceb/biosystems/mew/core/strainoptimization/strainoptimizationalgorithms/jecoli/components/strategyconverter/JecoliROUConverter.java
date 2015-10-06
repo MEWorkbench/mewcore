@@ -50,7 +50,7 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
     }
 
     @Override
-    public ISolutionFactory createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction evaluationFunction) {
+    public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
         int minSetSize = 1;
         int maxSetValue = decoder.getNumberVariables();
         int maxSetSize = configuration.getMaxSetSize();

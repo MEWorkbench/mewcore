@@ -26,14 +26,21 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	
 	@Override
 	public Set<String> getNonTargets() {
+		return getNonTargets(null);
+	}
+	
+	@Override
+	public Set<String> getNonTargets(Set<String> targets){
 		Set<String> totalGenes = _container.getGenes().keySet();
-		Set<String> targetGenes = getTargets();
+		Set<String> targetGenes = targets==null ? getTargets() : targets;
 		return CollectionUtils.getSetDiferenceValues(totalGenes, targetGenes);
+		
 	}
 	
 	@Override
 	public Set<String> getTargets() {
 		try {
+			processNonTargets();
 			_rkOptimizationTargetsStrategy.processNonTargets();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,7 +50,9 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 		for (String r : targetReactions)
 			targetGenes.addAll(_container.getReactions().get(r).getGenesIDs());
 		Set<String> criticalGenes = _flags_data.get(TargetIDStrategy.IDENTIFY_CRITICAL);
-		if (criticalGenes == null) criticalGenes = new HashSet<String>();
+		if (criticalGenes == null){
+			criticalGenes = new HashSet<String>();
+		}
 		
 		return CollectionUtils.getSetDiferenceValues(targetGenes, criticalGenes);
 	}
@@ -81,7 +90,7 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 				//				_flags.get(f).off();
 				System.out.println("GK flag = " + _flags.get(f).get_strategy() + " / " + tempIds.size() + " (" + TimeUtils.formatMillis(System.currentTimeMillis() - inittime) + ")");
 				_flags_data.put(f, tempIds);
-				nonTargetsSoFar.addAll(getNonTargets());
+				nonTargetsSoFar.addAll(tempIds);
 			}
 		}
 	}
@@ -166,6 +175,23 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	
 	public void setCarbonOffset(int carbonOffset) {
 		_rkOptimizationTargetsStrategy.setCarbonOffset(carbonOffset);
+	}
+	
+	public void setOnlyDrains(boolean onlyDrains){
+		super.setOnlyDrains(onlyDrains);
+		_rkOptimizationTargetsStrategy.setOnlyDrains(onlyDrains);
+	}
+
+	@Override
+	public void enable(TargetIDStrategy strategy) {
+		_flags.get(strategy).on();
+		_rkOptimizationTargetsStrategy.getFlags().get(strategy).on();
+	}
+
+	@Override
+	public void disable(TargetIDStrategy strategy) {
+		_flags.get(strategy).off();
+		_rkOptimizationTargetsStrategy.getFlags().get(strategy).off();
 	}
 	
 }

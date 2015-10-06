@@ -22,15 +22,15 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 /**
  * Created by ptiago on 19-03-2015.
  */
-public class JecoliGOUConverter <T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> implements IJecoliOptimizationStrategyConverter<T,E> {
+public class JecoliGOUConverter <T extends JecoliGenericConfiguration> implements IJecoliOptimizationStrategyConverter<T,GOUSolution> {
     /**
 	 * 
 	 */
 	private static final long	serialVersionUID	= 1L;
 
 	@Override
-    public IStrainOptimizationResultSet createSolutionSet(T configuration,List<E> solutionList) {
-        return new GOUSolutionSet(configuration,solutionList);
+    public IStrainOptimizationResultSet<T,GOUSolution> createSolutionSet(T configuration,List<GOUSolution> solutionList) {
+        return new GOUSolutionSet<T>(configuration,solutionList);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class JecoliGOUConverter <T extends JecoliGenericConfiguration,E extends 
     }
 
     @Override
-    public ISolutionFactory createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction evaluationFunction) {
+    public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
         int minSetSize = 1;
         int maxSetValue = decoder.getNumberVariables();
         int maxSetSize = configuration.getMaxSetSize();

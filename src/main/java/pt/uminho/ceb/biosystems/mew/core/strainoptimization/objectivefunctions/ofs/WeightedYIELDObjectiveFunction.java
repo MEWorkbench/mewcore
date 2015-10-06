@@ -41,6 +41,8 @@ public class WeightedYIELDObjectiveFunction extends AbstractObjectiveFunction {
 		parameters = Collections.unmodifiableMap(myparams);
 	}
 	
+	public WeightedYIELDObjectiveFunction(){super();}
+	
 	public WeightedYIELDObjectiveFunction(Map<String, Object> configuration) throws InvalidObjectiveFunctionConfiguration {
 		super(configuration);
 	}

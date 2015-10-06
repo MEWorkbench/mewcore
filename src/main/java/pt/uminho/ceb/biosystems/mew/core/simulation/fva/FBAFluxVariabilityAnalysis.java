@@ -52,9 +52,9 @@ public class FBAFluxVariabilityAnalysis {
 		
 		SteadyStateSimulationResult res = simulCenter.simulate();
 		wildTypeFluxes = res.getFluxValues();
-		System.out.println("WT Fluxes");
-		for (String r : wildTypeFluxes.keySet())
-			System.out.println(r + " = " + wildTypeFluxes.get(r));
+//		System.out.println("WT Fluxes");
+//		for (String r : wildTypeFluxes.keySet())
+//			System.out.println(r + " = " + wildTypeFluxes.get(r));
 		
 	}
 	

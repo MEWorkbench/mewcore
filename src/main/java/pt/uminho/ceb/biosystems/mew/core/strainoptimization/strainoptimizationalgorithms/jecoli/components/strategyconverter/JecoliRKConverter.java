@@ -46,7 +46,7 @@ public class JecoliRKConverter<T extends JecoliGenericConfiguration> implements 
     }
 
     @Override
-    public ISolutionFactory createSolutionFactory(T configuration,ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction evaluationFunction) {
+    public ISolutionFactory<?> createSolutionFactory(T configuration,ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
         int maxSetValue = decoder.getNumberVariables();
         int maxSetSize = configuration.getMaxSetSize();
         return new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());

@@ -40,11 +40,11 @@ public class JecoliRKRSConverter<T extends JecoliGenericConfiguration> implement
     }
 
     @Override
-    public ISolutionFactory createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction evaluationFunction) {
+    public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
         swapFactoryList = new ArrayList<>();
         int maxSetValue = decoder.getNumberVariables();
         int maxSetSize = configuration.getMaxSetSize();
-        Map swapsMap = configuration.getReactionSwapMap();
+        Map<String, List<String>> swapsMap = configuration.getReactionSwapMap();
         int maxAllowedSwaps = configuration.getMaxAllowedSwaps();
         int maxPossibleSwaps = swapsMap.size();
         IntegerSetRepresentationFactory koSolutionFactory = new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());

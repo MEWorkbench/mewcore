@@ -55,5 +55,6 @@ public interface IJecoliOptimizationStrategyConverter<T extends JecoliGenericCon
      * @param evaluationFunction
      * @return The specific solution factory for a given strategy. Each strategy may utilize distinct solution representations.
      */
-    ISolutionFactory createSolutionFactory(T configuration,ISteadyStateDecoder decoder,AbstractMultiobjectiveEvaluationFunction evaluationFunction);
+    ISolutionFactory<?> createSolutionFactory(T configuration,ISteadyStateDecoder decoder,AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction);
+
 }

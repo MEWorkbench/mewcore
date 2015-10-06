@@ -33,6 +33,8 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 	
 	protected ObjectiveFunctionsFactory ofFactory;
 	
+	private static final Pattern OVER_UNDER_STRATEGY_PATT = Pattern.compile("^[G|R]OU(.*)");
+	
 	private static final Pattern TERM_FE_PATT = Pattern.compile("[fF][eE]\\(([0-9]+?)\\)");
 	
 	private static final Pattern TERM_IT_PATT = Pattern.compile("[iI][tT]\\(([0-9]+?)\\)");
@@ -182,31 +184,30 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 	private IObjectiveFunction processOFParams(String ofString) throws InvalidObjectiveFunctionConfiguration {
 		Matcher matcher = OF_PATTERN.matcher(ofString);
 		matcher.matches();
-//		System.out.println(ofString);
+		//		System.out.println(ofString);
 		String ofTag = matcher.group(1);
 		String ofArgs = matcher.group(2);
 		//		ObjectiveFunctionType oft = ObjectiveFunctionType.valueOf(ofTag);
 		String[] argsList = ofArgs.split(Delimiter.COMMA.toString());
 		Object[] args = new Object[argsList.length];
-		for (int i = 0; i < argsList.length; i++){
+		for (int i = 0; i < argsList.length; i++) {
 			String trimmedArg = argsList[i].trim();
 			Object processedParameter = processParam(trimmedArg);
-			if (processedParameter==null){
-				throw new InvalidObjectiveFunctionConfiguration("Objective function argument ["+trimmedArg+"] is invalid. Either invoked method does not exist or it returned a null result!");
-			}else{
-				System.out.println("PARAM: "+processedParameter.toString());
+			if (processedParameter == null) {
+				throw new InvalidObjectiveFunctionConfiguration("Objective function argument [" + trimmedArg + "] is invalid. Either invoked method does not exist or it returned a null result!");
+			} else {
+				System.out.println("PARAM: " + processedParameter.toString());
 				args[i] = processedParameter;
 			}
 		}
-	
 		
-		IObjectiveFunction of = ofFactory.getObjectiveFunction(ofTag.trim(),args);
+		IObjectiveFunction of = ofFactory.getObjectiveFunction(ofTag.trim(), args);
 		return of;
 	}
 	
 	private Object processParam(String trimmedArg) {
 		Matcher m = INTERNAL_METHOD_PATTERN.matcher(trimmedArg);
-		if(m.matches()){
+		if (m.matches()) {
 			String methodName = m.group(1).trim();
 			Method method = null;
 			try {
@@ -214,9 +215,9 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 			} catch (NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 			}
-			if(method==null){				
+			if (method == null) {
 				return null;
-			}else{
+			} else {
 				Object res = null;
 				try {
 					res = method.invoke(this, null);
@@ -225,12 +226,12 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 					e.printStackTrace();
 				}
 				return res;
-			}						
-		}else{
+			}
+		} else {
 			return trimmedArg;
 		}
 	}
-
+	
 	private String getSimulationMethod(String sm) throws Exception {
 		SimulationMethodsEnum smconstant = Enum.valueOf(SimulationMethodsEnum.class, sm.toUpperCase());
 		
@@ -278,8 +279,22 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 			return -1;
 	}
 	
-	public boolean isGeneBased(String strategy){
-		return strategy.equals("GK") || strategy.equals("GOU");
+	public static boolean isGeneBased(String strategy) {
+		return strategy.startsWith("G");
+	}
+	
+	public boolean isGeneBased() {
+		String strategy = getOptimizationStrategy();
+		return isGeneBased(strategy);
+	}
+	
+	public static boolean isOverUnder(String strategy) {
+		return OVER_UNDER_STRATEGY_PATT.matcher(strategy).matches();
+	}
+	
+	public boolean isOverUnder(){
+		String strategy = getOptimizationStrategy();
+		return isOverUnder(strategy);
 	}
 	
 	public List<String> getOptimizationCriticalIDs() throws Exception {
@@ -460,6 +475,16 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 				throw new Exception("Illegal property definition [" + OPT_MAX_MEM + "] does not follow pattern: <int>[KMG])");
 		}
 		return toret;
+	}
+	
+	public static void main(String[] args) {
+		String[] tests = new String[]{"RK","GK","ROU","GOU","ROURS","GOUGS","RKRS"};
+		
+		for(String test : tests){
+			System.out.println("Gene based opt: "+test+"="+isGeneBased(test));
+			System.out.println("Over/under based opt: "+test+"="+isOverUnder(test));
+			System.out.println();
+		}
 	}
 	
 }

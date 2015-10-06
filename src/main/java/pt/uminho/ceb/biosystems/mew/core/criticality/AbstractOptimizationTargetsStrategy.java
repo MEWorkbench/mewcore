@@ -246,9 +246,8 @@ public abstract class AbstractOptimizationTargetsStrategy implements IOptimizati
 		bw.close();
 	};
 	
-	public void saveNonTargetsToFile(String file) throws IOException {
+	public void saveNonTargetsToFile(String file,Set<String> nonTargets) throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		Set<String> nonTargets = getNonTargets();
 		boolean first = true;
 		for (String s : nonTargets) {
 			if (first) {
@@ -262,6 +261,11 @@ public abstract class AbstractOptimizationTargetsStrategy implements IOptimizati
 		bw.flush();
 		bw.close();
 	};
+	
+	public void saveNonTargetsToFile(String file) throws IOException {
+		Set<String> nonTargets = getNonTargets();
+		saveNonTargetsToFile(file, nonTargets);
+	}
 	
 	@Override
 	public void saveNonTargetsPerStrategyToFile(String file, boolean includeConfiguration) throws IOException {

@@ -11,6 +11,10 @@ import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.CYIELDObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FVAObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.NumKnockoutsObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.ProductYieldObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
@@ -24,7 +28,11 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.put(WeightedBPCYObjectiveFunction.ID, WeightedBPCYObjectiveFunction.class);
 		mapObjectiveFunctions.put(WeightedYIELDObjectiveFunction.ID, WeightedYIELDObjectiveFunction.class);
 		mapObjectiveFunctions.put(CYIELDObjectiveFunction.ID, CYIELDObjectiveFunction.class);
-	}
+		mapObjectiveFunctions.put(NumKnockoutsObjectiveFunction.ID, NumKnockoutsObjectiveFunction.class);
+		mapObjectiveFunctions.put(FluxValueObjectiveFunction.ID, FluxValueObjectiveFunction.class);
+		mapObjectiveFunctions.put(ProductYieldObjectiveFunction.ID, ProductYieldObjectiveFunction.class);
+		mapObjectiveFunctions.put(FVAObjectiveFunction.ID, FVAObjectiveFunction.class);
+		}
 	
 	public ObjectiveFunctionsFactory() {
 	}
