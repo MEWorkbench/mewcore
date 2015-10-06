@@ -4,7 +4,6 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.AbstractGeneticConditionsSimplifier;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public abstract class AbstractPersistenceSimplifier extends AbstractGeneticConditionsSimplifier{

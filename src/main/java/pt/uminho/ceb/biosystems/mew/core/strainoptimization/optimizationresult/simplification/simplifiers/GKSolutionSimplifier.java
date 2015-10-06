@@ -20,8 +20,8 @@ public class GKSolutionSimplifier<C extends JecoliGenericConfiguration> extends 
 	}
 
 	@Override
-	public GKSolution createSolution(GeneticConditions gc, Map<String,SteadyStateSimulationResult> res) {
-		return new GKSolution(gc,res);
+	public GKSolution createSolution(GeneticConditions gc, Map<String,SteadyStateSimulationResult> res, List<Double> fitnesses) {
+		return new GKSolution(gc,res,fitnesses);
 	}
 	
 	

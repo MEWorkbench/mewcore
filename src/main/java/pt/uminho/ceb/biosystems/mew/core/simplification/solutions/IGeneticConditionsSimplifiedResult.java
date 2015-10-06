@@ -11,6 +11,8 @@ public interface IGeneticConditionsSimplifiedResult {
 	
 	List<GeneticConditions> getSimplifiedGeneticConditions();
 	
+	List<Double> getSimplifiedFitnesses();
+	
 	int size();
 
 }

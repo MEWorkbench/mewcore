@@ -54,8 +54,14 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 	@Override
 	public void writeToFile(String file) throws Exception {
 		FileWriter fd = new FileWriter(file);
-		for (IStrainOptimizationResult result : resultList)
-			result.write(fd);
+		for (int i=0; i<resultList.size();i++){
+			if(i>0){
+				fd.write("\n");				
+			}
+			IStrainOptimizationResult result  = resultList.get(i);
+			result.write(fd);			
+		}
+		fd.flush();
 		fd.close();
 	}
 

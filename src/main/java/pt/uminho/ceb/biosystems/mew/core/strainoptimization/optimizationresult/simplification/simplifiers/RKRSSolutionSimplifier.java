@@ -20,8 +20,8 @@ public class RKRSSolutionSimplifier<C extends JecoliGenericConfiguration> extend
 	}
 
 	@Override
-	public RKRSSolution createSolution(GeneticConditions gc, Map<String,SteadyStateSimulationResult> res) {
-		return new RKRSSolution(gc, configuration.getReactionSwapMap(), res);
+	public RKRSSolution createSolution(GeneticConditions gc, Map<String,SteadyStateSimulationResult> res, List<Double> fitnesses) {
+		return new RKRSSolution(gc, configuration.getReactionSwapMap(), res, fitnesses);
 	}
 	
 	

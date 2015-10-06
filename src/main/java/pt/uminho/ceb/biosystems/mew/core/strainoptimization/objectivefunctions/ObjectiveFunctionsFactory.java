@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -21,6 +23,8 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ObjectiveFunctionsFactory {
 	
+	protected static Pattern BOOLEAN_STRING_PATTERN = Pattern.compile("true|false", Pattern.CASE_INSENSITIVE);
+	
 	protected static Map<String, Class<? extends IObjectiveFunction>> mapObjectiveFunctions = new HashMap<>();
 	
 	static {
@@ -32,7 +36,7 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.put(FluxValueObjectiveFunction.ID, FluxValueObjectiveFunction.class);
 		mapObjectiveFunctions.put(ProductYieldObjectiveFunction.ID, ProductYieldObjectiveFunction.class);
 		mapObjectiveFunctions.put(FVAObjectiveFunction.ID, FVAObjectiveFunction.class);
-		}
+	}
 	
 	public ObjectiveFunctionsFactory() {
 	}
@@ -53,8 +57,7 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.remove(id);
 	}
 	
-	public IObjectiveFunction getObjectiveFunction(String ofID, Map<String, Object> configuration)
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public IObjectiveFunction getObjectiveFunction(String ofID, Map<String, Object> configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<? extends IObjectiveFunction> ofKlazz = mapObjectiveFunctions.get(ofID);
 		configuration.put(AbstractObjectiveFunction.OBJECTIVE_FUNCTION_ID, ofID);
 		IObjectiveFunction instance = ofKlazz.getConstructor(Map.class).newInstance(configuration);
@@ -71,21 +74,50 @@ public class ObjectiveFunctionsFactory {
 	public IObjectiveFunction getObjectiveFunction(String ofID, Object... initArgs) throws InvalidObjectiveFunctionConfiguration {
 		
 		Class<? extends IObjectiveFunction> klazz = mapObjectiveFunctions.get(ofID);
-		if(klazz==null){
-			throw new InvalidObjectiveFunctionConfiguration("Unknown objective function ["+ofID+"]. Please make sure it has been registered in the respective factory or contact the admin.");
+		if (klazz == null) {
+			throw new InvalidObjectiveFunctionConfiguration("Unknown objective function [" + ofID + "]. Please make sure it has been registered in the respective factory or contact the admin.");
 		}
-		Class<?>[] argsClasses = getArgumentsClasses(initArgs);
+		Object[] convertedArgs = convertArgs(initArgs);
+		Class<?>[] argsClasses = getArgumentsClasses(convertedArgs);
 		IObjectiveFunction of;
 		try {
 			
 			Constructor<?> constructor = klazz.getConstructor(argsClasses);
-			Object unTypedOF = constructor.newInstance(initArgs);
+			Object unTypedOF = constructor.newInstance(convertedArgs);
 			of = IObjectiveFunction.class.cast(unTypedOF);
 		} catch (Exception e) {
 			throw new InvalidObjectiveFunctionConfiguration(initArgs, argsClasses, klazz, e);
 		}
 		
 		return of;
+	}
+	
+	private Object[] convertArgs(Object[] initArgs) {
+		Object[] converted = new Object[initArgs.length];
+		
+		for (int i = 0; i < initArgs.length; i++) {
+			Object oi = initArgs[i];
+			Object conv = null;
+			if (String.class.isAssignableFrom(oi.getClass())) {
+				String ois = (String) oi;
+				Matcher matcher = BOOLEAN_STRING_PATTERN.matcher(ois.trim());
+				if (matcher.matches()) {
+					conv = Boolean.parseBoolean(ois.trim());
+				} else {
+					Double val = null;
+					try {
+						val = Double.parseDouble(ois.trim());
+					} catch (NumberFormatException e) {
+					}
+					if(val!=null)
+						conv = val;
+				}				
+			}
+			conv = (conv==null) ? oi : conv;		
+			converted[i] = conv;
+		}
+		
+		return converted;
 	}
 	
 	/**
@@ -99,9 +131,10 @@ public class ObjectiveFunctionsFactory {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
-	 * @throws InstantiationException 
+	 * @throws InstantiationException
 	 */
-	public Map<String, ObjectiveFunctionParameterType> getObjectiveFunctionParameterTypes(String ofID) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+	public Map<String, ObjectiveFunctionParameterType> getObjectiveFunctionParameterTypes(String ofID)
+			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		Class<? extends IObjectiveFunction> ofKlazz = mapObjectiveFunctions.get(ofID);
 		Object untypedObj = ofKlazz.newInstance();
 		IObjectiveFunction of = IObjectiveFunction.class.cast(untypedObj);
@@ -117,19 +150,19 @@ public class ObjectiveFunctionsFactory {
 		return klazzes;
 	}
 	
-//	@Test
+	//	@Test
 	public void testOF(String[] args) throws InvalidObjectiveFunctionConfiguration {
 		ObjectiveFunctionsFactory fact = new ObjectiveFunctionsFactory();
-		BPCYObjectiveFunction of = (BPCYObjectiveFunction) fact.getObjectiveFunction("BPCY", "R_bio","R_prod","R_subst");
+		BPCYObjectiveFunction of = (BPCYObjectiveFunction) fact.getObjectiveFunction("BPCY", "R_bio", "R_prod", "R_subst");
 		
 		MapUtils.prettyPrint(of.mandatoryParameters());
 		MapUtils.prettyPrint(of.getValues());
 	}
 	
 	@Test
-	public void testParams() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public void testParams() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		ObjectiveFunctionsFactory fact = new ObjectiveFunctionsFactory();
-		Map<String,ObjectiveFunctionParameterType> types = fact.getObjectiveFunctionParameterTypes("BPCY");
+		Map<String, ObjectiveFunctionParameterType> types = fact.getObjectiveFunctionParameterTypes("BPCY");
 		MapUtils.prettyPrint(types);
 	}
 	

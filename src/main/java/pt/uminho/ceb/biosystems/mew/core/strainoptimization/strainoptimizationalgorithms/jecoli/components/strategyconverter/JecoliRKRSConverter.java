@@ -22,47 +22,52 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 /**
  * Created by ptiago on 19-03-2015.
  */
-public class JecoliRKRSConverter<T extends JecoliGenericConfiguration> implements IJecoliOptimizationStrategyConverter<T,RKRSSolution> {
-    /**
+public class JecoliRKRSConverter<T extends JecoliGenericConfiguration> implements IJecoliOptimizationStrategyConverter<T, RKRSSolution> {
+	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
-	protected List<IntegerSetRepresentationFactory> swapFactoryList;
-
-    @Override
-    public IStrainOptimizationResultSet<T,RKRSSolution> createSolutionSet(T configuration,List<RKRSSolution> solutionList) {
-        return new RKRSSolutionSet<T>(configuration,solutionList);
-    }
-
-    @Override
-    public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new RKRSSolution(gc, configuration.getReactionSwapMap(), simulations);
-    }
-
-    @Override
-    public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
-        swapFactoryList = new ArrayList<>();
-        int maxSetValue = decoder.getNumberVariables();
-        int maxSetSize = configuration.getMaxSetSize();
-        Map<String, List<String>> swapsMap = configuration.getReactionSwapMap();
-        int maxAllowedSwaps = configuration.getMaxAllowedSwaps();
-        int maxPossibleSwaps = swapsMap.size();
-        IntegerSetRepresentationFactory koSolutionFactory = new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());
-        IntegerSetRepresentationFactory swapSolutionFactory = new IntegerSetRepresentationFactory(maxPossibleSwaps, maxAllowedSwaps, evaluationFunction.getNumberOfObjectives());
-        swapFactoryList.add(koSolutionFactory);
-        swapFactoryList.add(swapSolutionFactory);
-        return new DualSetRepresentationFactory(maxSetValue, maxPossibleSwaps, maxSetSize, maxAllowedSwaps,evaluationFunction.getNumberOfObjectives());
-    }
-
-    @Override
-    public ISteadyStateDecoder createDecoder(JecoliGenericConfiguration configuration) throws Exception {
-        ISteadyStateModel model = configuration.getSteadyStateModel();
-        Map<String,List<String>> reactionSwapMap  = configuration.getReactionSwapMap();
-        ISteadyStateDecoder decoder = new RKRSDualSetRepresentationDecoder(model,reactionSwapMap);
-        return decoder;
-    }
-
-    public List<IntegerSetRepresentationFactory> getSwapsFactoryList(){
-        return swapFactoryList;
-    }
+	private static final long						serialVersionUID	= 1L;
+	protected List<IntegerSetRepresentationFactory>	swapFactoryList;
+	
+	@Override
+	public IStrainOptimizationResultSet<T, RKRSSolution> createSolutionSet(T configuration, List<RKRSSolution> solutionList) {
+		return new RKRSSolutionSet<T>(configuration, solutionList);
+	}
+	
+	@Override
+	public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
+		return createSolution(configuration, simulations, gc, null);
+	}
+	
+	@Override
+	public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc, List<Double> fitnesses) {
+		return new RKRSSolution(gc, configuration.getReactionSwapMap(), simulations, fitnesses);
+	}
+	
+	@Override
+	public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
+		swapFactoryList = new ArrayList<>();
+		int maxSetValue = decoder.getNumberVariables();
+		int maxSetSize = configuration.getMaxSetSize();
+		Map<String, List<String>> swapsMap = configuration.getReactionSwapMap();
+		int maxAllowedSwaps = configuration.getMaxAllowedSwaps();
+		int maxPossibleSwaps = swapsMap.size();
+		IntegerSetRepresentationFactory koSolutionFactory = new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());
+		IntegerSetRepresentationFactory swapSolutionFactory = new IntegerSetRepresentationFactory(maxPossibleSwaps, maxAllowedSwaps, evaluationFunction.getNumberOfObjectives());
+		swapFactoryList.add(koSolutionFactory);
+		swapFactoryList.add(swapSolutionFactory);
+		return new DualSetRepresentationFactory(maxSetValue, maxPossibleSwaps, maxSetSize, maxAllowedSwaps, evaluationFunction.getNumberOfObjectives());
+	}
+	
+	@Override
+	public ISteadyStateDecoder createDecoder(JecoliGenericConfiguration configuration) throws Exception {
+		ISteadyStateModel model = configuration.getSteadyStateModel();
+		Map<String, List<String>> reactionSwapMap = configuration.getReactionSwapMap();
+		ISteadyStateDecoder decoder = new RKRSDualSetRepresentationDecoder(model, reactionSwapMap);
+		return decoder;
+	}
+	
+	public List<IntegerSetRepresentationFactory> getSwapsFactoryList() {
+		return swapFactoryList;
+	}
 }

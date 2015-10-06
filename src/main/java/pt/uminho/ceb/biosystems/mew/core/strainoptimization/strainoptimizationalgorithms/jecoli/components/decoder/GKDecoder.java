@@ -35,8 +35,8 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions
 
 public class GKDecoder extends RKDecoder {
 	
-	private static final long	serialVersionUID	= -7254501112776803961L;
-	
+	private static final long serialVersionUID = 1L;
+
 	public GKDecoder(ISteadyStateGeneReactionModel model) {
 		super(model);
 	}
@@ -84,7 +84,7 @@ public class GKDecoder extends RKDecoder {
 		
 		List<Integer> geneKnockoutList = decodeGeneKnockouts(genome);
 		
-		GeneChangesList gcl = new GeneChangesList(geneKnockoutList, (ISteadyStateGeneReactionModel) model);
+		GeneChangesList gcl = new GeneChangesList(geneKnockoutList, (ISteadyStateGeneReactionModel) model);		
 		
 		return new GeneticConditions(gcl, (ISteadyStateGeneReactionModel) model, false);
 	}

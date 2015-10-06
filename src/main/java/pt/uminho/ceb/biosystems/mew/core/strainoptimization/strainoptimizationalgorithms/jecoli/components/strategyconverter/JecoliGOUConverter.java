@@ -35,7 +35,12 @@ public class JecoliGOUConverter <T extends JecoliGenericConfiguration> implement
 
     @Override
     public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new GOUSolution(gc, simulations);
+        return createSolution(configuration, simulations, gc,null);
+    }
+    
+    @Override
+    public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc,List<Double> fitnesses) {
+        return new GOUSolution(gc, simulations,fitnesses);
     }
 
     @Override

@@ -19,6 +19,7 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.EvolutionaryAlgorithm;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.EvolutionaryConfiguration;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.RecombinationParameters;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.IJecoliOptimizationStrategyConverter;
@@ -28,9 +29,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
  */
 public abstract class JecoliEACSOM<E extends IJecoliOptimizationStrategyConverter> extends JecoliCSOM<JecoliEACSOMConfig,E> {
 
-    /**
-	 * 
-	 */
 	private static final long	serialVersionUID	= 1L;
 
 

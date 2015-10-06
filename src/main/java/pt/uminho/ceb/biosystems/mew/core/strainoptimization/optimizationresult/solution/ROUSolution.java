@@ -10,32 +10,43 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesLi
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractSolution;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 /**
  * Created by ptiago on 18-03-2015.
  */
 public class ROUSolution extends AbstractSolution {
-
-	private static final long	serialVersionUID	= 1L;
-
+	
+	private static final long serialVersionUID = 1L;
+	
 	public ROUSolution(GeneticConditions solutionGeneticConditions) {
-        super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
-    }
-
-    public ROUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
-        super(solutionGeneticConditions, simulationResultMap);
-    }
-
-    @Override
-    public void write(OutputStreamWriter outputStream) throws Exception {
-        ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
-        List<Pair<String,Double>> reactionExpressionList = reactionChangeList.getPairsList();
-//        IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap = configuration.getObjectiveFunctionsMap();
-//        writeMapOf2SimMap(outputStream,mapOf2SimMap);
-
-        for(Pair<String,Double> reactionExpression:reactionExpressionList)
-            outputStream.write(","+reactionExpression.getA()+"="+reactionExpression.getB());
-
-//        outputStream.write("\n");
-    }
+		super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
+	}
+	
+//	public ROUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
+//		super(solutionGeneticConditions, simulationResultMap);
+//	}
+	
+	public ROUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
+		super(solutionGeneticConditions, simulationResultMap,fitnesses);
+	}
+	
+	@Override
+	public void write(OutputStreamWriter outputStream) throws Exception {
+		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
+		List<Pair<String, Double>> reactionExpressionList = reactionChangeList.getPairsList();
+		
+		if (fitnesses != null) {
+			String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
+			outputStream.write(fitString);
+			outputStream.write(INNER_DELIMITER);
+        }else{
+        	outputStream.write(OUTTER_DELIMITER);
+        }
+		
+		for (Pair<String, Double> reactionExpression : reactionExpressionList) {
+			outputStream.write(INNER_DELIMITER + reactionExpression.getA() + "=" + reactionExpression.getB());
+		}
+		
+	}
 }

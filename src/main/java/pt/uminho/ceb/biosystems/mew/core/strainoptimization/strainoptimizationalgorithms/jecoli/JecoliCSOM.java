@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,12 +75,11 @@ public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends
 		ISolutionSet<IElementsRepresentation<?>> finalSolutionSet = archive.getArchive();
 		ISteadyStateModel model = configuration.getSteadyStateModel();
 		
-//		int k = 0;
 		List<IStrainOptimizationResult> strainOptimizationSolutionList = new ArrayList<>();
 		for (int j = 0; j < finalSolutionSet.getNumberOfSolutions(); j++) {
 			ISolution solution = finalSolutionSet.getSolution(j);
 			
-//			String id = "Solution_" + k;
+			Double[] fitnesses = (solution.getNumberOfObjectives()>1) ? solution.getFitnessValuesArray() : new Double[]{solution.getScalarFitnessValue()};
 			
 			Map<String, SteadyStateSimulationResult> simulations = new HashMap<String, SteadyStateSimulationResult>();
 			
@@ -102,9 +102,8 @@ public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends
 				simulations.put(simMethod, res);
 			}
 			
-			IStrainOptimizationResult strainOptimizationResult = createSolutionResult(configuration, simulations, gc);
+			IStrainOptimizationResult strainOptimizationResult = createSolutionResult(configuration, simulations, gc, fitnesses);
 			strainOptimizationSolutionList.add(strainOptimizationResult);
-//			k++;
 		}
 		return createSolutionSet(configuration, strainOptimizationSolutionList);
 	}
@@ -113,8 +112,8 @@ public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends
 		return optimizationStrategyConverter.createSolutionSet(configuration, strainOptimizationSolutionList);
 	}
 	
-	protected IStrainOptimizationResult createSolutionResult(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) throws Exception {
-		return optimizationStrategyConverter.createSolution(configuration, simulations, gc);
+	protected IStrainOptimizationResult createSolutionResult(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc, Double[] fitnesses) throws Exception {		
+		return optimizationStrategyConverter.createSolution(configuration, simulations, gc, Arrays.asList(fitnesses));
 	}
 	
 	protected AbstractMultiobjectiveEvaluationFunction computeStrainOptimizationEvaluationFunction(T configuration, ISteadyStateDecoder decoder) throws Exception {

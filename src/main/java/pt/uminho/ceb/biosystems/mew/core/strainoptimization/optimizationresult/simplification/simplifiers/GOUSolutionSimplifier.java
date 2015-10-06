@@ -20,8 +20,8 @@ public class GOUSolutionSimplifier<C extends JecoliGenericConfiguration> extends
 	}
 
 	@Override
-	public GOUSolution createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res) {
-		return new GOUSolution(gc,res);
+	public GOUSolution createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res, List<Double> fitnesses) {
+		return new GOUSolution(gc,res,fitnesses);
 	}
 
 	@Override

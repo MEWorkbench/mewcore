@@ -9,20 +9,23 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiS
 public class GeneticConditionSimplifiedResult implements IGeneticConditionsSimplifiedResult{
 	
 	protected List<GeneticConditions> gc;
-	protected List<SteadyStateMultiSimulationResult> results;		
+	protected List<SteadyStateMultiSimulationResult> results;
+	protected List<Double> fitnesses;
 	
-	public GeneticConditionSimplifiedResult(List<GeneticConditions> gc, List<SteadyStateMultiSimulationResult> results ) {
+	public GeneticConditionSimplifiedResult(List<GeneticConditions> gc, List<SteadyStateMultiSimulationResult> results, List<Double> fitnesses ) {
 		this.gc = gc;
 		this.results = results;
+		this.fitnesses = fitnesses;
 	}
 	
-	public GeneticConditionSimplifiedResult(GeneticConditions gc, SteadyStateMultiSimulationResult result) {
+	public GeneticConditionSimplifiedResult(GeneticConditions gc, SteadyStateMultiSimulationResult result,List<Double> fitnesses) {
 		List<GeneticConditions> gcs = new ArrayList<GeneticConditions>();
 		List<SteadyStateMultiSimulationResult> results = new ArrayList<SteadyStateMultiSimulationResult>();
 		gcs.add(gc);
 		results.add(result);
 		this.gc = gcs;
 		this.results = results;
+		this.fitnesses = fitnesses;
 	}
 	
 	@Override
@@ -36,7 +39,13 @@ public class GeneticConditionSimplifiedResult implements IGeneticConditionsSimpl
 	}
 
 	@Override
+	public List<Double> getSimplifiedFitnesses() {
+		return fitnesses;
+	}
+	
+	@Override
 	public int size() {
 		return gc.size();
 	}
+
 }

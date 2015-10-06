@@ -15,44 +15,54 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.A
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 /**
  * Created by ptiago on 23-03-2015.
  */
 public class RKRSSolution extends AbstractSolution {
-
-	private static final long serialVersionUID = 1L;
-	private Map<String, List<String>> swapsMap;
-
+	
+	private static final long			serialVersionUID	= 1L;
+	private Map<String, List<String>>	swapsMap;
+	
 	public RKRSSolution(GeneticConditions solutionGeneticConditions, Map<String, List<String>> swapsMap) {
-		this(solutionGeneticConditions, swapsMap, new HashMap<String, SteadyStateSimulationResult>());
+		this(solutionGeneticConditions, swapsMap, new HashMap<String, SteadyStateSimulationResult>(),null);
 	}
-
-	public RKRSSolution(GeneticConditions solutionGeneticConditions, Map<String, List<String>> swapsMap,
-			Map<String, SteadyStateSimulationResult> simulationResultMap) {
-		super(solutionGeneticConditions, simulationResultMap);
-		this.swapsMap = swapsMap;
-	}
-
+	
+//	public RKRSSolution(GeneticConditions solutionGeneticConditions, Map<String, List<String>> swapsMap, Map<String, SteadyStateSimulationResult> simulationResultMap) {
+//		super(solutionGeneticConditions, simulationResultMap);
+//		this.swapsMap = swapsMap;
+//	}
+	
+	public RKRSSolution(GeneticConditions solutionGeneticConditions, Map<String, List<String>> swapsMap, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
+        super(solutionGeneticConditions, simulationResultMap,fitnesses);
+        this.swapsMap = swapsMap;
+    }
+	
 	@Override
 	public void write(OutputStreamWriter outputStream) throws Exception {
 		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
 		List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();
-		// IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap =
-		// configuration.getObjectiveFunctionsMap();
-		// writeMapOf2SimMap(outputStream,mapOf2SimMap);
-
-		for (String reactionKnockout : reactionKnockoutList)
-			outputStream.write("," + reactionKnockout);
-
-		// outputStream.write("\n");
+		
+		if (fitnesses != null) {
+			String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
+			outputStream.write(fitString);
+			outputStream.write(INNER_DELIMITER);
+        }else{
+        	outputStream.write(OUTTER_DELIMITER);
+        }
+		
+		for (String reactionKnockout : reactionKnockoutList) {
+			outputStream.write(INNER_DELIMITER + reactionKnockout);
+		}
+		
 	}
-
+	
 	public List<Pair<String, String>> getReactionSwapList(Map<String, List<String>> swapMap, GeneticConditions gc) {
 		List<Pair<String, String>> swapList = new ArrayList<>();
-
+		
 		MapStringNum map = (gc.isGenes()) ? gc.getGeneList() : gc.getReactionList();
-
+		
 		for (String k : map.keySet()) {
 			if (swapMap.containsKey(k)) {
 				List<String> k_swaps = swapMap.get(k);
@@ -63,14 +73,14 @@ public class RKRSSolution extends AbstractSolution {
 				}
 			}
 		}
-
+		
 		return swapList;
 	}
-
-	public List<Pair<String, String>> getReactionSwapList() {		
+	
+	public List<Pair<String, String>> getReactionSwapList() {
 		return getReactionSwapList(swapsMap, solutionGeneticConditions);
 	}
-
+	
 	public Set<String> getKnockoutSet() {
 		Set<String> knockoutSet = new HashSet<>();
 		MapStringNum map = (solutionGeneticConditions.isGenes()) ? solutionGeneticConditions.getGeneList() : solutionGeneticConditions.getReactionList();
@@ -79,23 +89,21 @@ public class RKRSSolution extends AbstractSolution {
 				boolean isKeyOnSwap = false;
 				for (Map.Entry<String, List<String>> swapEntry : swapsMap.entrySet())
 					for (String swapReaction : swapEntry.getValue()) {
-						if (isKeyOnSwap)
-							break;
-
+						if (isKeyOnSwap) break;
+						
 						if (swapReaction.compareTo(k) == 0) {
 							isKeyOnSwap = true;
 							break;
 						}
 					}
-				if (!isKeyOnSwap)
-					knockoutSet.add(k);
+				if (!isKeyOnSwap) knockoutSet.add(k);
 			}
 		}
 		return knockoutSet;
 	}
-
+	
 	public Map<String, List<String>> getSwapsMap() {
-				return swapsMap;
-			}
-
+		return swapsMap;
+	}
+	
 }

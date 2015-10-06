@@ -13,6 +13,6 @@ public class JecoliEAGKCSOM extends JecoliEARKCSOM {
 	private static final long	serialVersionUID	= 1L;
 
 	public JecoliEAGKCSOM() {
-        super(new JecoliGKConverter());
+        super(new JecoliGKConverter<>());
     }
 }

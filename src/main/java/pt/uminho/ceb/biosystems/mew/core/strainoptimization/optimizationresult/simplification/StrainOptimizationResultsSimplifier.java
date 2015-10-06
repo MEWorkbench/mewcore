@@ -30,7 +30,7 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		for (int i = 0; i < simpResults.size(); i++) {
 			GeneticConditions gc = simpResults.getSimplifiedGeneticConditions().get(i);
 			SteadyStateMultiSimulationResult res = simpResults.getSimplifiedSimulationResults().get(i);
-			T simpSol = createSolution(gc, res.getSimulations());
+			T simpSol = createSolution(gc, res.getSimulations(),simpResults.getSimplifiedFitnesses());
 			toret.add(simpSol);
 		}
 
@@ -59,7 +59,7 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		return createResultSetInstance(simplifiedList);
 	};
 
-	public abstract T createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res);
+	public abstract T createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res, List<Double> fitnesses);
 
 	public abstract ISimplifierGeneticConditions getSimplifierGeneticConditions();
 	

@@ -13,28 +13,24 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.ROUSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
-public class ROUSolutionSimplifier<C extends JecoliGenericConfiguration> extends StrainOptimizationResultsSimplifier<C, ROUSolution>{
-
+public class ROUSolutionSimplifier<C extends JecoliGenericConfiguration> extends StrainOptimizationResultsSimplifier<C, ROUSolution> {
+	
 	public ROUSolutionSimplifier(C configuration) {
 		super(configuration);
 	}
-
+	
 	@Override
-	public ROUSolution createSolution(GeneticConditions gc, Map<String,SteadyStateSimulationResult> res) {
-		return new ROUSolution(gc,res);
+	public ROUSolution createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res, List<Double> fitnesses) {
+		return new ROUSolution(gc, res, fitnesses);
 	}
 	
-	
-	public ISimplifierGeneticConditions getSimplifierGeneticConditions(){
-		return new ReactionsSimplifier(configuration.getSteadyStateModel(),
-									   configuration.getReferenceFluxDistribution(),
-									   configuration.getEnvironmentalConditions(),
-									   configuration.getSolver());
+	public ISimplifierGeneticConditions getSimplifierGeneticConditions() {
+		return new ReactionsSimplifier(configuration.getSteadyStateModel(), configuration.getReferenceFluxDistribution(), configuration.getEnvironmentalConditions(), configuration.getSolver());
 	}
-
+	
 	@Override
 	public IStrainOptimizationResultSet<C, ROUSolution> createResultSetInstance(List<ROUSolution> resultList) {
 		return new ROUSolutionSet<C>(configuration, resultList);
 	}
-
+	
 }

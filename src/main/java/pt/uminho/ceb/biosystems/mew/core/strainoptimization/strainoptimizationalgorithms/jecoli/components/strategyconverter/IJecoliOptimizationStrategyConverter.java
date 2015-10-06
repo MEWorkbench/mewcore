@@ -39,6 +39,16 @@ public interface IJecoliOptimizationStrategyConverter<T extends JecoliGenericCon
      * @return Returns a strategy solution
      */
     IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc);
+    
+    /**
+    *
+    * @param configuration utilized by the solution
+    * @param simulations simulations regarding the simulation method and the simulation result (including flux distribution)
+    * @param gc Genetic Condition of the solution
+    * @param fitnesses a list of fitnesses if available
+    * @return Returns a strategy solution
+    */
+    IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc, List<Double> fitnesses);
 
     /**
      * Creates the decoder for a specific strategy

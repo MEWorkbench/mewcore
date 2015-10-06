@@ -10,32 +10,43 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractSolution;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 /**
  * Created by ptiago on 18-03-2015.
  */
 public class GOUSolution extends AbstractSolution {
-
-	private static final long	serialVersionUID	= 1L;
-
+	
+	private static final long serialVersionUID = 1L;
+	
 	public GOUSolution(GeneticConditions solutionGeneticConditions) {
-        super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
+		super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
+	}
+	
+//	public GOUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
+//		super(solutionGeneticConditions, simulationResultMap);
+//	}
+	
+	public GOUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
+        super(solutionGeneticConditions, simulationResultMap,fitnesses);
     }
-
-    public GOUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
-        super(solutionGeneticConditions, simulationResultMap);
-    }
-
-    @Override
-    public void write(OutputStreamWriter outputStream) throws Exception {
-        GeneChangesList genenChangeList = solutionGeneticConditions.getGeneList();
-        List<Pair<String,Double>> geneExpressionList = genenChangeList.getPairsList();
-//        IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap = configuration.getObjectiveFunctionsMap();
-//        writeMapOf2SimMap(outputStream,mapOf2SimMap);
-
-        for(Pair<String,Double> reactionExpression:geneExpressionList)
-            outputStream.write(","+reactionExpression.getA()+"="+reactionExpression.getB());
-
-//        outputStream.write("\n");
-    }
+	
+	@Override
+	public void write(OutputStreamWriter outputStream) throws Exception {
+		GeneChangesList geneChangeList = solutionGeneticConditions.getGeneList();
+		List<Pair<String, Double>> geneExpressionList = geneChangeList.getPairsList();
+		
+		if (fitnesses != null) {
+			String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
+			outputStream.write(fitString);
+			outputStream.write(INNER_DELIMITER);
+        }else{
+        	outputStream.write(OUTTER_DELIMITER);
+        }
+		
+		for (Pair<String, Double> geneExpression : geneExpressionList) {
+			outputStream.write(INNER_DELIMITER + geneExpression.getA() + "=" + geneExpression.getB());
+		}
+		
+	}
 }

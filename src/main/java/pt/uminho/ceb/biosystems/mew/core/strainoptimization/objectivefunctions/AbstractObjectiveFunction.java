@@ -20,7 +20,7 @@ public abstract class AbstractObjectiveFunction implements IObjectiveFunction, S
 	}
 	
 	public AbstractObjectiveFunction(Object... params){
-		if(params.length>1){
+		if(params.length>0){
 			processParams(params);
 		}
 	}

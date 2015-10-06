@@ -35,9 +35,14 @@ public class JecoliGKConverter <T extends JecoliGenericConfiguration> implements
 
     @Override
     public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc) {
-        return new GKSolution(gc, simulations);
+        return createSolution(configuration,simulations, gc,null);
     }
 
+    @Override
+    public IStrainOptimizationResult createSolution(T configuration, Map<String, SteadyStateSimulationResult> simulations, GeneticConditions gc, List<Double> fitnesses) {
+    	return new GKSolution(gc, simulations, fitnesses);
+    }
+    
     @Override
     public ISteadyStateDecoder createDecoder(T configuration) throws Exception {
         ISteadyStateModel model = configuration.getSteadyStateModel();
@@ -53,4 +58,5 @@ public class JecoliGKConverter <T extends JecoliGenericConfiguration> implements
         int maxSetSize = configuration.getMaxSetSize();
         return new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());
     }
+
 }

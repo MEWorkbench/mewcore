@@ -5,6 +5,7 @@ import java.util.List;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.rk.RKStrategyReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.RKSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
@@ -30,7 +31,6 @@ public class RKSolutionSet<T extends  JecoliGenericConfiguration> extends Abstra
 
 	@Override
 	public IStrainOptimizationReader getSolutionReaderInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		return new RKStrategyReader();
 	}
 }

@@ -19,26 +19,35 @@ public class GKSolution extends AbstractSolution {
 	private static final long	serialVersionUID	= 1L;
 
 	public GKSolution(GeneticConditions solutionGeneticConditions) {
-        this(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
+        super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
     }
 	
-	public GKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
-        super(solutionGeneticConditions, simulationResultMap);
+//	public GKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
+//        super(solutionGeneticConditions, simulationResultMap);
+//    }
+	
+	public GKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
+        super(solutionGeneticConditions, simulationResultMap,fitnesses);
     }
 
     @Override
     public void write(OutputStreamWriter outputStream) throws Exception {
         GeneChangesList geneChangesList = solutionGeneticConditions.getGeneList();
         List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
-//        IndexedHashMap<IObjectiveFunction,String> mapOf2SimMap = configuration.getObjectiveFunctionsMap();
-//        writeMapOf2SimMap(outputStream,mapOf2SimMap);
+        
+        if(fitnesses!=null){
+        	String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
+        	outputStream.write(fitString);
+        	outputStream.write(INNER_DELIMITER);
+        }else{
+        	outputStream.write(OUTTER_DELIMITER);
+        }
+        
 
-        for(String geneKnockout:geneKnockoutList)
-            outputStream.write(","+geneKnockout);
+        for(String geneKnockout:geneKnockoutList){        	
+        	outputStream.write(INNER_DELIMITER+geneKnockout);
+        }
 
-        StringUtils.concat(",",geneKnockoutList);
-
-//        outputStream.write("\n");
     }
 
 

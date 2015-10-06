@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult;
 
 import java.io.OutputStreamWriter;
+import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
@@ -46,5 +47,11 @@ public interface IStrainOptimizationResult extends IStrainOptimizationWriter {
 	 */
 	@Override
 	void write(OutputStreamWriter outputStream) throws Exception;
+
+	/**
+	 * 
+	 * @return the fitnesses
+	 */
+	List<Double> getFitnesses();
 	
 }
