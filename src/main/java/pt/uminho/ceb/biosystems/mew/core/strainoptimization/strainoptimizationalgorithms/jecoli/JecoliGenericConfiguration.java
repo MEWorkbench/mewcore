@@ -25,10 +25,19 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
  */
 public class JecoliGenericConfiguration extends GenericConfiguration implements IJecoliConfiguration {
 	
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 	
 	public JecoliGenericConfiguration() {
 		super();
+		loadMandatoryOptionalProperties();
+	}
+	
+	public JecoliGenericConfiguration(Map<String,Object> propertyMapToCopy) {
+		super(propertyMapToCopy);
+		loadMandatoryOptionalProperties();
+	}
+	
+	private void loadMandatoryOptionalProperties() {
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, String.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, String.class);
 		
@@ -53,7 +62,7 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		optionalPropertyMap.put(JecoliOptimizationProperties.MAX_SET_SIZE, Integer.class);
 	}
 	
-	public ITerminationCriteria getTerminationCriteria() throws InvalidTerminationCriteriaParameter{
+	public ITerminationCriteria getTerminationCriteria() throws InvalidTerminationCriteriaParameter {
 		return getDefaultValue(JecoliOptimizationProperties.TERMINATION_CRITERIA, new NumFunctionEvaluationsListenerHybridTerminationCriteria(50000));
 	}
 	

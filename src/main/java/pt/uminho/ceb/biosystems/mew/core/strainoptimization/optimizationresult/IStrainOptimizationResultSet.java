@@ -43,7 +43,7 @@ public interface IStrainOptimizationResultSet<T extends JecoliGenericConfigurati
     void readSolutionsFromFile(String file) throws Exception;
 
     /**
-     * Creates a solution given a configuration given a set of objective values and a genetic condition
+     * Creates a solution given a genetic condition
      * 
      * @param gc
      * @param result
@@ -51,5 +51,19 @@ public interface IStrainOptimizationResultSet<T extends JecoliGenericConfigurati
      * @throws Exception
      */
     E createSolution(GeneticConditions gc);
+    
+    /**
+     * Creates a solution given a genetic condition and a list of attribute values 
+     * 
+     * @param gc
+     * @param attributes
+     * @return
+     */
+    E createSolution(GeneticConditions gc, List<Double> attributes);
+    
+    
+    void addSolution(E solution);
+    
+    IStrainOptimizationResultSet<T,E> merge(IStrainOptimizationResultSet<T, E> resultSetToMerge);
 
 }

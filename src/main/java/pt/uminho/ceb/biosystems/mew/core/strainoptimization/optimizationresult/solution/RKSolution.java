@@ -35,13 +35,11 @@ public class RKSolution extends AbstractSolution {
 		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
 		List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();
 		
-		if (fitnesses != null) {
-			String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
+		if (attributes != null) {
+			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
 			outputStream.write(fitString);
-			outputStream.write(INNER_DELIMITER);
-        }else{
-        	outputStream.write(OUTTER_DELIMITER);
         }
+		outputStream.write(INNER_DELIMITER);
 		
 		for (String reactionKnockout : reactionKnockoutList) {
 			outputStream.write(INNER_DELIMITER + reactionKnockout);

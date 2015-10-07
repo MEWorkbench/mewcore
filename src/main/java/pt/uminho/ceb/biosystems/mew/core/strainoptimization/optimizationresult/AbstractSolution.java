@@ -21,16 +21,16 @@ public abstract class AbstractSolution implements IStrainOptimizationResult {
 	
 	protected Map<String, SteadyStateSimulationResult>	simulationResultMap;
 	protected GeneticConditions							solutionGeneticConditions;
-	protected List<Double>								fitnesses;
+	protected List<Double>								attributes;
 	
 	public AbstractSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
 		this(solutionGeneticConditions, simulationResultMap, null);
 	}
 	
-	public AbstractSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
+	public AbstractSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> attributes) {
 		this.simulationResultMap = simulationResultMap;
 		this.solutionGeneticConditions = solutionGeneticConditions;
-		this.fitnesses = fitnesses;
+		this.attributes = attributes;
 	}
 	
 	@Override
@@ -79,12 +79,12 @@ public abstract class AbstractSolution implements IStrainOptimizationResult {
 
 	
 	@Override
-	public List<Double> getFitnesses() {
-		return fitnesses;
+	public List<Double> getAttributes() {
+		return attributes;
 	}
 
-	public void setFitnesses(List<Double> fitnesses) {
-		this.fitnesses = fitnesses;
+	public void setAttributes(List<Double> attributes) {
+		this.attributes = attributes;
 	}
 	
 }

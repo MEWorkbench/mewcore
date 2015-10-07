@@ -1,8 +1,10 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset;
 
+import java.util.HashMap;
 import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.rk.RKStrategyReader;
@@ -24,6 +26,11 @@ public class RKSolutionSet<T extends  JecoliGenericConfiguration> extends Abstra
     public RKSolution createSolution(GeneticConditions gc) {
         return new RKSolution(gc);
     }
+    
+    @Override
+	public RKSolution createSolution(GeneticConditions gc, List<Double> attributes) {
+		return new RKSolution(gc, new HashMap<String,SteadyStateSimulationResult>(), attributes);
+	}
 
     public RKSolutionSet(T baseConfiguration) {
         super(baseConfiguration);

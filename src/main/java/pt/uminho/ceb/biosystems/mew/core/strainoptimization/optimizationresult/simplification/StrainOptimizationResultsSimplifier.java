@@ -13,7 +13,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.I
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
-public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGenericConfiguration, T extends IStrainOptimizationResult> {
+public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGenericConfiguration, T extends IStrainOptimizationResult> implements IStrainOptimizationResultsSimplifier<C, T> {
 
 	protected ISimplifierGeneticConditions simplifier;
 	protected C configuration;
@@ -22,6 +22,10 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		this.configuration = configuration;
 	}
 
+	/* (non-Javadoc)
+	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#simplifySolution(T)
+	 */
+	@Override
 	public List<T> simplifySolution(T solution) throws Exception {
 		
 		IGeneticConditionsSimplifiedResult simpResults = getSimplifier().simplifyGeneticConditions(solution.getGeneticConditions(),configuration.getObjectiveFunctionsMap());
@@ -37,6 +41,10 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		return toret;
 	}
 
+	/* (non-Javadoc)
+	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#getSimplifier()
+	 */
+	@Override
 	public ISimplifierGeneticConditions getSimplifier() {
 		if (simplifier == null) {
 			simplifier = getSimplifierGeneticConditions();
@@ -54,13 +62,25 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		return simplifiedList;
 	}
 	
+	/* (non-Javadoc)
+	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#getSimplifyResultSet(pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet)
+	 */
+	@Override
 	public IStrainOptimizationResultSet<C,T> getSimplifyResultSet(IStrainOptimizationResultSet<C,T> resultSet) throws Exception{
 		List<T> simplifiedList = getSimplifiedResultList(resultSet);
 		return createResultSetInstance(simplifiedList);
 	};
 
+	/* (non-Javadoc)
+	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#createSolution(pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions, java.util.Map, java.util.List)
+	 */
+	@Override
 	public abstract T createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res, List<Double> fitnesses);
 
+	/* (non-Javadoc)
+	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#getSimplifierGeneticConditions()
+	 */
+	@Override
 	public abstract ISimplifierGeneticConditions getSimplifierGeneticConditions();
 	
 	public abstract IStrainOptimizationResultSet<C,T> createResultSetInstance(List<T> resultList);

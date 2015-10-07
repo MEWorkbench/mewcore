@@ -50,8 +50,11 @@ public interface IStrainOptimizationResult extends IStrainOptimizationWriter {
 
 	/**
 	 * 
-	 * @return the fitnesses
+	 * @return the atrributes
 	 */
-	List<Double> getFitnesses();
+	List<Double> getAttributes();
+	
+	
+	void setAttributes(List<Double> attributes);
 	
 }

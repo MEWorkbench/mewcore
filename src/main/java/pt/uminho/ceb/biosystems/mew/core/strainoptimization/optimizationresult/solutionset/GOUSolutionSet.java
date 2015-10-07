@@ -1,8 +1,10 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset;
 
+import java.util.HashMap;
 import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.gou.GOUStrategyReader;
@@ -28,6 +30,11 @@ public class GOUSolutionSet<T extends  JecoliGenericConfiguration> extends Abstr
     public GOUSolution createSolution(GeneticConditions gc) {
     	return new GOUSolution(gc);
     }
+    
+    @Override
+	public GOUSolution createSolution(GeneticConditions gc, List<Double> attributes) {
+		return new GOUSolution(gc, new HashMap<String,SteadyStateSimulationResult>(), attributes);
+	}
 
 	@Override
 	public IStrainOptimizationReader getSolutionReaderInstance() {

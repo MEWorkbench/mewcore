@@ -36,13 +36,11 @@ public class GOUSolution extends AbstractSolution {
 		GeneChangesList geneChangeList = solutionGeneticConditions.getGeneList();
 		List<Pair<String, Double>> geneExpressionList = geneChangeList.getPairsList();
 		
-		if (fitnesses != null) {
-			String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
+		if (attributes != null) {
+			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
 			outputStream.write(fitString);
-			outputStream.write(INNER_DELIMITER);
-        }else{
-        	outputStream.write(OUTTER_DELIMITER);
         }
+		outputStream.write(INNER_DELIMITER);
 		
 		for (Pair<String, Double> geneExpression : geneExpressionList) {
 			outputStream.write(INNER_DELIMITER + geneExpression.getA() + "=" + geneExpression.getB());

@@ -16,39 +16,36 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
  */
 public class GKSolution extends AbstractSolution {
 	
-	private static final long	serialVersionUID	= 1L;
-
-	public GKSolution(GeneticConditions solutionGeneticConditions) {
-        super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
-    }
+	private static final long serialVersionUID = 1L;
 	
-//	public GKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
-//        super(solutionGeneticConditions, simulationResultMap);
-//    }
+	public GKSolution(GeneticConditions solutionGeneticConditions) {
+		super(solutionGeneticConditions, new HashMap<String, SteadyStateSimulationResult>());
+	}
+	
+	//	public GKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {
+	//        super(solutionGeneticConditions, simulationResultMap);
+	//    }
 	
 	public GKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
-        super(solutionGeneticConditions, simulationResultMap,fitnesses);
-    }
-
-    @Override
-    public void write(OutputStreamWriter outputStream) throws Exception {
-        GeneChangesList geneChangesList = solutionGeneticConditions.getGeneList();
-        List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
-        
-        if(fitnesses!=null){
-        	String fitString = StringUtils.concat(INNER_DELIMITER, fitnesses);
-        	outputStream.write(fitString);
-        	outputStream.write(INNER_DELIMITER);
-        }else{
-        	outputStream.write(OUTTER_DELIMITER);
-        }
-        
-
-        for(String geneKnockout:geneKnockoutList){        	
-        	outputStream.write(INNER_DELIMITER+geneKnockout);
-        }
-
-    }
-
-
+		super(solutionGeneticConditions, simulationResultMap, fitnesses);
+	}
+	
+	@Override
+	public void write(OutputStreamWriter outputStream) throws Exception {
+		GeneChangesList geneChangesList = solutionGeneticConditions.getGeneList();
+		List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
+		
+		if (attributes != null) {
+			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
+			outputStream.write(fitString);
+		}
+		
+		outputStream.write(INNER_DELIMITER);
+		
+		for (String geneKnockout : geneKnockoutList) {
+			outputStream.write(INNER_DELIMITER + geneKnockout);
+		}
+		
+	}
+	
 }
