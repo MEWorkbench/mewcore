@@ -9,10 +9,11 @@ public abstract class AbstractObjectiveFunction implements IObjectiveFunction, S
 	private static final long	serialVersionUID		= 1L;
 	public static final String	OBJECTIVE_FUNCTION_ID	= "objectiveFunctionID";
 	
-	protected static Map<String, ObjectiveFunctionParameterType>	parameters;
+	protected Map<String, ObjectiveFunctionParameterType>	parameters;
 	protected Map<String, Object>									values;
 	
 	public AbstractObjectiveFunction(Map<String,Object> configuration) throws InvalidObjectiveFunctionConfiguration{
+		this();
 		validate(configuration);
 		for(String param : configuration.keySet()){
 			setParameterValue(param, configuration.get(param));
@@ -20,18 +21,28 @@ public abstract class AbstractObjectiveFunction implements IObjectiveFunction, S
 	}
 	
 	public AbstractObjectiveFunction(Object... params){
+		this();
 		if(params.length>0){
 			processParams(params);
 		}
 	}
 	
-	public AbstractObjectiveFunction(){}
+	public AbstractObjectiveFunction(){
+		Map<String,ObjectiveFunctionParameterType> params = loadParameters();
+		setParameters(params);
+	}
 	
 	abstract protected void processParams(Object... params);
 	
 	public Map<String, ObjectiveFunctionParameterType> mandatoryParameters(){
 		return parameters;
-	}	
+	}
+	
+	public abstract Map<String,ObjectiveFunctionParameterType> loadParameters();
+	
+	protected void setParameters(Map<String,ObjectiveFunctionParameterType> mandatoryParams){
+		parameters = mandatoryParams;
+	}
 	
 	public Map<String, Object> getValues() {
 		if (values == null) {

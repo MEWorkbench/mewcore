@@ -39,10 +39,10 @@ public class FluxValueNumberReactionsObjectiveFunction extends AbstractObjective
 	
 	protected final double worstFitness = 0;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(FV_NR_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public FluxValueNumberReactionsObjectiveFunction() {

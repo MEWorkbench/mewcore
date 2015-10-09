@@ -48,13 +48,13 @@ public class YieldMinimumBiomassObjectiveFunction extends AbstractObjectiveFunct
 	protected double		minimumBiomassValue	= 0.0;
 	protected boolean		biomassComputed		= false;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(YIELD_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(YIELD_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(YIELD_PARAM_MIN_BIOMASS_PERCENTAGE, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(YIELD_PARAM_SOLVER, ObjectiveFunctionParameterType.SOLVER);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public YieldMinimumBiomassObjectiveFunction() {

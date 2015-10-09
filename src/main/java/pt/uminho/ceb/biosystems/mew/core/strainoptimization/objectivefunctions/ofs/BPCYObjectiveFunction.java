@@ -41,12 +41,12 @@ public class BPCYObjectiveFunction extends AbstractObjectiveFunction {
 	protected final double		worstFitness			= Double.NEGATIVE_INFINITY;
 	protected double			substrateValue;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		HashMap<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(BPCY_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(BPCY_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(BPCY_PARAM_SUBSTRATE, ObjectiveFunctionParameterType.REACTION_SUBSTRATE);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public BPCYObjectiveFunction() {

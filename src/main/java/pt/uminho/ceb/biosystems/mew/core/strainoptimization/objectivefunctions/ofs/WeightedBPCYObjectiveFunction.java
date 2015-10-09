@@ -2,6 +2,7 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
@@ -11,6 +12,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.AbstractObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
 import pt.uminho.ceb.biosystems.mew.core.utils.Debugger;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
@@ -29,17 +31,21 @@ public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 	
 	protected transient SimulationSteadyStateControlCenter center = null;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		HashMap<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(WBPCY_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(WBPCY_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(WBPCY_PARAM_ALPHA, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(WBPCY_PARAM_SOLVER, ObjectiveFunctionParameterType.SOLVER);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 		
 	public WeightedBPCYObjectiveFunction() {
 		super();
+	}
+	
+	public WeightedBPCYObjectiveFunction(Map<String, Object> configuration) throws InvalidObjectiveFunctionConfiguration {
+		super(configuration);
 	}
 	
 	public WeightedBPCYObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, SolverType lpSolver) {

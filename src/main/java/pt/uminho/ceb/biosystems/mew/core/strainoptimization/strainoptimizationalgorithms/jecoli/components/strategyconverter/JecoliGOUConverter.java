@@ -64,6 +64,7 @@ public class JecoliGOUConverter <T extends JecoliGenericConfiguration> implement
         if (ouRange != null) {
             nmin = ouRange.getA();
             nmax = ouRange.getB();
+            ((GOUDecoder) decoder).setSpecialIndex(nmin);
         }
         return new IntIntHybridSetRepresentationFactory(minSetSize, maxSetSize, maxSetValue, nmin, nmax, evaluationFunction.getNumberOfObjectives());
     }

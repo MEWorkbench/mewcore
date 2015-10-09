@@ -49,7 +49,7 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		if (simplifier == null) {
 			simplifier = getSimplifierGeneticConditions();
 		}
-		return getSimplifier();
+		return simplifier;
 	}
 	
 	protected List<T> getSimplifiedResultList(IStrainOptimizationResultSet<C, T> resultSet) throws Exception{

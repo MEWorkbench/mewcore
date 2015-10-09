@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -27,6 +28,7 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 	protected T							baseConfiguration;
 	protected List<E>					resultList;
 	protected IStrainOptimizationReader	solutionReader;
+	protected HashSet<String>			solutionHash	= null;
 	
 	public abstract IStrainOptimizationReader getSolutionReaderInstance();
 	
@@ -96,12 +98,12 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 		}
 	}
 	
-	public void recalculateFitness(IndexedHashMap<IObjectiveFunction, String> ofs) throws Exception{
+	public void recalculateFitness(IndexedHashMap<IObjectiveFunction, String> ofs) throws Exception {
 		Map<String, SimulationSteadyStateControlCenter> ccs = createAllCCs(ofs);
 		
-		for(E sol : getResultList()){
+		for (E sol : getResultList()) {
 			Double[] fitArray = new Double[ofs.size()];
-			for(int i=0; i<ofs.size();i++){
+			for (int i = 0; i < ofs.size(); i++) {
 				IObjectiveFunction of = ofs.getKeyAt(i);
 				String method = ofs.get(of);
 				ccs.get(method).setGeneticConditions(sol.getGeneticConditions());
@@ -111,7 +113,7 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 				fitArray[i] = fit;
 			}
 			sol.setAttributes(Arrays.asList(fitArray));
-		}		
+		}
 	}
 	
 	public void recalculateFitness() throws Exception {
@@ -140,14 +142,38 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 		return solutionReader;
 	};
 	
-	
-	public void addSolution(E solution){
+	public void addSolution(E solution) {
 		resultList.add(solution);
 	}
 	
-	public IStrainOptimizationResultSet<T,E> merge(IStrainOptimizationResultSet<T,E> resultSetToMerge){
-		resultList.addAll(resultSetToMerge.getResultList());
+	public boolean addSolutionNoRepeat(E solution){
+		String unique = solution.getGeneticConditions().toUniqueString();
+		if(!getSolutionHash().contains(unique)){
+			getSolutionHash().add(unique);
+			addSolution(solution);
+			return true;
+		}
+		return false;
+	}
+	
+	public IStrainOptimizationResultSet<T, E> merge(IStrainOptimizationResultSet<T, E> resultSetToMerge) {
+		return mergeHash(resultSetToMerge);
+	}
+	
+	public IStrainOptimizationResultSet<T, E> mergeHash(IStrainOptimizationResultSet<T, E> resultSetToMerge) {
+		int repeated=0;
+		for(E res : resultSetToMerge.getResultList()){			
+			repeated += !addSolutionNoRepeat(res) ? 1 : 0;
+		}
+		System.out.println("Merge finished, found ["+repeated+"] repeated solutions.");
 		return this;
+	}
+
+	public HashSet<String> getSolutionHash() {
+		if(solutionHash==null){
+			solutionHash = new HashSet<>();
+		}
+		return solutionHash;
 	}
 	
 }

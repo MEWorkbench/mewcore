@@ -27,12 +27,12 @@ public class CYIELDObjectiveFunction extends AbstractObjectiveFunction {
 	protected int	_carbonContentSubstrate	= -1;
 	protected int	_carbonContentTarget	= -1;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		HashMap<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(CYIELD_PARAM_SUBSTRATE, ObjectiveFunctionParameterType.REACTION_SUBSTRATE);
 		myparams.put(CYIELD_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(CYIELD_PARAM_CONTAINER, ObjectiveFunctionParameterType.CONTAINER);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public CYIELDObjectiveFunction(){super();}

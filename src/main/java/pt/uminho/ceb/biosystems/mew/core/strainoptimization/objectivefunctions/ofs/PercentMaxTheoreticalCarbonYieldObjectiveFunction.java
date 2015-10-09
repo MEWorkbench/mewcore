@@ -20,13 +20,13 @@ public class PercentMaxTheoreticalCarbonYieldObjectiveFunction extends CYIELDObj
 	
 	public static final String PMTCYIELD_PARAM_SOLVER = "Solver";
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		HashMap<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(CYIELD_PARAM_SUBSTRATE, ObjectiveFunctionParameterType.REACTION_SUBSTRATE);
 		myparams.put(CYIELD_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(CYIELD_PARAM_CONTAINER, ObjectiveFunctionParameterType.CONTAINER);
 		myparams.put(PMTCYIELD_PARAM_SOLVER, ObjectiveFunctionParameterType.SOLVER);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public PercentMaxTheoreticalCarbonYieldObjectiveFunction() {

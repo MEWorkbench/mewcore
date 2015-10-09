@@ -24,14 +24,14 @@ public class WeightedBPObjectiveFunction extends AbstractObjectiveFunction {
 	
 	protected final double worstFitness = Double.NEGATIVE_INFINITY;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(WBP_PARAM_MAX_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(WBP_PARAM_MAX_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(WBP_PARAM_MAX_BIOMASS, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(WBP_PARAM_MAX_PRODUCT, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(WBP_PARAM_ALPHA, ObjectiveFunctionParameterType.DOUBLE);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public WeightedBPObjectiveFunction() {

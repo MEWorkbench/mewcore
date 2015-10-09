@@ -1,23 +1,25 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGOUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAROUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKRSCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAROUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAGKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAGOUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSARKCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAROUSCOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSARKRSCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAROUSCOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2GKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2GOUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2RKCSOM;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2ROUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2RKRSCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2ROUCSOM;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
 /**
  * Created by ptiago on 23-02-2015.
@@ -53,6 +55,15 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 	}
 	
 	public IStrainOptimizationResultSet execute(IGenericConfiguration genericConfiguration) throws Exception {
+		
+		AbstractObjTerm.setMaxValue(Double.MAX_VALUE);
+		AbstractObjTerm.setMinValue(-Double.MAX_VALUE);
+		CplexParamConfiguration.setDoubleParam("EpRHS", 1e-9);
+		CplexParamConfiguration.setIntegerParam("MIPEmphasis", 2);
+		CplexParamConfiguration.setBooleanParam("NumericalEmphasis", true);
+		CplexParamConfiguration.setBooleanParam("PreInd", true);
+		CplexParamConfiguration.setIntegerParam("HeurFreq", -1);
+		
 		String optimizationAlgorithm = (String) genericConfiguration.getProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM);
 		
 		if (optimizationAlgorithm == null) throw new Exception("Optimization Method Not Defined");

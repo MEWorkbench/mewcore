@@ -32,12 +32,12 @@ public class FVAObjectiveFunction extends AbstractObjectiveFunction {
 	private transient SimulationSteadyStateControlCenter	_cc						= null;
 
 	
-	static{
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String,ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(FVA_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(FVA_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(FVA_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public FVAObjectiveFunction(){super();}

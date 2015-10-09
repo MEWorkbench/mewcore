@@ -34,13 +34,13 @@ public class TurnoverObjectiveFunction extends AbstractObjectiveFunction {
 	protected Map<String, Double>	_reactions	= null;
 	protected boolean				_init		= false;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(TURN_PARAM_TARGET_METABOLITE, ObjectiveFunctionParameterType.METABOLITE);
 		myparams.put(TURN_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(TURN_PARAM_MIN_BIOMASS, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(TURN_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public TurnoverObjectiveFunction() {

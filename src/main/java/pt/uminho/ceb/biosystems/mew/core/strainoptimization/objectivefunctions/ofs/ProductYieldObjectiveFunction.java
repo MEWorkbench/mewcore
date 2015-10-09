@@ -22,14 +22,14 @@ public class ProductYieldObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String	PYIELD_PARAM_MIN_UPTAKE		= "MinUptake";
 	public static final String	PYIELD_PARAM_MIN_BIOMASS	= "MinBiomass";
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(PYIELD_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(PYIELD_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(PYIELD_PARAM_SUBSTRATE, ObjectiveFunctionParameterType.REACTION_SUBSTRATE);
 		myparams.put(PYIELD_PARAM_MIN_UPTAKE, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(PYIELD_PARAM_MIN_BIOMASS, ObjectiveFunctionParameterType.DOUBLE);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public ProductYieldObjectiveFunction() {

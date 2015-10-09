@@ -31,4 +31,6 @@ public interface IObjectiveFunction extends Serializable {
 	
 	Map<String, Object> copyConfiguration();
 	
+	Map<String, ObjectiveFunctionParameterType> loadParameters();
+	
 }

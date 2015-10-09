@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class MinimizeAlternativesObjectiveFunction extends AbstractObjectiveFunc
 	private transient SimulationSteadyStateControlCenter	_cc							= null;
 	private Map<String, Integer>							_alternativeCarbonContent	= null;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(MIN_ALTERN_PARAM_ALTERNATIVES, ObjectiveFunctionParameterType.SET.of(ObjectiveFunctionParameterType.REACTION));
 		myparams.put(MIN_ALTERN_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
@@ -63,6 +64,7 @@ public class MinimizeAlternativesObjectiveFunction extends AbstractObjectiveFunc
 		myparams.put(MIN_ALTERN_PARAM_CONTAINER, ObjectiveFunctionParameterType.CONTAINER);
 		myparams.put(MIN_ALTERN_PARAM_SOLVER, ObjectiveFunctionParameterType.SOLVER);
 		myparams.put(MIN_ALTERN_PARAM_USE_COUNTS, ObjectiveFunctionParameterType.BOOLEAN);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public MinimizeAlternativesObjectiveFunction() {

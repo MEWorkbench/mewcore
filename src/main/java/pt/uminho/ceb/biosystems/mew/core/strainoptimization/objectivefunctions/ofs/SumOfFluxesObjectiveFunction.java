@@ -39,11 +39,11 @@ public class SumOfFluxesObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String	SUM_F_PARAM_MAXIMIZATION	= "Maximization";
 	public static final String	SUM_F_PARAM_FLUXES_TO_SUM	= "FluxesToSum";
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(SUM_F_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
 		myparams.put(SUM_F_PARAM_FLUXES_TO_SUM, ObjectiveFunctionParameterType.SET.of(ObjectiveFunctionParameterType.REACTION));
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public SumOfFluxesObjectiveFunction(Boolean maximize, Set<String> fluxesToSum) {

@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 public class GeneticConditions implements Serializable{
 
@@ -144,6 +146,23 @@ public class GeneticConditions implements Serializable{
 		}
 			
 		return sb.toString();
+	}
+	
+	public String toUniqueString(){
+		List<Pair<String,Double>> pairs = (getGeneList()!=null) ? getGeneList().getPairsList() : getReactionList().getPairsList();  
+				
+		TreeSet<String> ordered = new TreeSet<String>();		
+		for(int i=0; i< pairs.size(); i++){
+			Pair<String, Double> pair = pairs.get(i);			
+			if(isOverUnder){
+				ordered.add(pair.getValue()+"="+pair.getPairValue());				
+			}
+			else{
+				ordered.add(pair.getValue());				
+			}
+		}
+			
+		return StringUtils.concat(",", ordered);
 	}
 	
 	public GeneticConditions clone(){

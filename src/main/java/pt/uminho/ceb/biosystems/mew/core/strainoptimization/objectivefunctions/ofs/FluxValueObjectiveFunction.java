@@ -38,11 +38,11 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String	FV_PARAM_MAXIMIZATION	= "Maximization";
 	protected final double		worstFitness			= 0;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(FV_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(FV_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public FluxValueObjectiveFunction() {

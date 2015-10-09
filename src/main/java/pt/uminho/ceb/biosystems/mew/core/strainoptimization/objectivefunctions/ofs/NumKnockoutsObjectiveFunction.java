@@ -35,10 +35,10 @@ public class NumKnockoutsObjectiveFunction extends AbstractObjectiveFunction {
 	
 	public static final String NK_PARAM_MAXIMIZATION = "Maximization";
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(NK_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public NumKnockoutsObjectiveFunction() {

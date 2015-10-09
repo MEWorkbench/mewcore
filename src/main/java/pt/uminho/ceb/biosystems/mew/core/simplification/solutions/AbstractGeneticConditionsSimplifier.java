@@ -60,9 +60,9 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			
 			removeGeneticCondition(finalSolution, id);
 			
-			long init = System.currentTimeMillis();
+//			long init = System.currentTimeMillis();
 			Map<String, SteadyStateSimulationResult> results = simulateGeneticConditions(finalSolution, objectiveFunctions);
-			System.out.println((System.currentTimeMillis() - init));
+//			System.out.println((System.currentTimeMillis() - init));
 			
 			double[] simpfitnesses = evaluateSolution(results, objectiveFunctions);
 			
@@ -126,7 +126,9 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		while (res && i < objectiveFunctions.size()) {
 			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
 			if (of.isMaximization()) {
-				if (fitnesses[i] - simplifiedFitness[i] > delta) res = false;
+				if (fitnesses[i] - simplifiedFitness[i] > delta) {
+					res = false;
+				}
 			} else if (simplifiedFitness[i] - fitnesses[i] > delta) res = false;
 			i++;
 		}

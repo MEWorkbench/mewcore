@@ -27,18 +27,18 @@ public class WeightedYIELDObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String	WYIELD_PARAM_ALPHA				= "Alpha";
 	public static final String	WYIELD_PARAM_SOLVER				= "Solver";
 	public static final String	WYIELD_PARAM_MIN_BIOMASS_VALUE	= "MinBiomassValue";
-	protected final double		worstFitness					= 0.0;
+	protected final double		worstFitness					= 0.0d;
 	
 	transient protected SimulationSteadyStateControlCenter center = null;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(WYIELD_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(WYIELD_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(WYIELD_PARAM_ALPHA, ObjectiveFunctionParameterType.DOUBLE);
 		myparams.put(WYIELD_PARAM_SOLVER, ObjectiveFunctionParameterType.SOLVER);
 		myparams.put(WYIELD_PARAM_MIN_BIOMASS_VALUE, ObjectiveFunctionParameterType.DOUBLE);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public WeightedYIELDObjectiveFunction(){super();}

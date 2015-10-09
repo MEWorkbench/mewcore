@@ -38,14 +38,14 @@ public class FVASenseObjectiveFunction extends AbstractObjectiveFunction {
 	
 	private transient SimulationSteadyStateControlCenter _cc = null;
 	
-	static {
+	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
 		myparams.put(FVA_SENSE_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(FVA_SENSE_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(FVA_SENSE_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
 		myparams.put(FVA_SENSE_PARAM_SOLVER, ObjectiveFunctionParameterType.SOLVER);
 		myparams.put(FVA_SENSE_PARAM_SENSE, ObjectiveFunctionParameterType.BOOLEAN);
-		parameters = Collections.unmodifiableMap(myparams);
+		return Collections.unmodifiableMap(myparams);
 	}
 	
 	public FVASenseObjectiveFunction() {
