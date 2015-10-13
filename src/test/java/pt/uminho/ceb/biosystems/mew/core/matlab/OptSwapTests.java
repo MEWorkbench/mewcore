@@ -1,8 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.matlab;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -11,16 +9,11 @@ import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-import pt.uminho.ceb.biosystems.mew.core.integrationplatform.formulations.optimization.OptSwapFormulation;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.SteadyStateGeneReactionModel;
-import pt.uminho.ceb.biosystems.mew.core.optimization.controlcenter.OptimizationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneChangesList;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 
+@Deprecated
 public class OptSwapTests {
 	
 	SteadyStateModel model;
@@ -86,48 +79,48 @@ public class OptSwapTests {
 		
 	}
 
-	@Test
-	public void OptSwapTest() throws Exception{
-		//OptimizationSteadyStateControlCenter.registerMethod("MATLAB_OPTKNOCK", CobraOptKnockFormulation.class);
-		OptimizationSteadyStateControlCenter.registerMethod("MATLAB_OPTSWAP", OptSwapFormulation.class);
-		
-		GeneChangesList geneList = new GeneChangesList(Arrays.asList("b0008"), Arrays.asList(10.0));
-		ReactionChangesList reactionList = new ReactionChangesList(Arrays.asList("R_DXPRIi"));
-		GeneticConditions geneCond = new GeneticConditions(reactionList, false);//geneList, (ISteadyStateGeneReactionModel)model, true);
-		
-//			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, geneCond, model, "MATLAB_OPTKNOCK");
-		OptimizationSteadyStateControlCenter cc = new OptimizationSteadyStateControlCenter(null, null, model, "MATLAB_OPTSWAP");
+//	@Test
+//	public void OptSwapTest() throws Exception{
+//		//OptimizationSteadyStateControlCenter.registerMethod("MATLAB_OPTKNOCK", CobraOptKnockFormulation.class);
+//		OptimizationSteadyStateControlCenter.registerMethod("MATLAB_OPTSWAP", OptSwapFormulation.class);
+//		
+//		GeneChangesList geneList = new GeneChangesList(Arrays.asList("b0008"), Arrays.asList(10.0));
+//		ReactionChangesList reactionList = new ReactionChangesList(Arrays.asList("R_DXPRIi"));
+//		GeneticConditions geneCond = new GeneticConditions(reactionList, false);//geneList, (ISteadyStateGeneReactionModel)model, true);
+//		
+////			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, geneCond, model, "MATLAB_OPTKNOCK");
+//		OptimizationSteadyStateControlCenter cc = new OptimizationSteadyStateControlCenter(null, null, model, "MATLAB_OPTSWAP");
+////			
+//		cc.setMaxKnockouts(3);
+//		cc.addProperty("MAX_SWAP", 3);
+//		//cc.setMinGrowth(0.05);
+//		cc.setProductFlux("EX_succ(e)");
+//		
+//		Set<String> selectedReactions = new LinkedHashSet<>(model.getReactions().keySet());
+//		selectedReactions.remove(model.getBiomassFlux());
+//		
+//		//cc.setSelectedReactions(selectedReactions);
+//		Set<String> sel = new LinkedHashSet<String>();
+//		sel.add("R_CO2t");
+//		sel.add("R_FUM");
+//		sel.add("R_H2Otm");
+//		//cc.setSelectedReactions(sel);
+//		SteadyStateSimulationResult result = cc.optimize();
+//		
+////		ArrayList<Double> fitness = new ArrayList<Double>();
+////		fitness.add(result.getOFvalue());
+////		
+////		SteadyStateOptimizationResult optResult = new SteadyStateOptimizationResult();
+////		optResult.addOptimizationResult(result, fitness);
+////		
+//////			double d = result.getFluxValues().get(model.getBiomassFlux());
+////		System.out.println("Test OptSwap: "+result.getOFString() + " : " +result.getOFvalue());
+////		System.out.println("List of KOS:");
+////		for (String string : result.getGeneticConditions().getReactionList().keySet()) {
+////			System.out.println(string);
+////		}
 //			
-		cc.setMaxKnockouts(3);
-		cc.addProperty("MAX_SWAP", 3);
-		//cc.setMinGrowth(0.05);
-		cc.setProductFlux("EX_succ(e)");
-		
-		Set<String> selectedReactions = new LinkedHashSet<>(model.getReactions().keySet());
-		selectedReactions.remove(model.getBiomassFlux());
-		
-		//cc.setSelectedReactions(selectedReactions);
-		Set<String> sel = new LinkedHashSet<String>();
-		sel.add("R_CO2t");
-		sel.add("R_FUM");
-		sel.add("R_H2Otm");
-		//cc.setSelectedReactions(sel);
-		SteadyStateSimulationResult result = cc.optimize();
-		
-//		ArrayList<Double> fitness = new ArrayList<Double>();
-//		fitness.add(result.getOFvalue());
-//		
-//		SteadyStateOptimizationResult optResult = new SteadyStateOptimizationResult();
-//		optResult.addOptimizationResult(result, fitness);
-//		
-////			double d = result.getFluxValues().get(model.getBiomassFlux());
-//		System.out.println("Test OptSwap: "+result.getOFString() + " : " +result.getOFvalue());
-//		System.out.println("List of KOS:");
-//		for (String string : result.getGeneticConditions().getReactionList().keySet()) {
-//			System.out.println(string);
-//		}
-			
-	}
+//	}
 	
 
 }

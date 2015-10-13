@@ -188,7 +188,7 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		return getDefaultValue(JecoliOptimizationProperties.STATISTICS_CONFIGURATION, new StatisticsConfiguration());
 	}
 	
-	public void setOptimizationStrategyConverter(IJecoliOptimizationStrategyConverter<JecoliGenericConfiguration, IStrainOptimizationResult> optimizationStrategyConverter) {
+	public <T extends JecoliGenericConfiguration, E extends IStrainOptimizationResult> void setOptimizationStrategyConverter(IJecoliOptimizationStrategyConverter<T, E> optimizationStrategyConverter) {
 		propertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY_CONVERTER, optimizationStrategyConverter);
 	}
 	
