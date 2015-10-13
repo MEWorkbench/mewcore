@@ -17,6 +17,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.o
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.NumKnockoutsObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.ProductYieldObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.TurnoverObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
@@ -36,6 +37,7 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.put(FluxValueObjectiveFunction.ID, FluxValueObjectiveFunction.class);
 		mapObjectiveFunctions.put(ProductYieldObjectiveFunction.ID, ProductYieldObjectiveFunction.class);
 		mapObjectiveFunctions.put(FVAObjectiveFunction.ID, FVAObjectiveFunction.class);
+		mapObjectiveFunctions.put(TurnoverObjectiveFunction.ID, TurnoverObjectiveFunction.class);
 	}
 	
 	public ObjectiveFunctionsFactory() {

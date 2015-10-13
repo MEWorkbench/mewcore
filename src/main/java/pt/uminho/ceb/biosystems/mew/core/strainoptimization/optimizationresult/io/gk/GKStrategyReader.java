@@ -12,25 +12,28 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.i
  * Created by ptiago on 18-03-2015.
  */
 public class GKStrategyReader extends AbstractStrainOptimizationSolutionReader {
-
-	private static final long serialVersionUID = 1L;
-	private ISteadyStateGeneReactionModel model;
-
+	
+	private static final long				serialVersionUID	= 1L;
+	private ISteadyStateGeneReactionModel	model;
+	
 	public GKStrategyReader(ISteadyStateGeneReactionModel model) {
 		super();
 		this.model = model;
 	}
-
+	
 	@Override
 	protected GeneticConditions processGeneticConditions(String geneticConditionString) throws Exception {
 		List<String> modificationList = new ArrayList<>();
-		String[] lineArray = geneticConditionString.split(",");
-
-		for (String knockoutId : lineArray) {
-			String[] tokens = knockoutId.split("=");
-			modificationList.add(tokens[0].trim());
+		
+		if (geneticConditionString != null) {
+			String[] lineArray = geneticConditionString.split(",");
+			
+			for (String knockoutId : lineArray) {
+				String[] tokens = knockoutId.split("=");
+				modificationList.add(tokens[0].trim());
+			}
 		}
-
+		
 		GeneChangesList geneChangesList = new GeneChangesList(modificationList);
 		return new GeneticConditions(geneChangesList, model, false);
 	}

@@ -11,30 +11,32 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.i
 /**
  * Created by ptiago on 18-03-2015.
  */
-public class GOUStrategyReader extends AbstractStrainOptimizationSolutionReader{
-    
-	private static final long	serialVersionUID	= 1L;
-	private ISteadyStateGeneReactionModel model;
+public class GOUStrategyReader extends AbstractStrainOptimizationSolutionReader {
+	
+	private static final long				serialVersionUID	= 1L;
+	private ISteadyStateGeneReactionModel	model;
 	
 	public GOUStrategyReader(ISteadyStateGeneReactionModel model) {
 		super();
 		this.model = model;
 	}
-
+	
 	@Override
-    protected GeneticConditions processGeneticConditions(String geneticConditionString) throws Exception {
-        List<String> geneIdmodificationList = new ArrayList<>();
-        List<Double> geneExpressionModificationList = new ArrayList<>();
-
-        String[] lineArray = geneticConditionString.split(",");
-
-        for(String modification:lineArray) {
-            String[] modificationArray = modification.split("=");
-            geneIdmodificationList.add(modificationArray[0]);
-            geneExpressionModificationList.add(Double.valueOf(modificationArray[1]));
-        }
-
-        GeneChangesList geneChangesList = new GeneChangesList(geneIdmodificationList,geneExpressionModificationList);
-        return new GeneticConditions(geneChangesList, model, true);
-    }
+	protected GeneticConditions processGeneticConditions(String geneticConditionString) throws Exception {
+		List<String> geneIdmodificationList = new ArrayList<>();
+		List<Double> geneExpressionModificationList = new ArrayList<>();
+		
+		if (geneticConditionString != null) {
+			String[] lineArray = geneticConditionString.split(",");
+			
+			for (String modification : lineArray) {
+				String[] modificationArray = modification.split("=");
+				geneIdmodificationList.add(modificationArray[0].trim());
+				geneExpressionModificationList.add(Double.valueOf(modificationArray[1].trim()));
+			}
+		}
+		
+		GeneChangesList geneChangesList = new GeneChangesList(geneIdmodificationList, geneExpressionModificationList);
+		return new GeneticConditions(geneChangesList, model, true);
+	}
 }

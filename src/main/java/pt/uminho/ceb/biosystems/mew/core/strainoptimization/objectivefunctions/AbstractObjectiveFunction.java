@@ -10,37 +10,37 @@ public abstract class AbstractObjectiveFunction implements IObjectiveFunction, S
 	public static final String	OBJECTIVE_FUNCTION_ID	= "objectiveFunctionID";
 	
 	protected Map<String, ObjectiveFunctionParameterType>	parameters;
-	protected Map<String, Object>									values;
+	protected Map<String, Object>							values;
 	
-	public AbstractObjectiveFunction(Map<String,Object> configuration) throws InvalidObjectiveFunctionConfiguration{
+	public AbstractObjectiveFunction(Map<String, Object> configuration) throws InvalidObjectiveFunctionConfiguration {
 		this();
 		validate(configuration);
-		for(String param : configuration.keySet()){
+		for (String param : configuration.keySet()) {
 			setParameterValue(param, configuration.get(param));
 		}
 	}
 	
-	public AbstractObjectiveFunction(Object... params){
+	public AbstractObjectiveFunction(Object... params) {
 		this();
-		if(params.length>0){
+		if (params.length > 0) {
 			processParams(params);
 		}
 	}
 	
-	public AbstractObjectiveFunction(){
-		Map<String,ObjectiveFunctionParameterType> params = loadParameters();
+	public AbstractObjectiveFunction() {
+		Map<String, ObjectiveFunctionParameterType> params = loadParameters();
 		setParameters(params);
 	}
 	
 	abstract protected void processParams(Object... params);
 	
-	public Map<String, ObjectiveFunctionParameterType> mandatoryParameters(){
+	public Map<String, ObjectiveFunctionParameterType> mandatoryParameters() {
 		return parameters;
 	}
 	
-	public abstract Map<String,ObjectiveFunctionParameterType> loadParameters();
+	public abstract Map<String, ObjectiveFunctionParameterType> loadParameters();
 	
-	protected void setParameters(Map<String,ObjectiveFunctionParameterType> mandatoryParams){
+	protected void setParameters(Map<String, ObjectiveFunctionParameterType> mandatoryParams) {
 		parameters = mandatoryParams;
 	}
 	

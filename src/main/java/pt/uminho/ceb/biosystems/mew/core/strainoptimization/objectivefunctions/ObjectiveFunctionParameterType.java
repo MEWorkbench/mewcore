@@ -2,8 +2,8 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions;
 
 import java.io.Serializable;
 
-public enum ObjectiveFunctionParameterType implements Serializable{
-
+public enum ObjectiveFunctionParameterType implements Serializable {
+	
 	/**
 	 * IDENTIFIER
 	 */
@@ -24,36 +24,35 @@ public enum ObjectiveFunctionParameterType implements Serializable{
 	REACTION,
 	REACTION_BIOMASS,
 	REACTION_PRODUCT,
-	REACTION_SUBSTRATE,
-	METABOLITE,
-	MODEL,
-	CONTAINER,
+	REACTION_SUBSTRATE,	
+	METABOLITE, 
+	MODEL, 
+	CONTAINER, 
 	SOLVER,
 	
 	/**
 	 * COLLECTIONS
-	 */	
-	LIST{
-		public ObjectiveFunctionParameterType of(ObjectiveFunctionParameterType inner){
+	 */
+	LIST {
+		public ObjectiveFunctionParameterType of(ObjectiveFunctionParameterType inner) {
 			this.inner = inner;
 			return this;
-		}	
+		}
 	},
-	SET{
-		public ObjectiveFunctionParameterType of(ObjectiveFunctionParameterType inner){
+	SET {
+		public ObjectiveFunctionParameterType of(ObjectiveFunctionParameterType inner) {
 			this.inner = inner;
 			return this;
 		}
 	};
 	
-	
 	protected ObjectiveFunctionParameterType inner;
-
-	public ObjectiveFunctionParameterType of(ObjectiveFunctionParameterType inner){
+	
+	public ObjectiveFunctionParameterType of(ObjectiveFunctionParameterType inner) {
 		this.inner = null;
 		return this;
 	}
-
+	
 	public ObjectiveFunctionParameterType getInner() {
 		return inner;
 	}

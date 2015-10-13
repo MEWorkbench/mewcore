@@ -74,7 +74,7 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 			String[] lineArray = line.split(",,");
 			String objectiveValueFunctionString = lineArray[0];
 			Double[] objectiveFunctionValueArray = computeObjectiveFunctionValueArray(objectiveValueFunctionString);
-			String solutionString = lineArray[1];
+			String solutionString = (lineArray.length>1) ? lineArray[1] : "";
 			GeneticConditions gc = getSolutionReader().readSolutionFromStream(new ByteArrayInputStream(solutionString.getBytes()));
 			resultList.add(createSolution(gc, Arrays.asList(objectiveFunctionValueArray)));
 		}

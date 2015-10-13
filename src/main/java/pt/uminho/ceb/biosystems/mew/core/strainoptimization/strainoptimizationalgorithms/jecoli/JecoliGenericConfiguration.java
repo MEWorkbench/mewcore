@@ -1,5 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -98,8 +100,10 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		return (SolverType) propertyMap.get(JecoliOptimizationProperties.SOLVER);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<String> getSimulationMethodList() {
-		return (List<String>) propertyMap.get(JecoliOptimizationProperties.SIMULATION_METHOD_LIST);
+		Collection<String> collection = (Collection<String>) propertyMap.get(JecoliOptimizationProperties.SIMULATION_METHOD_LIST);
+		return new ArrayList<String>(collection);
 	}
 	
 	public FluxValueMap getReferenceFluxDistribution() {
@@ -114,6 +118,7 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		return (Boolean) propertyMap.get(JecoliOptimizationProperties.OU_2_STEP_APPROACH);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public IndexedHashMap<IObjectiveFunction, String> getObjectiveFunctionsMap() {
 		return (IndexedHashMap<IObjectiveFunction, String>) propertyMap.get(JecoliOptimizationProperties.MAP_OF2_SIM);
 	}

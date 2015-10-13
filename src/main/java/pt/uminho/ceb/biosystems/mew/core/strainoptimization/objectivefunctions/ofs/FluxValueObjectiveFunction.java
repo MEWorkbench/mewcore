@@ -34,13 +34,13 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 	private static final long	serialVersionUID	= 1L;
 	public static final String	ID					= "FV";
 	
-	public static final String	FV_PARAM_PRODUCT		= "Product";
-	public static final String	FV_PARAM_MAXIMIZATION	= "Maximization";
-	protected final double		worstFitness			= 0;
+	public static final String	FV_PARAM_REACTION						= "Reaction";
+	public static final String	FV_PARAM_MAXIMIZATION					= "Maximization";
+	protected final double		worstFitness							= 0;
 	
 	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
-		myparams.put(FV_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
+		myparams.put(FV_PARAM_REACTION, ObjectiveFunctionParameterType.REACTION);
 		myparams.put(FV_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
 		return Collections.unmodifiableMap(myparams);
 	}
@@ -59,16 +59,16 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 	
 	@Override
 	protected void processParams(Object... params) {
-		setParameterValue(FV_PARAM_PRODUCT, params[0]);
+		setParameterValue(FV_PARAM_REACTION, params[0]);
 		setParameterValue(FV_PARAM_MAXIMIZATION, params[1]);
 	}
 	
 	@Override
 	public double evaluate(SteadyStateSimulationResult simResult) {
-		String productID = (String) getParameterValue(FV_PARAM_PRODUCT);
+		String reactionID = (String) getParameterValue(FV_PARAM_REACTION);
 		FluxValueMap fluxValues = simResult.getFluxValues();
-		Double fluxValue = fluxValues.getValue(productID);
-		Debugger.debug(productID + ": " + fluxValue + "\t" + simResult.getReactionList().keySet());
+		Double fluxValue = fluxValues.getValue(reactionID);
+		Debugger.debug(reactionID + ": " + fluxValue + "\t" + simResult.getReactionList().keySet());
 		return fluxValue;
 	}
 	
@@ -79,11 +79,11 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 	
 	public String toString() {
 		String objSense = (boolean) (getParameterValue(FV_PARAM_MAXIMIZATION)) ? "Maximize " : "Minimize ";
-		return objSense + " " + getParameterValue(FV_PARAM_PRODUCT);
+		return objSense + " " + getParameterValue(FV_PARAM_REACTION);
 	}
 	
 	public String getFluxId() {
-		return (String) getParameterValue(FV_PARAM_PRODUCT);
+		return (String) getParameterValue(FV_PARAM_REACTION);
 	}
 	
 	@Override
@@ -110,7 +110,7 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 	 */
 	@Override
 	public String getShortString() {
-		return ID;
+		return getFluxId();
 	}
 	
 	@Override
@@ -121,12 +121,12 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 	@Override
 	public String getLatexFormula() {
 		String sense = (boolean) getParameterValue(FV_PARAM_MAXIMIZATION) ? "max" : "min";
-		return "FV = " + sense + "\\;\\text{" + getParameterValue(FV_PARAM_PRODUCT) + "}";
+		return "FV = " + sense + "\\;\\text{" + getParameterValue(FV_PARAM_REACTION) + "}";
 	}
 	
 	@Override
 	public String getBuilderString() {
-		return ID + "(" + getParameterValue(FV_PARAM_PRODUCT) + "," + getParameterValue(FV_PARAM_MAXIMIZATION) + ")";
+		return ID + "(" + getParameterValue(FV_PARAM_REACTION) + "," + getParameterValue(FV_PARAM_MAXIMIZATION) + ")";
 	}
 	
 	@Override
