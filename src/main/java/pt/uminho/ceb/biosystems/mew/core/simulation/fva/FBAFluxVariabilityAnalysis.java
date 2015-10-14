@@ -33,221 +33,240 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class FBAFluxVariabilityAnalysis {
-	
-	ISteadyStateModel					model;
-	
-	SimulationSteadyStateControlCenter	simulCenter;
-	
-	FluxValueMap						wildTypeFluxes	= null;
-	
-	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions, SolverType solverType) throws Exception {
+
+	protected ISteadyStateModel 		model;
+	protected EnvironmentalConditions 	envConditions;
+	protected GeneticConditions 		geneticConditions;
+	protected SolverType 				solverType;
+
+	protected SimulationSteadyStateControlCenter simulCenter;
+
+	protected FluxValueMap referenceFD = null;
+
+	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
+			SolverType solverType) throws Exception {
 		this.model = model;
-		
-		simulCenter = new SimulationSteadyStateControlCenter(envConditions, geneticConditions, model, SimulationProperties.FBA);
-		simulCenter.setSolver(solverType);
-		simulCenter.setMaximization(true);
-		
-		SteadyStateSimulationResult res = simulCenter.simulate();
-		wildTypeFluxes = res.getFluxValues();
-//		System.out.println("WT Fluxes");
-//		for (String r : wildTypeFluxes.keySet())
-//			System.out.println(r + " = " + wildTypeFluxes.get(r));
+		this.envConditions = envConditions;
+		this.geneticConditions = geneticConditions;
+		this.solverType = solverType;
+
+		FBA fba = new FBA(model);
+		fba.setEnvironmentalConditions(envConditions);
+		fba.setGeneticConditions(geneticConditions);
+		fba.setSolverType(solverType);
+		fba.setIsMaximization(true);
+		referenceFD = fba.simulate().getFluxValues();
 		
 	}
-	
-	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions, SolverType solverType, FluxValueMap wildTypeFluxes) throws Exception {
+
+	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
+			SolverType solverType, FluxValueMap reference) throws Exception {
 		this.model = model;
-		
-		simulCenter = new SimulationSteadyStateControlCenter(envConditions, geneticConditions, model, SimulationProperties.FBA);
-		simulCenter.setSolver(solverType);
-		simulCenter.setMaximization(true);
-		
-		this.wildTypeFluxes = wildTypeFluxes;
-		
+		this.envConditions = envConditions;
+		this.geneticConditions = geneticConditions;
+		this.solverType = solverType;
+
+		this.referenceFD = reference;
+
 	}
-	
+
 	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, SolverType solverType) throws Exception {
 		this(model, null, null, solverType);
 	}
-	
+
 	// gives maximum or minimum value for a flux (no constraints)
 	public double optimumFlux(String fluxId, boolean maximize) {
-		simulCenter.setFBAObjSingleFlux(fluxId, 1.0);
-		simulCenter.setMaximization(maximize);
-		
+		getSimulCenter().setFBAObjSingleFlux(fluxId, 1.0);
+		getSimulCenter().setMaximization(maximize);
+
 		double value = Double.NaN;
 		try {
-			SteadyStateSimulationResult res = simulCenter.simulate();
+			SteadyStateSimulationResult res = getSimulCenter().simulate();
 			value = res.getFluxValues().get(fluxId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return value;
 	}
-	
+
 	public double[] limitsFlux(String fluxId) {
 		double[] res = new double[2];
-		
+
 		res[0] = optimumFlux(fluxId, false);
 		res[1] = optimumFlux(fluxId, true);
-		
+
 		return res;
 	}
-	
-	// gives maximum or minimum value for a flux given a constraint on the biomass
+
+	// gives maximum or minimum value for a flux given a constraint on the
+	// biomass
 	// (biomass given as percentage of wild type)
 	public double optimumFlux(String fluxId, double minimumPercBiomass, boolean maximize) throws Exception {
 		String biomassId = model.getBiomassFlux();
-		double wtBiomass = wildTypeFluxes.get(biomassId);
+		double wtBiomass = referenceFD.get(biomassId);
 		Double biomassLowerLimit = minimumPercBiomass * wtBiomass;
-		
-		if (biomassLowerLimit.equals(Double.NaN)) biomassLowerLimit = 0.0;
-		
+
+		if (biomassLowerLimit.equals(Double.NaN))
+			biomassLowerLimit = 0.0;
+
 		ReactionConstraint oldConstraints = model.getReactionConstraint(biomassId);
 		ReactionConstraint newConstraints = new ReactionConstraint(biomassLowerLimit, oldConstraints.getUpperLimit());
-		
+
 		EnvironmentalConditions conditions;
-		
-		if (this.simulCenter.getEnvironmentalConditions() != null)
-			conditions = this.simulCenter.getEnvironmentalConditions().copy();
+
+		if (this.getSimulCenter().getEnvironmentalConditions() != null)
+			conditions = this.getSimulCenter().getEnvironmentalConditions().copy();
 		else
 			conditions = new EnvironmentalConditions();
-		
+
 		conditions.addReactionConstraint(biomassId, newConstraints);
-		
-		simulCenter.setFBAObjSingleFlux(fluxId, 1.0);
-		simulCenter.setEnvironmentalConditions(conditions);
-		simulCenter.setMaximization(maximize);
-		
-		SteadyStateSimulationResult res = simulCenter.simulate();
-		
-		if (res == null)
+
+		getSimulCenter().setFBAObjSingleFlux(fluxId, 1.0);
+		getSimulCenter().setEnvironmentalConditions(conditions);
+		getSimulCenter().setMaximization(maximize);
+
+		SteadyStateSimulationResult res = getSimulCenter().simulate();
+
+		if (res == null) {
 			return 0.0;
-		else
+		} else {
 			return res.getFluxValues().get(fluxId);
+		}
 	}
-	
+
 	public double[] limitsFlux(String fluxId, double minPercBiomass) throws Exception {
 		double[] res = new double[2];
-		
+
 		res[0] = optimumFlux(fluxId, minPercBiomass, false);
 		res[1] = optimumFlux(fluxId, minPercBiomass, true);
-		
+
 		return res;
 	}
-	
+
 	public Map<String, double[]> limitsAllFluxes(double minimumPercBiomass) throws Exception {
 		Map<String, double[]> res = new HashMap<String, double[]>();
-		
+
 		for (int i = 0; i < model.getNumberOfReactions(); i++) {
-			
+
 			String reactionId = model.getReactionId(i);
-			
+
 			double r[] = limitsFlux(reactionId, minimumPercBiomass);
-			
+
 			System.out.println(reactionId + "\t" + r[0] + "\t" + r[1]);
-			
+
 			res.put(reactionId, r);
-			
+
 		}
 		return res;
 	}
-	
+
 	public double[] tightBounds(String fluxId) throws Exception {
 		return limitsFlux(fluxId, 1.0);
 	}
-	
+
 	/**
 	 * For a given flux calculates maximum value, for each value of biomass,
-	 * from
-	 * 0% to 100% using interval defined by 2nd argument
+	 * from 0% to 100% using interval defined by 2nd argument
 	 */
 	public double[] maxValuesFluxAllBiomasses(String fluxId, double interval) throws Exception {
 		double[] res = new double[(int) (1.0 / interval) + 1];
-		
+
 		double biomassPerc = 0.0;
-		
+
 		for (int i = 0; i < res.length; i++) {
 			res[i] = optimumFlux(fluxId, biomassPerc, true);
 			biomassPerc += interval;
 		}
-		
+
 		return res;
 	}
-	
+
 	public FluxValueMap getWildTypeFluxes() {
-		
-		return wildTypeFluxes;
+
+		return referenceFD;
 	}
-	
+
 	public void setWildTypeFluxes(FluxValueMap wildTypeFluxes) {
-		this.wildTypeFluxes = wildTypeFluxes;
+		this.referenceFD = wildTypeFluxes;
 	}
-	
+
 	public EnvironmentalConditions getEnvConditions() {
-		return simulCenter.getEnvironmentalConditions();
+		return getSimulCenter().getEnvironmentalConditions();
 	}
-	
+
 	public void setEnvConditions(EnvironmentalConditions envConditions) throws Exception {
-		simulCenter.setEnvironmentalConditions(envConditions);
-		
-		SteadyStateSimulationResult res = simulCenter.simulate();
-		wildTypeFluxes = res.getFluxValues();
-		
+		getSimulCenter().setEnvironmentalConditions(envConditions);
+
+		SteadyStateSimulationResult res = getSimulCenter().simulate();
+		referenceFD = res.getFluxValues();
+
 	}
-	
+
 	public GeneticConditions getGeneticConditions() {
-		return this.simulCenter.getGeneticConditions();
+		return getSimulCenter().getGeneticConditions();
 	}
-	
+
 	public void setGeneticConditions(GeneticConditions gc) throws Exception {
-		simulCenter.setGeneticConditions(gc);
-		
-		SteadyStateSimulationResult res = simulCenter.simulate();
-		wildTypeFluxes = res.getFluxValues();
+		getSimulCenter().setGeneticConditions(gc);
+
+		SteadyStateSimulationResult res = getSimulCenter().simulate();
+		referenceFD = res.getFluxValues();
 	}
-	
+
 	public FVAZeroValueFluxes identifyFVAZeroFluxes() throws Exception {
-		
+
 		List<String> zeroF = new ArrayList<String>();
-		
-		for (String fId : wildTypeFluxes.keySet()) {
-			
-			double wtF = wildTypeFluxes.get(fId);
-			
+
+		for (String fId : referenceFD.keySet()) {
+
+			double wtF = referenceFD.get(fId);
+
 			if (wtF == 0.0) {
 				double[] limits = limitsFlux(fId, 0.0);
-				if (limits[0] == 0 && limits[1] == 0) zeroF.add(fId);
+				if (limits[0] == 0 && limits[1] == 0)
+					zeroF.add(fId);
 				System.out.println(fId + " = [" + limits[0] + "," + limits[1] + "]");
 			}
 		}
-		
+
 		FVAZeroValueFluxes zerovalues = new FVAZeroValueFluxes(zeroF, this.getEnvConditions());
 		return zerovalues;
 	}
-	
+
 	public FVAZeroValueFluxes identifyFVAZeroFluxesIgnore(Set<String> toIgnore) throws Exception {
 		List<String> zeroF = new ArrayList<String>();
-		
-		for (String fId : wildTypeFluxes.keySet()) {
+
+		for (String fId : referenceFD.keySet()) {
 			if (toIgnore == null || !toIgnore.contains(fId)) {
-				double wtF = wildTypeFluxes.get(fId);
-				
+				double wtF = referenceFD.get(fId);
+
 				if (wtF == 0.0) {
 					double[] limits = limitsFlux(fId, 0.0);
-					if (limits[0] == 0 && limits[1] == 0) zeroF.add(fId);
-					//					System.out.println(fId + " = [" + limits[0] + "," + limits[1] + "]");
+					if (limits[0] == 0 && limits[1] == 0)
+						zeroF.add(fId);
+					// System.out.println(fId + " = [" + limits[0] + "," +
+					// limits[1] + "]");
 				}
 			}
 		}
-		
+
 		FVAZeroValueFluxes zerovalues = new FVAZeroValueFluxes(zeroF, this.getEnvConditions());
 		return zerovalues;
 	}
-	
+
+	public SimulationSteadyStateControlCenter getSimulCenter() {
+		if (simulCenter == null) {
+			simulCenter = new SimulationSteadyStateControlCenter(envConditions, geneticConditions, model, SimulationProperties.FBA);
+			simulCenter.setSolver(solverType);
+			simulCenter.setMaximization(true);
+		}
+		return simulCenter;
+	}
+
 }
