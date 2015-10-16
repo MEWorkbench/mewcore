@@ -3,15 +3,21 @@ package pt.uminho.ceb.biosystems.mew.core.cmd.searchtools;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.AlgorithmTypeEnum;
 import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.OptimizationConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter.StrainOptimizationControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
@@ -143,18 +149,37 @@ public class ClusterRunner {
 		
 		StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
 		
+		
+		ISteadyStateModel model = _configuration.getModel();
+		EnvironmentalConditions envConditions = _configuration.getEnvironmentalConditions();
+		Boolean isMaximization = true; // always maximization, objective functions will deal with specific objective senses on their own
+		Boolean isOverUnder2stepApproach =  _configuration.isOverUnder2stepApproach();
+		SolverType solver =  _configuration.getSimulationSolver();
+		Map<String,Double> of = new HashMap<>();
+		of.put(model.getBiomassFlux(), 1.0);
+		
+		Map<String,Map<String,Object>> simulationConfiguration = new HashMap<String,Map<String,Object>>();
+		for(String method : _configuration.getSimulationMethod()){
+			Map<String,Object> methodConf = new HashMap<>();
+			methodConf.put(SimulationProperties.METHOD_ID, method);
+			methodConf.put(SimulationProperties.MODEL, model);
+			methodConf.put(SimulationProperties.ENVIRONMENTAL_CONDITIONS, envConditions);
+			methodConf.put(SimulationProperties.IS_MAXIMIZATION, isMaximization);
+			methodConf.put(SimulationProperties.SOLVER, solver);
+			methodConf.put(SimulationProperties.OVERUNDER_2STEP_APPROACH, isOverUnder2stepApproach);
+			methodConf.put(SimulationProperties.OBJECTIVE_FUNCTION, of);
+			simulationConfiguration.put(method, methodConf);
+		}
+		
 		GenericConfiguration genericConfiguration = new GenericConfiguration();
-		genericConfiguration.setProperty(JecoliOptimizationProperties.STEADY_STATE_MODEL, _configuration.getModel());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.ENVIRONMENTAL_CONDITIONS, _configuration.getEnvironmentalConditions());
+		genericConfiguration.setProperty(JecoliOptimizationProperties.STEADY_STATE_MODEL, model);
+		genericConfiguration.setProperty(JecoliOptimizationProperties.STEADY_STATE_GENE_REACTION_MODEL, model);
 		genericConfiguration.setProperty(JecoliOptimizationProperties.MAX_SET_SIZE, _configuration.getMaxSize());
 		genericConfiguration.setProperty(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, _configuration.isVariableSize());
 		genericConfiguration.setProperty(JecoliOptimizationProperties.NOT_ALLOWED_IDS, _configuration.getOptimizationCriticalIDs());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, _configuration.getOptimizationStrategy());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.SIMULATION_METHOD_LIST, _configuration.getSimulationMethod());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.IS_MAXIMIZATION, true); //assumido por default FO trata disto
+		genericConfiguration.setProperty(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, _configuration.getOptimizationStrategy());		
 		genericConfiguration.setProperty(JecoliOptimizationProperties.MAP_OF2_SIM, _configuration.getObjectiveFunctions());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.OU_2_STEP_APPROACH, _configuration.isOverUnder2stepApproach());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.SOLVER, _configuration.getSimulationSolver());
+		genericConfiguration.setProperty(JecoliOptimizationProperties.SIMULATION_CONFIGURATION, simulationConfiguration);
 		genericConfiguration.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA, _configuration.getTerminationCriteria());
 		genericConfiguration.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, _configuration.getAlgorithm().toString());
 		

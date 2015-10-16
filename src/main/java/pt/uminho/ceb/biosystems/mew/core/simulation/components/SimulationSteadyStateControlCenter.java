@@ -40,11 +40,11 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 
 public class SimulationSteadyStateControlCenter extends AbstractSimulationSteadyStateControlCenter {
 	
-	private static final long					serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 	
-	protected static SimulationMethodsFactory	factory;
+	protected static SimulationMethodsFactory factory;
 	
-	protected boolean							forceRecreate		= false;
+	protected boolean forceRecreate = false;
 	
 	static {
 		
@@ -60,6 +60,21 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		mapMethods.put(SimulationProperties.DSPP_LMOMA, DSPP_LMOMA.class);
 		
 		factory = new SimulationMethodsFactory(mapMethods);
+	}
+	
+	public SimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) throws Exception {
+		super(simulationConfiguration);
+		SolverType solver = (SolverType) simulationConfiguration.get(SimulationProperties.SOLVER);
+		Boolean isMaximization = (Boolean) simulationConfiguration.get(SimulationProperties.IS_MAXIMIZATION);
+		Boolean overUnder2StepApproach = (Boolean) simulationConfiguration.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
+		FluxValueMap wtReference = (FluxValueMap) simulationConfiguration.get(SimulationProperties.WT_REFERENCE);
+		FluxValueMap ouReference = (FluxValueMap) simulationConfiguration.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
+	
+		setSolver(solver);
+		setMaximization(isMaximization);
+		setOverUnder2StepApproach(overUnder2StepApproach);
+		setWTReference(wtReference);
+		setUnderOverRef(ouReference);
 	}
 	
 	public SimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
@@ -189,6 +204,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 	 * calls (e.g., C calls from CPLEX)
 	 */
 	public void forceSolverCleanup() {
-		if (lastMethod != null) lastMethod.forceSolverCleanup();
+		if (lastMethod != null)
+			lastMethod.forceSolverCleanup();
 	}
 }

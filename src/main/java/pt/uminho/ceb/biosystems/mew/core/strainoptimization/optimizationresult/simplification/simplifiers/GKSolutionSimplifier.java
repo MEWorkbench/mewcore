@@ -26,10 +26,7 @@ public class GKSolutionSimplifier<C extends JecoliGenericConfiguration> extends 
 	
 	
 	public ISimplifierGeneticConditions getSimplifierGeneticConditions(){
-		return new GenesSimplifier(configuration.getGeneReactionSteadyStateModel(), 
-								   configuration.getReferenceFluxDistribution(), 
-								   configuration.getEnvironmentalConditions(),
-								   configuration.getSolver());
+		return new GenesSimplifier(configuration.getSimulationConfiguration());
 	}
 
 	@Override

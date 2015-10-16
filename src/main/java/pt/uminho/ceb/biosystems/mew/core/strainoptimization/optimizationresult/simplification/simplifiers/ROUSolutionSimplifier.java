@@ -25,7 +25,7 @@ public class ROUSolutionSimplifier<C extends JecoliGenericConfiguration> extends
 	}
 	
 	public ISimplifierGeneticConditions getSimplifierGeneticConditions() {
-		return new ReactionsSimplifier(configuration.getSteadyStateModel(), configuration.getReferenceFluxDistribution(), configuration.getEnvironmentalConditions(), configuration.getSolver());
+		return new ReactionsSimplifier(configuration.getSimulationConfiguration());
 	}
 	
 	@Override

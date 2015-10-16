@@ -1,18 +1,15 @@
 package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
 
+import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class GenesSimplifier extends AbstractPersistenceSimplifier{
 	
-	public GenesSimplifier(ISteadyStateModel model, FluxValueMap referenceFD, EnvironmentalConditions envCond, SolverType solver) {
-		super(model, referenceFD, envCond, solver);
+	public GenesSimplifier(Map<String,Map<String,Object>> simulationConfiguration) {
+		super(simulationConfiguration);
 	}
 
 	@Override

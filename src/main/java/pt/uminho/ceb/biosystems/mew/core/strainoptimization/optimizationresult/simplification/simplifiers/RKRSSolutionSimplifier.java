@@ -26,10 +26,7 @@ public class RKRSSolutionSimplifier<C extends JecoliGenericConfiguration> extend
 	
 	
 	public ISimplifierGeneticConditions getSimplifierGeneticConditions(){
-		return new ReactionsSimplifier(configuration.getSteadyStateModel(),
-									   configuration.getReferenceFluxDistribution(),
-									   configuration.getEnvironmentalConditions(),
-									   configuration.getSolver());
+		return new ReactionsSimplifier(configuration.getSimulationConfiguration());
 	}
 
 	@Override

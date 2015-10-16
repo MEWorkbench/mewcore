@@ -120,16 +120,14 @@ public abstract class AbstractStrainOptimizationResultSet<T extends JecoliGeneri
 		recalculateFitness(baseConfiguration.getObjectiveFunctionsMap());
 	}
 	
-	private Map<String, SimulationSteadyStateControlCenter> createAllCCs(Map<IObjectiveFunction, String> ofs) {
-		Map<String, SimulationSteadyStateControlCenter> ccs = new HashMap<String, SimulationSteadyStateControlCenter>();
+	private Map<String, SimulationSteadyStateControlCenter> createAllCCs(Map<IObjectiveFunction, String> ofs) throws Exception {
+		Map<String, SimulationSteadyStateControlCenter> ccs = new HashMap<String, SimulationSteadyStateControlCenter>();		
 		
-		for (IObjectiveFunction of : ofs.keySet()) {
-			String method = ofs.get(of);
-			SimulationSteadyStateControlCenter center = new SimulationSteadyStateControlCenter(baseConfiguration.getEnvironmentalConditions(), null, baseConfiguration.getSteadyStateModel(), method);
-			center.setMaximization(true);
-			center.setSolver(baseConfiguration.getSolver());
-			center.setWTReference(baseConfiguration.getReferenceFluxDistribution());
-			ccs.put(method, center);
+		Map<String,Map<String,Object>> simConfiguration = baseConfiguration.getSimulationConfiguration();
+		for (String method : simConfiguration.keySet()) {
+			Map<String, Object> methodConf = simConfiguration.get(method);			
+			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(methodConf);
+			ccs.put(method, cc);
 		}
 		
 		return ccs;

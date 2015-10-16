@@ -1,27 +1,24 @@
 package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
 
-import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import java.util.Map;
 
-public abstract class AbstractSimplifier extends AbstractGeneticConditionsSimplifier{
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
+
+public abstract class AbstractSimplifier extends AbstractGeneticConditionsSimplifier {
 	
-	protected SimulationSteadyStateControlCenter cc;
+	protected Map<String, SimulationSteadyStateControlCenter> ccs;
 	
-	public AbstractSimplifier(ISteadyStateModel model, FluxValueMap referenceFD, EnvironmentalConditions envCond, SolverType solver) {
-		super(model, referenceFD, envCond, solver);
-		cc = new SimulationSteadyStateControlCenter(envCond, null, model, null);
-		cc.setMaximization(true);
-		cc.setSolver(solver);
-		cc.setWTReference(referenceFD);
+	public AbstractSimplifier(Map<String, Map<String, Object>> simulationConfiguration) {
+		super(simulationConfiguration);
 	}
 	
-
-	public SimulationSteadyStateControlCenter getControlCenterForMethod(String method){
-		cc.setMethodType(method);
+	public SimulationSteadyStateControlCenter getControlCenterForMethod(String method) throws Exception {
+		
+		SimulationSteadyStateControlCenter cc = ccs.get(method);
+		if (cc == null) {
+			cc = new SimulationSteadyStateControlCenter(simulationConfiguration.get(method));
+			ccs.put(method, cc);
+		}
 		return cc;
 	}
-	
 }

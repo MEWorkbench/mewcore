@@ -26,10 +26,7 @@ public class GOUSolutionSimplifier<C extends JecoliGenericConfiguration> extends
 
 	@Override
 	public ISimplifierGeneticConditions getSimplifierGeneticConditions() {
-		return new GenesSimplifier(configuration.getGeneReactionSteadyStateModel(),
-								   configuration.getReferenceFluxDistribution(),
-								   configuration.getEnvironmentalConditions(),
-								   configuration.getSolver());
+		return new GenesSimplifier(configuration.getSimulationConfiguration());
 	}
 	
 	@Override
