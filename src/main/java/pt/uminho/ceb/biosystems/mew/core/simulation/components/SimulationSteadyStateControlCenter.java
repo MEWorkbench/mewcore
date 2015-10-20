@@ -114,7 +114,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		return (Boolean) (getProperty(SimulationProperties.IS_MAXIMIZATION));
 	}
 	
-	public void setMaximization(boolean isMaximization) {
+	public void setMaximization(Boolean isMaximization) {
 		addProperty(SimulationProperties.IS_MAXIMIZATION, isMaximization);
 	}
 	
@@ -157,12 +157,12 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		addProperty(SimulationProperties.IS_OVERUNDER_SIMULATION, false);
 	}
 	
-	public void setRoomProperties(double delta, double epsilon) {
+	public void setRoomProperties(Double delta, Double epsilon) {
 		addProperty(SimulationProperties.ROOM_DELTA, delta);
 		addProperty(SimulationProperties.ROOM_EPSILON, epsilon);
 	}
 	
-	public void setOverUnder2StepApproach(boolean ou2stepApproach) {
+	public void setOverUnder2StepApproach(Boolean ou2stepApproach) {
 		addProperty(SimulationProperties.OVERUNDER_2STEP_APPROACH, ou2stepApproach);
 	}
 	

@@ -41,19 +41,20 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 	private static final long	serialVersionUID	= 1L;
 	protected final boolean		_debug				= false;
 	
-	protected ISteadyStateDecoder								_decoder			= null;
-	protected Map<String, SimulationSteadyStateControlCenter>	_controlCenters		= null;
-	protected Map<String, Map<String, Object>>					_simMethods			= null;
-	protected Map<IObjectiveFunction, String>					_mapOF2Sim			= null;
-	protected int												_numberOfObjectives	= 1;
+	protected ISteadyStateDecoder								_decoder					= null;
+	protected Map<String, SimulationSteadyStateControlCenter>	_controlCenters				= null;
+	protected Map<String, Map<String, Object>>					_simulationConfiguration	= null;
+	protected Map<IObjectiveFunction, String>					_mapOF2Sim					= null;
+	protected int												_numberOfObjectives			= 1;
 	
 	public StrainOptimizationEvaluationFunction(
 			ISteadyStateDecoder decoder,
-			Map<String, Map<String, Object>> simConf,
+			Map<String, Map<String, Object>> simulationConfiguration,
 			Map<IObjectiveFunction, String> mapOF2Sim) throws Exception {
 			
 		super();
 		this._decoder = decoder;
+		this._simulationConfiguration = simulationConfiguration;
 		this._mapOF2Sim = mapOF2Sim;
 		this._numberOfObjectives = mapOF2Sim.size();
 		initializeControlCenters();
@@ -62,8 +63,8 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 	protected void initializeControlCenters() throws Exception {
 		_controlCenters = new HashMap<String, SimulationSteadyStateControlCenter>();
 		
-		for (String method : _simMethods.keySet()) {
-			Map<String, Object> methodConf = _simMethods.get(method);
+		for (String method : _simulationConfiguration.keySet()) {
+			Map<String, Object> methodConf = _simulationConfiguration.get(method);
 			String simMethod = (String) methodConf.get(SimulationProperties.METHOD_ID);
 			ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
 			EnvironmentalConditions envConditions = (EnvironmentalConditions) methodConf.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS);
@@ -170,7 +171,7 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 	 * @return the simMethods
 	 */
 	public Map<String, Map<String, Object>> getSimMethods() {
-		return _simMethods;
+		return _simulationConfiguration;
 	}
 	
 	/**
@@ -178,7 +179,7 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 	 *            the simMethods to set
 	 */
 	public void setSimMethods(Map<String, Map<String, Object>> simMethods) {
-		this._simMethods = simMethods;
+		this._simulationConfiguration = simMethods;
 	}
 	
 	@Override

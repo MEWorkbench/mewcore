@@ -105,15 +105,14 @@ public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends
 				FluxValueMap ouReference = (FluxValueMap) methodConf.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
 				
 				if(controlCenters.get(methodConf)==null){
-					controlCenters.put(method, new SimulationSteadyStateControlCenter(envConditions, gc, model, simMethod));
-					controlCenters.get(method).setSolver(solver);
+					controlCenters.put(method, new SimulationSteadyStateControlCenter(methodConf));
 				}else{
 					controlCenters.get(method).setMaximization(isMaximization);
 					controlCenters.get(method).setWTReference(wtReference);
 					controlCenters.get(method).setOverUnder2StepApproach(overUnder2StepApproach);
 					controlCenters.get(method).setUnderOverRef(ouReference);
 					controlCenters.get(method).setEnvironmentalConditions(envConditions);
-					controlCenters.get(method).setGeneticConditions(gc);
+					controlCenters.get(method).setGeneticConditions(gc);					
 				}
 				
 				SteadyStateSimulationResult res = controlCenters.get(method).simulate();

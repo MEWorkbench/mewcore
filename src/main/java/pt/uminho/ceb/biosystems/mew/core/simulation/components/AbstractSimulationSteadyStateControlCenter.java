@@ -148,6 +148,12 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		return lastMethod;
 	}
 	
+	
+	public FluxValueMap getWTReference(){
+		FluxValueMap wtref = (FluxValueMap) getProperty(SimulationProperties.WT_REFERENCE);
+		return wtref;
+	}
+	
 	public void setWTReference(Map<String, Double> wtReference) {
 		addProperty(SimulationProperties.WT_REFERENCE, wtReference);
 	}
@@ -209,7 +215,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		return lastMethod;
 	};
 	
-	public void saveModelToMPSFile(String file, boolean includeTime) {
+	public void saveModelToMPSFile(String file, Boolean includeTime) {
 		if (lastMethod != null)
 			lastMethod.saveModelToMPS(file, includeTime);
 	}
