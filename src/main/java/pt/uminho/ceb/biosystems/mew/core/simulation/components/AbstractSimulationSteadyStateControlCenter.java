@@ -220,4 +220,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		}
 	}
 	
+	public void resetLastMethod() {
+		lastMethod = null;
+	}
 }
