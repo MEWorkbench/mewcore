@@ -16,7 +16,7 @@ public interface IStrainOptimizationResultsSimplifier<C extends JecoliGenericCon
 	
 	ISimplifierGeneticConditions getSimplifier();
 	
-	IStrainOptimizationResultSet<C, T> getSimplifyResultSet(IStrainOptimizationResultSet<C, T> resultSet) throws Exception;
+	IStrainOptimizationResultSet<C, T> getSimplifyResultSet(IStrainOptimizationResultSet<C, T> resultSet) throws Exception;	
 	
 	T createSolution(GeneticConditions gc, Map<String, SteadyStateSimulationResult> res, List<Double> fitnesses);
 	

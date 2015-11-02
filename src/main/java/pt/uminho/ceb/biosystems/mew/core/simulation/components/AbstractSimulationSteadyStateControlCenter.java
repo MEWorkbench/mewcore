@@ -16,7 +16,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.Lis
 public abstract class AbstractSimulationSteadyStateControlCenter implements PropertyChangeListener, Serializable {
 	
 	private static final long serialVersionUID = 1L;
-
+	
 	public static final boolean _debug = false;
 	
 	protected ISteadyStateModel model;
@@ -29,7 +29,14 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	
 	protected abstract AbstractSimulationMethodsFactory getFactory();
 	
-	public abstract void addUnderOverRef() throws Exception;	
+	public abstract void addUnderOverRef() throws Exception;
+	
+	public AbstractSimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) {
+		this((EnvironmentalConditions) simulationConfiguration.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS),
+				(GeneticConditions) simulationConfiguration.get(SimulationProperties.GENETIC_CONDITIONS),
+				(ISteadyStateModel) simulationConfiguration.get(SimulationProperties.MODEL),
+				(String) simulationConfiguration.get(SimulationProperties.METHOD_ID));
+	}
 	
 	public AbstractSimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
@@ -37,7 +44,8 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		this.model = model;
 		methodProperties = new ListenerHashMap<String, Object>();
 		methodProperties.addPropertyChangeListener(this);
-		if (environmentalConditions != null) addProperty(SimulationProperties.ENVIRONMENTAL_CONDITIONS, environmentalConditions);
+		if (environmentalConditions != null)
+			addProperty(SimulationProperties.ENVIRONMENTAL_CONDITIONS, environmentalConditions);
 		if (geneticConditions != null) {
 			addProperty(SimulationProperties.IS_OVERUNDER_SIMULATION, geneticConditions.isOverUnder());
 			addProperty(SimulationProperties.GENETIC_CONDITIONS, geneticConditions);
@@ -124,7 +132,8 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	}
 	
 	public boolean isUnderOverSimulation() {
-		if (getProperty(SimulationProperties.IS_OVERUNDER_SIMULATION) == null) return false;
+		if (getProperty(SimulationProperties.IS_OVERUNDER_SIMULATION) == null)
+			return false;
 		return (Boolean) getProperty(SimulationProperties.IS_OVERUNDER_SIMULATION);
 	}
 	
@@ -137,6 +146,12 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	
 	public ISteadyStateSimulationMethod getSimulatedMethod() {
 		return lastMethod;
+	}
+	
+	
+	public FluxValueMap getWTReference(){
+		FluxValueMap wtref = (FluxValueMap) getProperty(SimulationProperties.WT_REFERENCE);
+		return wtref;
 	}
 	
 	public void setWTReference(Map<String, Double> wtReference) {
@@ -181,13 +196,16 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		//		System.out.println("LAST METHOD ?= "+lastMethod);
 		
 		if (source.equals(methodProperties) && lastMethod != null) {
-			if (_debug) System.out.println("[AbstractSimulationSteadyStateControlCenter]: sending event [" + event.getPropertyName() + "] to [" + lastMethod.getClass().getSimpleName() + "] = " + event.getKey() + " from " + event.getOldValue()
-					+ " to " + event.getNewValue());
+			if (_debug)
+				System.out.println("[AbstractSimulationSteadyStateControlCenter]: sending event [" + event.getPropertyName() + "] to [" + lastMethod.getClass().getSimpleName() + "] = "
+						+ event.getKey() + " from " + event.getOldValue()
+						+ " to " + event.getNewValue());
 			lastMethod.setProperty((String) event.getKey(), event.getNewValue());
 		} else {
 			if (event.getKey().equals(SimulationProperties.WT_REFERENCE)) {
 				if (lastMethod != null && _debug)
-					System.out.println("[AbstractSimulationSteadyStateControlCenter]: receiving event [" + event.getPropertyName() + "] from [" + lastMethod.getClass().getSimpleName() + "] = " + event.getKey() + " to " + event.getNewValue());
+					System.out.println("[AbstractSimulationSteadyStateControlCenter]: receiving event [" + event.getPropertyName() + "] from [" + lastMethod.getClass().getSimpleName() + "] = "
+							+ event.getKey() + " to " + event.getNewValue());
 				methodProperties.putQuietly((String) event.getKey(), event.getNewValue());
 			}
 		}
@@ -197,8 +215,9 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		return lastMethod;
 	};
 	
-	public void saveModelToMPSFile(String file, boolean includeTime) {
-		if (lastMethod != null) lastMethod.saveModelToMPS(file, includeTime);
+	public void saveModelToMPSFile(String file, Boolean includeTime) {
+		if (lastMethod != null)
+			lastMethod.saveModelToMPS(file, includeTime);
 	}
 	
 }

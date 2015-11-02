@@ -6,36 +6,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public abstract class AbstractGeneticConditionsSimplifier implements ISimplifierGeneticConditions {
 	
 	private double delta = 0.000001;
 	
-	protected Map<String, SimulationSteadyStateControlCenter> ccs = null;
+	protected Map<String, SimulationSteadyStateControlCenter>	ccs						= null;
+	protected Map<String, Map<String, Object>>					simulationConfiguration	= null;
+	protected ISteadyStateGeneReactionModel						model					= null;
 	
-	protected ISteadyStateModel			model;
-	protected SolverType				solver;
-	protected EnvironmentalConditions	envCond;
-	protected FluxValueMap				referenceFD;
-	
-	public AbstractGeneticConditionsSimplifier(ISteadyStateModel model, FluxValueMap referenceFD, EnvironmentalConditions envCond, SolverType solver) {
-		this.model = model;
-		this.referenceFD = referenceFD;
-		this.envCond = envCond;
-		this.solver = solver;
+	public AbstractGeneticConditionsSimplifier(Map<String, Map<String, Object>> simulationConfiguration) {
+		this.simulationConfiguration = simulationConfiguration;
+		this.model = (ISteadyStateGeneReactionModel) simulationConfiguration.values().iterator().next().get(SimulationProperties.MODEL);
 	}
 	
-	protected abstract SimulationSteadyStateControlCenter getControlCenterForMethod(String method);
+	protected abstract SimulationSteadyStateControlCenter getControlCenterForMethod(String method) throws Exception;
 	
 	@Override
 	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions geneticConditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) throws Exception {
@@ -45,7 +38,8 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	}
 	
 	@Override
-	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses) throws Exception {
+	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses)
+			throws Exception {
 		Set<String> ids = getGeneticConditionsIDs(conditions);
 		
 		List<String> iDsIterator = new ArrayList<String>(ids);
@@ -84,7 +78,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		return new GeneticConditionSimplifiedResult(finalSolution, new SteadyStateMultiSimulationResult(finalSolution, finalResults), fitList);
 	}
 	
-	public Map<String, SteadyStateSimulationResult> simulateGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) {
+	public Map<String, SteadyStateSimulationResult> simulateGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) throws Exception {
 		buildControlCenters(objectiveFunctions);
 		Map<String, SteadyStateSimulationResult> res = new HashMap<>();
 		for (String method : objectiveFunctions.values()) {
@@ -129,7 +123,8 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 				if (fitnesses[i] - simplifiedFitness[i] > delta) {
 					res = false;
 				}
-			} else if (simplifiedFitness[i] - fitnesses[i] > delta) res = false;
+			} else if (simplifiedFitness[i] - fitnesses[i] > delta)
+				res = false;
 			i++;
 		}
 		
@@ -139,13 +134,14 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	protected void buildControlCenters(IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) {
 		if (ccs == null) {
 			ccs = new HashMap<String, SimulationSteadyStateControlCenter>();
-			for (IObjectiveFunction of : objectiveFunctions.keySet()) {
-				String method = objectiveFunctions.get(of);
-				SimulationSteadyStateControlCenter center = new SimulationSteadyStateControlCenter(envCond, null, model, method);
-				center.setMaximization(true);
-				center.setSolver(solver);
-				//			center.addProperty(id, obj);
-				center.setWTReference(referenceFD);
+			for (String method : simulationConfiguration.keySet()) {
+				Map<String, Object> methodConf = simulationConfiguration.get(method);
+				SimulationSteadyStateControlCenter center = null;
+				try {
+					center = new SimulationSteadyStateControlCenter(methodConf);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				ccs.put(method, center);
 			}
 		}

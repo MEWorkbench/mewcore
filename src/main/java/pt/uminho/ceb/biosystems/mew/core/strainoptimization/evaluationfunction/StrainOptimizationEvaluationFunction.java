@@ -33,69 +33,55 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
  * This approach guarantees maximum performance when using solvers that support
  * such functionality.
  * 
- * @author pmaia Jan 10, 2014
+ * @since Jan 10, 2014
+ * @author pmaia updated in Oct 15, 2015
  */
 public class StrainOptimizationEvaluationFunction extends AbstractMultiobjectiveEvaluationFunction<IRepresentation> {
 	
-	private static final long						serialVersionUID			= 1L;
+	private static final long	serialVersionUID	= 1L;
+	protected final boolean		_debug				= false;
 	
-	protected final boolean							_debug						= false;
-	
-	protected ISteadyStateModel						_model						= null;
-	
-	protected ISteadyStateDecoder					_decoder					= null;
-	
-	protected SimulationSteadyStateControlCenter[]	_controlCenters				= null;
-	
-	protected List<String>							_simMethods					= null;
-	
-	protected Map<IObjectiveFunction, String>		_mapOF2Sim					= null;
-	
-	protected FluxValueMap							_wtReference				= null;
-	
-	protected int									_numberOfObjectives			= 1;
-	
-	protected SolverType							_solver						= SolverType.CPLEX3;
-	
-	protected EnvironmentalConditions				_environmentalConditions	= null;
-	
-	private boolean									_ou2stepApproach			= false;
+	protected ISteadyStateDecoder								_decoder					= null;
+	protected Map<String, SimulationSteadyStateControlCenter>	_controlCenters				= null;
+	protected Map<String, Map<String, Object>>					_simulationConfiguration	= null;
+	protected Map<IObjectiveFunction, String>					_mapOF2Sim					= null;
+	protected int												_numberOfObjectives			= 1;
 	
 	public StrainOptimizationEvaluationFunction(
-			ISteadyStateModel model,
 			ISteadyStateDecoder decoder,
-			EnvironmentalConditions envConds,
-			SolverType solver,
-			List<String> simulationMethods,
-			Map<IObjectiveFunction, String> mapOF2Sim,
-			FluxValueMap wtReference,
-			boolean isMaximization,
-			int maxThreads,
-			boolean ou2stepApproach) throws Exception {
-		
-		super(isMaximization);
-		this._model = model;
+			Map<String, Map<String, Object>> simulationConfiguration,
+			Map<IObjectiveFunction, String> mapOF2Sim) throws Exception {
+			
+		super();
 		this._decoder = decoder;
-		this._environmentalConditions = envConds;
-		this._solver = solver;
-		this._simMethods = simulationMethods;
+		this._simulationConfiguration = simulationConfiguration;
 		this._mapOF2Sim = mapOF2Sim;
-		this._wtReference = wtReference;
 		this._numberOfObjectives = mapOF2Sim.size();
-		this._ou2stepApproach = ou2stepApproach;
 		initializeControlCenters();
 	}
 	
-	protected void initializeControlCenters() {
-		_controlCenters = new SimulationSteadyStateControlCenter[_simMethods.size()];
-		for (int i = 0; i < _simMethods.size(); i++) {
-			String simMethod = _simMethods.get(i);
-			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(_environmentalConditions, null, _model, simMethod);
-			cc.setSolver(_solver);
+	protected void initializeControlCenters() throws Exception {
+		_controlCenters = new HashMap<String, SimulationSteadyStateControlCenter>();
+		
+		for (String method : _simulationConfiguration.keySet()) {
+			Map<String, Object> methodConf = _simulationConfiguration.get(method);
+			String simMethod = (String) methodConf.get(SimulationProperties.METHOD_ID);
+			ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
+			EnvironmentalConditions envConditions = (EnvironmentalConditions) methodConf.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS);
+			GeneticConditions genCond = (GeneticConditions) methodConf.get(SimulationProperties.GENETIC_CONDITIONS);
+			SolverType solver = (SolverType) methodConf.get(SimulationProperties.SOLVER);
+			Boolean isMaximization = (Boolean) methodConf.get(SimulationProperties.IS_MAXIMIZATION);
+			Boolean overUnder2StepApproach = (Boolean) methodConf.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
+			FluxValueMap wtReference = (FluxValueMap) methodConf.get(SimulationProperties.WT_REFERENCE);
+			FluxValueMap ouReference = (FluxValueMap) methodConf.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
+			
+			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envConditions, genCond, model, simMethod);
+			cc.setSolver(solver);
 			cc.setMaximization(isMaximization);
-			cc.setWTReference(_wtReference);
-			cc.setOverUnder2StepApproach(_ou2stepApproach);
-			_controlCenters[i] = cc;
+			cc.setWTReference(wtReference);
+			cc.setOverUnder2StepApproach(overUnder2StepApproach);
+			cc.setUnderOverRef(ouReference);
+			_controlCenters.put(method, cc);
 		}
 	}
 	
@@ -106,12 +92,13 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 			evaluateSingleSolution(solutionSet.getSolution(i));
 		}
 		
-		if (listeners != null && !listeners.isEmpty()) notifyEvaluationFunctionListeners(EvaluationFunctionEvent.SOLUTIONSET_EVALUATION_EVENT, String.valueOf(solutionSet.getNumberOfSolutions()), solutionSet);
+		if (listeners != null && !listeners.isEmpty())
+			notifyEvaluationFunctionListeners(EvaluationFunctionEvent.SOLUTIONSET_EVALUATION_EVENT, String.valueOf(solutionSet.getNumberOfSolutions()), solutionSet);
 	}
 	
 	@Override
 	public void verifyInputData() throws InvalidEvaluationFunctionInputDataException {
-		
+	
 	}
 	
 	@Override
@@ -131,20 +118,31 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		this._numberOfObjectives = numberOfObjectives;
 	}
 	
+	public Object getSimulationPropertyForMethod(String propertyKey, String simMethodKey) {
+		return _controlCenters.get(simMethodKey).getProperty(propertyKey);
+	}
+	
 	public Object[] getSimulationProperty(String propertyKey) {
 		
-		Object[] toret = new Object[_controlCenters.length];
+		Object[] toret = new Object[_controlCenters.size()];
 		
-		for (int i = 0; i < _controlCenters.length; i++)
-			toret[i] = _controlCenters[i].getProperty(propertyKey);
+		int i = 0;
+		for (String m : _controlCenters.keySet()) {
+			toret[i] = _controlCenters.get(m).getProperty(propertyKey);
+			i++;
+		}
 		
 		return toret;
 	}
 	
 	public void setSimulationProperty(String key, Object value) {
 		
-		for (int i = 0; i < _controlCenters.length; i++)
-			_controlCenters[i].setSimulationProperty(key, value);
+		for (String m : _controlCenters.keySet())
+			_controlCenters.get(m).setSimulationProperty(key, value);
+	}
+	
+	public void setSimulationPropertyForMethod(String key, Object value, String simMethodKey) {
+		_controlCenters.get(simMethodKey).setSimulationProperty(key, value);
 	}
 	
 	public void setOverUnderReferenceDistribution(Map<String, Double> reference) {
@@ -165,23 +163,23 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 	/**
 	 * @return the controlCenters
 	 */
-	public SimulationSteadyStateControlCenter[] getControlCenters() {
+	public Map<String, SimulationSteadyStateControlCenter> getControlCenters() {
 		return _controlCenters;
 	}
 	
 	/**
 	 * @return the simMethods
 	 */
-	public List<String> getSimMethods() {
-		return _simMethods;
+	public Map<String, Map<String, Object>> getSimMethods() {
+		return _simulationConfiguration;
 	}
 	
 	/**
 	 * @param simMethods
 	 *            the simMethods to set
 	 */
-	public void setSimMethods(List<String> simMethods) {
-		this._simMethods = simMethods;
+	public void setSimMethods(Map<String, Map<String, Object>> simMethods) {
+		this._simulationConfiguration = simMethods;
 	}
 	
 	@Override
@@ -195,39 +193,34 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 			
 			for (int i = 0; i < fitnessValues.length; i++) {
 				if (fitnessValues[i] == null) {
-					if (isMaximization)
-						fitnessValues[i] = Double.MIN_VALUE;
-					else
-						fitnessValues[i] = Double.MAX_VALUE;
-					
+					fitnessValues[i] = Double.MIN_VALUE;
 					fitsOK = false;
 				}
 				
 			}
 			
 			solution.setFitnessValues(fitnessValues);
-			if(fitnessValues.length==1)
+			if (fitnessValues.length == 1)
 				solution.setScalarFitnessValue(fitnessValues[0]);
-
+				
 			if (performFitnessAggregation) {
 				double rawfitness;
-				if (fitsOK)
+				if (fitsOK) {
 					rawfitness = fitnessAggregation.aggregate(fitnessValues);
-				else
-					rawfitness = (isMaximization) ? Double.MIN_VALUE : Double.MAX_VALUE;
+				} else {
+					rawfitness = Double.MIN_VALUE;
+				}
 				
 				solution.setScalarFitnessValue(rawfitness);
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			if (isMaximization)
-				solution.setScalarFitnessValue(-Double.MAX_VALUE);
-			else
-				solution.setScalarFitnessValue(Double.MAX_VALUE);
+			solution.setScalarFitnessValue(-Double.MAX_VALUE);
 		}
 		
-		if (listeners != null && !listeners.isEmpty()) notifyEvaluationFunctionListeners(EvaluationFunctionEvent.SINGLE_SOLUTION_EVALUATION_EVENT, "", solution);
+		if (listeners != null && !listeners.isEmpty())
+			notifyEvaluationFunctionListeners(EvaluationFunctionEvent.SINGLE_SOLUTION_EVALUATION_EVENT, "", solution);
 	}
 	
 	public Double[] evaluateMO(IRepresentation solution) throws Exception {
@@ -242,10 +235,9 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		
 		Map<String, SteadyStateSimulationResult> results = new HashMap<String, SteadyStateSimulationResult>();
 		
-		for (int i = 0; i < _simMethods.size(); i++) {
-			String simMethod = _simMethods.get(i);
-			_controlCenters[i].setGeneticConditions(gc);
-			SteadyStateSimulationResult res = _controlCenters[i].simulate();
+		for (String simMethod : _controlCenters.keySet()) {
+			_controlCenters.get(simMethod).setGeneticConditions(gc);
+			SteadyStateSimulationResult res = _controlCenters.get(simMethod).simulate();
 			results.put(simMethod, res);
 		}
 		
@@ -261,7 +253,8 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 					e.printStackTrace();
 				}
 			} else {
-				if (result != null) System.out.println(result.getSolutionType());
+				if (result != null)
+					System.out.println(result.getSolutionType());
 				resultList[k] = of.getWorstFitness();
 			}
 			
