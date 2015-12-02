@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 
 /**
  * Created by ptiago on 18-03-2015.
@@ -15,7 +15,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
  * @param <T> the configuration extension
  * @param <E> the optimization result
  */
-public interface IStrainOptimizationResultSet<T extends JecoliGenericConfiguration, E extends IStrainOptimizationResult> extends Serializable {
+public interface IStrainOptimizationResultSet<T extends IGenericConfiguration, E extends IStrainOptimizationResult> extends Serializable {
     /**
      *
      * @return the configuration utilized in this solution set

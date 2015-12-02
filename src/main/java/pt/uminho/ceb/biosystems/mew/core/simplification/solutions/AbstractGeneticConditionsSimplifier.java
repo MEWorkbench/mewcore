@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeSet;
 
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
@@ -17,7 +18,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.
 
 public abstract class AbstractGeneticConditionsSimplifier implements ISimplifierGeneticConditions {
 	
-	private double delta = 0.000001;
+	private double delta = 1e-6;
 	
 	protected Map<String, SimulationSteadyStateControlCenter>	ccs						= null;
 	protected Map<String, Map<String, Object>>					simulationConfiguration	= null;
@@ -37,15 +38,28 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		return simplifyGeneticConditions(geneticConditions, objectiveFunctions, initialFitnesses);
 	}
 	
+	
+	protected void findNaNInResults(Map<String, SteadyStateSimulationResult> results) {
+		for (String st : results.keySet()) {
+			
+			FluxValueMap resultsMap = results.get(st).getFluxValues();
+			for (String s : resultsMap.keySet()) {
+				if(Double.isNaN(resultsMap.get(s)))
+					System.err.println(s + " Is NaN!");
+			}
+		}
+	}
+	
 	@Override
 	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses)
 			throws Exception {
-		Set<String> ids = getGeneticConditionsIDs(conditions);
+		
+		TreeSet<String> ids = new TreeSet<String>(getGeneticConditionsIDs(conditions));
 		
 		List<String> iDsIterator = new ArrayList<String>(ids);
 		
-		GeneticConditions finalSolution = conditions;
-		Map<String, SteadyStateSimulationResult> finalResults = null;
+		GeneticConditions finalSolution = conditions.clone();
+		Map<String, SteadyStateSimulationResult> finalResults = simulateGeneticConditions(finalSolution, objectiveFunctions);
 		double[] finalFitnesses = initialFitnesses;
 		
 		for (String id : iDsIterator) {
@@ -54,15 +68,14 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			
 			removeGeneticCondition(finalSolution, id);
 			
-//			long init = System.currentTimeMillis();
 			Map<String, SteadyStateSimulationResult> results = simulateGeneticConditions(finalSolution, objectiveFunctions);
-//			System.out.println((System.currentTimeMillis() - init));
 			
+			findNaNInResults(results);
 			double[] simpfitnesses = evaluateSolution(results, objectiveFunctions);
 			
-			if (compare(finalFitnesses, simpfitnesses, objectiveFunctions)) {
-				finalFitnesses = simpfitnesses;
-				finalResults = results;
+			if (isBetter(finalFitnesses, simpfitnesses, objectiveFunctions)) {
+					finalFitnesses = simpfitnesses;
+					finalResults = results;
 				//NOTE: SE ISTO NAO ESTIVER A FUNCIONAR EM CONDICOES, O PROBLEMA PODE SER DAQUI
 			} else {
 				nextGeneticCondition(finalSolution, id, expLvl);
@@ -108,21 +121,21 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		for (int i = 0; i < size; i++) {
 			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
 			String method = objectiveFunctions.get(of);
-			resultList[i] = of.evaluate(results.get(method));
+			double resValue = of.evaluate(results.get(method)); 
+			resultList[i] = resValue;
 		}
 		return resultList;
 	}
 	
-	protected boolean compare(double[] fitnesses, double[] simplifiedFitness, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) {
+	protected boolean isBetter(double[] fitnesses, double[] simplifiedFitness, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) {
 		boolean res = true;
 		int i = 0;
 		
 		while (res && i < objectiveFunctions.size()) {
 			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
 			if (of.isMaximization()) {
-				if (fitnesses[i] - simplifiedFitness[i] > delta) {
+				if (fitnesses[i] - simplifiedFitness[i] > delta) 
 					res = false;
-				}
 			} else if (simplifiedFitness[i] - fitnesses[i] > delta)
 				res = false;
 			i++;
@@ -146,5 +159,5 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			}
 		}
 	}
-	
+
 }

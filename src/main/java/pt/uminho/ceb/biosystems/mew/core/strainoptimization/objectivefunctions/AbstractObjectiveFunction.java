@@ -1,4 +1,4 @@
-package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions;
+ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -66,11 +66,22 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#getSimplifyResultSet(pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet)
 	 */
 	@Override
-	public IStrainOptimizationResultSet<C,T> getSimplifyResultSet(IStrainOptimizationResultSet<C,T> resultSet) throws Exception{
+	public IStrainOptimizationResultSet<C,T> getSimplifiedResultSet(IStrainOptimizationResultSet<C,T> resultSet) throws Exception{
 		List<T> simplifiedList = getSimplifiedResultList(resultSet);
 		return createResultSetInstance(simplifiedList);
 	};
-
+	
+	@Override
+	public IStrainOptimizationResultSet<C, T> getSimplifiedResultSetDiscardRepeated(IStrainOptimizationResultSet<C, T> resultSet) throws Exception{
+		IStrainOptimizationResultSet<C, T> emptySet = createResultSetInstance(new ArrayList<T>());
+		IStrainOptimizationResultSet<C, T> resSetRepeated = getSimplifiedResultSet(resultSet);
+		
+//		System.out.println("RESULT SET WITH REPEATITIONS = "+resSetRepeated.getResultList().size());
+		emptySet = emptySet.merge(resSetRepeated);
+//		System.out.println("RESULT SET WITHOUT REPEATITIONS = "+emptySet.getResultList().size());
+		return emptySet;
+	}
+	
 	/* (non-Javadoc)
 	 * @see pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier#createSolution(pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions, java.util.Map, java.util.List)
 	 */
