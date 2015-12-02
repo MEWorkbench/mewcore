@@ -36,9 +36,8 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyS
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
-public class FBAFluxVariabilityAnalysis {
+public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 
 	protected ISteadyStateModel 		model;
 	protected EnvironmentalConditions 	envConditions;
@@ -49,7 +48,7 @@ public class FBAFluxVariabilityAnalysis {
 
 	protected FluxValueMap referenceFD = null;
 
-	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
+	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
 			SolverType solverType) throws Exception {
 		this.model = model;
 		this.envConditions = envConditions;
@@ -64,7 +63,7 @@ public class FBAFluxVariabilityAnalysis {
 		referenceFD = fba.simulate().getFluxValues();
 	}
 
-	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
+	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
 			SolverType solverType, FluxValueMap reference) throws Exception {
 		this.model = model;
 		this.envConditions = envConditions;
@@ -74,7 +73,7 @@ public class FBAFluxVariabilityAnalysis {
 		this.referenceFD = reference;
 	}
 
-	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, SolverType solverType) throws Exception {
+	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, SolverType solverType) throws Exception {
 		this(model, null, null, solverType);
 	}
 
@@ -182,13 +181,12 @@ public class FBAFluxVariabilityAnalysis {
 	 * <br>The second Double corresponds to the Min/Max flux values
 	 * @throws Exception
 	 */
-	public Map<String, Map<Double, Map<Boolean, Double/*FluxValueMap*/>>> fluxVariation(String pivotFlux, List<String> targetFluxes, int pivotNumStep, EnvironmentalConditions envCond, GeneticConditions geneCond) throws Exception {
+	public Map<String, Map<Double, SteadyStateSimulationResult[]>> fluxVariation(String pivotFlux, List<String> targetFluxes, int pivotNumStep, EnvironmentalConditions envCond, GeneticConditions geneCond) throws Exception {
 		
-		Map<String, Map<Double, Map<Boolean, Double>>> mapToRet = new LinkedHashMap<>();
+		Map<String, Map<Double, SteadyStateSimulationResult[]>> mapToRet = new LinkedHashMap<>();
 		
-		for (String flux : targetFluxes) {
+		for (String flux : targetFluxes)
 			mapToRet.put(flux, fluxVariation(pivotFlux, flux, pivotNumStep, envCond, geneCond));
-		}
 		
 		return mapToRet;
 	}
@@ -209,68 +207,61 @@ public class FBAFluxVariabilityAnalysis {
 	 * <br>The second Double the correspondent Min/Max flux values.
 	 * @throws Exception
 	 */
-	public Map<Double, Map<Boolean, Double/*FluxValueMap[]*/>> fluxVariation(String pivotFlux, String targetFlux, int pivotNumStep, EnvironmentalConditions envCond, GeneticConditions geneCond) throws Exception {
+	public Map<Double, SteadyStateSimulationResult[]> fluxVariation(String pivotFlux, String targetFlux, int pivotNumStep, EnvironmentalConditions envCond, GeneticConditions geneCond) throws Exception {
 		
-		Map<Double, Map<Boolean, Double>> mapToRet = new LinkedHashMap<>();
+		Map<Double, SteadyStateSimulationResult[]> mapToRet = new LinkedHashMap<>();
 		
 		if(model.getReactions().containsKey(pivotFlux) && model.getReactions().containsKey(targetFlux)){
 			
 			// Get Min and Max Pivot Flux Values
 			setEnvConditions(envCond);
 			setGeneticConditions(geneCond);
-			Pair<Double, Double> minMaxPair = getMinMaxSimulation(pivotFlux);
-			double minPivotOF = minMaxPair.getA();
-			double maxPivotOF = minMaxPair.getB();
+			Double[] minMaxPair = {run(model, false, pivotFlux).getOFvalue(), run(model, true, pivotFlux).getOFvalue()};
+			double minPivotOF = minMaxPair[0];
+			double maxPivotOF = minMaxPair[1];
 			
 			// Obtain value for each step based on min/max pivot values and number of steps
-			double eachStepValue = (maxPivotOF - minPivotOF) / pivotNumStep;
+			double eachStepValue = Math.abs(maxPivotOF - minPivotOF) / pivotNumStep;
 			
-			double actualStepValue = 0.0;
+			double actualStepValue = minPivotOF;
+			int actualStep = 0;
 			
 			// for each step perform min/max flux simulations
-			while (actualStepValue < maxPivotOF) {
-				
-				Map<Boolean, Double> minMaxFluxMap = new LinkedHashMap<>();
+			while(actualStep < pivotNumStep){
 				
 				// Define new EnvCond with actual step value
 				if(envCond == null) envCond = new EnvironmentalConditions();
-				EnvironmentalConditions envCondMinPivot = envCond.copy();
+				EnvironmentalConditions restrictions = envCond.copy();
 				ReactionConstraint rc = new ReactionConstraint(actualStepValue, model.getReactionConstraint(pivotFlux).getUpperLimit());
-				envCondMinPivot.addReactionConstraint(pivotFlux, rc);
+				restrictions.addReactionConstraint(pivotFlux, rc);
+				defineRestrictions(restrictions);
 
-				getSimulCenter().setEnvironmentalConditions(envCondMinPivot);
-				
 				// Perform simulations
-				Pair<Double, Double> minMaxPairFluxToAnalyze = getMinMaxSimulation(targetFlux);
-				// Boolean is Maximization
-				minMaxFluxMap.put(false, minMaxPairFluxToAnalyze.getA());
-				minMaxFluxMap.put(true, minMaxPairFluxToAnalyze.getB());
+				SteadyStateSimulationResult[] simResults = {run(model, false, targetFlux), run(model, true, targetFlux)};
 				
 				// Add to Map
-				mapToRet.put(actualStepValue, minMaxFluxMap);
+				mapToRet.put(actualStepValue, simResults);
 				
-				// Increment step
+				// Increment step value and iteration
 				actualStepValue += eachStepValue;
+				actualStep++;
+				
+				// Set previous envCond
+				setEnvConditions(envCond);
 			}
-			
-			// Set previous envCond
-			setEnvConditions(envCond);
 		}
 		
 		return mapToRet;
 		
 	}
 	
-	protected Pair<Double, Double> getMinMaxSimulation(String flux) throws Exception {
-		getSimulCenter().setFBAObjSingleFlux(flux, 1.0);
+	protected Double[] getMinMaxSimulation(String flux) throws Exception {
+		double minOF = run(model, false, flux).getOFvalue();
+		double maxOF = run(model, true, flux).getOFvalue();
 		
-		getSimulCenter().setMaximization(false);
-		double minOF = getSimulCenter().simulate().getOFvalue();
-
-		getSimulCenter().setMaximization(true);
-		double maxOF = getSimulCenter().simulate().getOFvalue();
+		Double[] minMax = {minOF, maxOF};
 		
-		return new Pair<Double, Double>(minOF, maxOF);
+		return minMax;
 	}
 	
 	public double[] tightBounds(String fluxId) throws Exception {
@@ -294,13 +285,13 @@ public class FBAFluxVariabilityAnalysis {
 		return res;
 	}
 
-	public FluxValueMap getWildTypeFluxes() {
+	public FluxValueMap getReferenceFluxes() {
 
 		return referenceFD;
 	}
 
-	public void setWildTypeFluxes(FluxValueMap wildTypeFluxes) {
-		this.referenceFD = wildTypeFluxes;
+	public void setReferenceFluxes(FluxValueMap referenceFluxes) {
+		this.referenceFD = referenceFluxes;
 	}
 
 	public EnvironmentalConditions getEnvConditions() {
@@ -374,6 +365,24 @@ public class FBAFluxVariabilityAnalysis {
 			simulCenter.setMaximization(true);
 		}
 		return simulCenter;
+	}
+
+	@Override
+	public void defineRestrictions(EnvironmentalConditions restrictions) {
+		if(getSimulCenter().getEnvironmentalConditions() != null)
+			getSimulCenter().getEnvironmentalConditions().addAllReactionConstraints(restrictions);
+		else
+			getSimulCenter().setEnvironmentalConditions(restrictions);
+	}
+
+	@Override
+	public SteadyStateSimulationResult run(ISteadyStateModel model, boolean isMaximization, String targetFlux) throws Exception {
+		
+		getSimulCenter().setFBAObjSingleFlux(targetFlux, 1.0);
+		getSimulCenter().setMaximization(isMaximization);
+		
+		SteadyStateSimulationResult result = getSimulCenter().simulate(); 
+		return result;
 	}
 
 }
