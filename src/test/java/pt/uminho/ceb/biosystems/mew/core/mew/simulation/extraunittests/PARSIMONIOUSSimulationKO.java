@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.junit.Before;
@@ -39,7 +40,8 @@ public class PARSIMONIOUSSimulationKO {
 	public void setData() throws Exception {
 		// input Modelo
 		//exception.expect(FileNotFoundException.class);
-		JSBMLReader reader = new JSBMLReader("/home/hgiesteira/Desktop/Models/Ec_iAF1260.xml", "1", false);
+//		JSBMLReader reader = new JSBMLReader("/home/hgiesteira/Desktop/Models/Ec_iAF1260.xml", "1", false);
+		JSBMLReader reader = new JSBMLReader("/home/hgiesteira/Desktop/Models/ecoli_core_model.xml", "1", false);
 		
 		// Container
 		Container cont = new Container(reader);
@@ -419,6 +421,126 @@ public class PARSIMONIOUSSimulationKO {
 			Reaction rec = model.getReaction(sortedKeys.get(i).toString());
 			System.out.println(sortedKeys.get(i) + " " + result.getFluxValues().get(sortedKeys.get(i).toString()));
 		}
+	}
+	
+	@Test
+	public void pfbaMultipleTests() throws Exception
+	{
+		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
+		cc.setSolver(SolverType.CPLEX3);
+		cc.setMaximization(true);
+		
+		SteadyStateSimulationResult result = cc.simulate();
+		System.out.println(result.getOFvalue() + " VS " + singularSim(null).getOFvalue());
+		
+		
+		GeneticConditions geneCond = geneticConditionFromString("R_ACKr, R_AKGDH, R_FUM, R_G6PDH2r", ",");
+		cc.setGeneticConditions(geneCond);
+		result = cc.simulate();
+		System.out.println(result.getOFvalue() + " VS " + singularSim(geneCond).getOFvalue());
+		
+		
+		GeneticConditions geneCond2 = geneticConditionFromString("R_PTAr, R_SUCDi, R_TKT2", ",");
+		cc.setGeneticConditions(geneCond2);
+		result = cc.simulate();
+		System.out.println(result.getOFvalue() + " VS " + singularSim(geneCond2).getOFvalue());
+		
+		GeneticConditions geneCond3 = geneticConditionFromString("R_FUM", ",");
+		cc.setGeneticConditions(geneCond3);
+		result = cc.simulate();
+		System.out.println(result.getOFvalue() + " VS " + singularSim(geneCond3).getOFvalue());
+		
+		GeneticConditions geneCond4 = geneticConditionFromString("R_ACKr, R_ALCD2x, R_FRD7, R_GND, R_LDH_D, R_MDH, R_PGL, R_SUCDi", ",");
+		cc.setGeneticConditions(geneCond4);
+		result = cc.simulate();
+		System.out.println(result.getOFvalue() + " VS " + singularSim(geneCond4).getOFvalue());
+		
+		removeGeneCondSimulation(new TreeSet<String>(geneCond4.getReactionList().keySet()));
+		
+		testSimulations();
+	}
+	
+	protected void testSimulations() throws Exception{
+		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
+		cc.setSolver(SolverType.CPLEX3);
+		cc.setMaximization(true);
+		
+		compareSimulations("R_GND,R_ALCD2x,R_PGL,R_SUCDi,R_LDH_D,R_MDH,R_FRD7", cc);
+
+		compareSimulations("R_GND,R_ACKr,R_PGL,R_SUCDi,R_LDH_D,R_MDH,R_FRD7", cc);
+
+		compareSimulations("R_GND,R_ALCD2x,R_ACKr,R_PGL,R_SUCDi,R_LDH_D,R_MDH", cc);
+
+		compareSimulations("R_ALCD2x,R_ACKr,R_PGL,R_SUCDi,R_LDH_D,R_MDH,R_FRD7", cc);
+
+		compareSimulations("R_GND,R_ALCD2x,R_ACKr,R_PGL,R_SUCDi,R_MDH,R_FRD7", cc);
+
+		compareSimulations("R_GND,R_ALCD2x,R_ACKr,R_PGL,R_SUCDi,R_LDH_D,R_FRD7", cc);
+
+		compareSimulations("R_GND,R_ALCD2x,R_ACKr,R_SUCDi,R_LDH_D,R_MDH,R_FRD7", cc);
+
+		compareSimulations("R_GND,R_ALCD2x,R_ACKr,R_PGL,R_LDH_D,R_MDH,R_FRD7", cc);
+	}
+	
+	protected GeneticConditions geneticConditionFromString(String geneCondString, String delimiter){
+		String[] splitted = geneCondString.split(delimiter);
+		
+		ReactionChangesList reactionList = new ReactionChangesList();
+		for (String id : splitted) {
+			reactionList.addReaction(id.trim(), 0.0);
+		}
+		
+		GeneticConditions toRet = new GeneticConditions(reactionList);
+		return toRet;
+	}
+	
+	protected SteadyStateSimulationResult singularSim(GeneticConditions geneCond) throws Exception{
+		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
+		cc.setSolver(SolverType.CPLEX3);
+		cc.setMaximization(true);
+		
+		cc.setGeneticConditions(geneCond);
+		SteadyStateSimulationResult result = cc.simulate();
+		return result;
+	}
+	
+	protected void removeGeneCondSimulation(TreeSet<String> geneCondList) throws Exception{
+		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
+		cc.setSolver(SolverType.CPLEX3);
+		cc.setMaximization(true);
+		
+		for (String gc : geneCondList) {
+			TreeSet<String> geneCondListAux = new TreeSet<String>(geneCondList);
+			geneCondListAux.remove(gc);
+			ReactionChangesList reactionList = new ReactionChangesList(geneCondListAux);
+			GeneticConditions geneCond = new GeneticConditions(reactionList);
+			cc.setGeneticConditions(geneCond);
+			SteadyStateSimulationResult result = cc.simulate();
+			System.out.println("REMOVED: " + gc + " SIMVALUE: " + result.getOFvalue());
+		}
+	}
+	
+	protected void compareSimulations(String geneCondString, SimulationSteadyStateControlCenter cc) throws Exception{
+		GeneticConditions geneCond = geneticConditionFromString(geneCondString, ",");
+		cc.setGeneticConditions(geneCond);
+		SteadyStateSimulationResult result = cc.simulate();
+		SteadyStateSimulationResult resultSim = singularSim(geneCond);
+		
+		double epsilon = 0.000001;
+		
+		double ofResCC = result.getOFvalue();
+		double ofResSing = resultSim.getOFvalue();
+		if(Math.abs(ofResCC/ofResSing -1) < epsilon)
+			System.out.println(ofResCC + " VS " + ofResSing);
+		else
+			System.err.println(ofResCC + " VS " + ofResSing);
+		
+		double ofResBioCC = result.getFluxValues().get(model.getBiomassFlux());
+		double ofResBioSing = resultSim.getFluxValues().get(model.getBiomassFlux());
+		if(Math.abs(ofResBioCC/ofResBioSing-1) < epsilon)
+			System.out.println("BIOMASS: " + result.getFluxValues().get(model.getBiomassFlux()) + " VS " + singularSim(geneCond).getFluxValues().get(model.getBiomassFlux()));
+		else
+			System.err.println("BIOMASS: " + result.getFluxValues().get(model.getBiomassFlux()) + " VS " + singularSim(geneCond).getFluxValues().get(model.getBiomassFlux()));
 	}
 
 }

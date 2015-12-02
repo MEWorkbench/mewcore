@@ -1,16 +1,21 @@
 package pt.uminho.ceb.biosystems.mew.core.mew.simulation.fva;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
+import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.fva.FBAFluxVariabilityAnalysis;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
@@ -36,6 +41,12 @@ public class FVAUnitTest {
 		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
 		cont.removeMetabolites(met);
 		SteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+		
+		
+		FBAFluxVariabilityAnalysis fva = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX3);
+		
+		fva.fluxVariation(model.getBiomassFlux(), new ArrayList<String>(){{add("R_EX_h_e");}}, 20);
+		
 
 //		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
 //		cc.setSolver(SolverType.CPLEX3);
@@ -44,52 +55,89 @@ public class FVAUnitTest {
 //
 //		FluxValueMap wt = cc.simulate().getFluxValues();
 
-		FBAFluxVariabilityAnalysis fva = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX3);
+//		FBAFluxVariabilityAnalysis fva = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX3);
+//
+//		Map<String, double[]> fluxLimits_persistent = fva.limitsAllFluxes(0.1 * 0.99999);
+//
+//		TreeSet<String> keys = new TreeSet<>(fluxLimits_persistent.keySet());
+//
+//		FBAFluxVariabilityAnalysis fva_volatile = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX);
+//		Map<String, double[]> fluxLimits_volatile = fva_volatile.limitsAllFluxes(0.1 * 0.99999);
+//
+//		for (String k : keys) {
+//
+//			System.out.println("[" + k + "]");
+//			double[] k_persist = fluxLimits_persistent.get(k);
+//			double[] k_volatile = fluxLimits_volatile.get(k);
+//
+//			System.out.println("\tLower: " + k_persist[0] + " | " + k_volatile[0] + "\tDiff: " + (Math.abs(k_persist[0]) - Math.abs(k_volatile[0])));
+//			if((Math.abs(k_persist[0]) - Math.abs(k_volatile[0])) > 0.0001)
+//				System.err.println("BUG!!!!!");
+//			System.out.println("\tUpper: " + k_persist[1] + " | " + k_volatile[1] + "\tDiff: " + (Math.abs(k_persist[1]) - Math.abs(k_volatile[1])));
+//			if((Math.abs(k_persist[1]) - Math.abs(k_volatile[1])) > 0.0001)
+//				System.err.println("BUG!!!!!");
+//		}
+		
+//		int numSteps = 20;
+//		
+//		Map<Pair<Integer, Double>, FluxValueMap> allFluxesByBiomass = new LinkedHashMap<>();
+//		
+//		double minBiomass = simulate(model, false, model.getBiomassFlux(), SolverType.CPLEX, null, null).getOFvalue();
+//		double maxBiomass = simulate(model, true, model.getBiomassFlux(), SolverType.CPLEX, null, null).getOFvalue();
+//		
+//		double bioSteps = (maxBiomass - minBiomass) / numSteps;
+//		double actualStep = minBiomass;
+//		
+//		long init = System.currentTimeMillis();
+//		int i = 1;
+//		while (actualStep < maxBiomass) {
+//			
+//
+////			Pair<Integer, Double> pair = new Pair<Integer, Double>(i, actualStep);
+////			allFluxesByBiomass.put(pair, );
+//			
+//			EnvironmentalConditions envCond = new EnvironmentalConditions();
+//			ReactionConstraint rconst = model.getReactionConstraint(model.getBiomassFlux());
+//			envCond.addReactionConstraint(model.getBiomassFlux(), new ReactionConstraint(actualStep, rconst.getUpperLimit()));
+//			
+////			SteadyStateSimulationResult resultMin = simulate(model, false, "R_EX_h_e", SolverType.CPLEX3, envCond, null);
+////			SteadyStateSimulationResult resultMax = simulate(model, true, "R_EX_h_e", SolverType.CPLEX3, envCond, null);
+////			System.out.println("Step " + i +": "+actualStep +"\tMin Succ :" + resultMin.getOFvalue() + "\tMax Succ: " + resultMax.getOFvalue());
+//			
+//			
+//			SteadyStateSimulationResult result1 = simulate(model, true, model.getBiomassFlux(), SolverType.CPLEX3, envCond, null);
+//			SteadyStateSimulationResult result2 = simulate(model, false, model.getBiomassFlux(), SolverType.CPLEX3, envCond, null);
+//			System.out.println("Step " + i +": "+actualStep +"\tMin Succ :" + result1.getFluxValues().get("R_EX_h_e")+"\tMax Succ :" + result2.getFluxValues().get("R_EX_h_e"));
+//			
+//			i++;
+//			actualStep += bioSteps;
+//		}
+//		
+//		System.out.println("TIME ELAPSED: " + (System.currentTimeMillis()-init));
+		
+//		System.out.println(minBiomass);
+//		System.out.println(maxBiomass);
+//		
+//		System.out.println("-------------------------------------------------------------");
+//		
+//		System.out.println(simulate(model, false, "R_EX_succ_e", SolverType.CPLEX, null, null).getOFvalue());
+//		System.out.println(simulate(model, true, "R_EX_succ_e", SolverType.CPLEX, null, null).getOFvalue());
 
-		Map<String, double[]> fluxLimits_persistent = fva.limitsAllFluxes(0.1 * 0.99999);
-
-		TreeSet<String> keys = new TreeSet<>(fluxLimits_persistent.keySet());
-
-		FBAFluxVariabilityAnalysis fva_volatile = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX);
-		Map<String, double[]> fluxLimits_volatile = fva_volatile.limitsAllFluxes(0.1 * 0.99999);
-
-		for (String k : keys) {
-
-			System.out.println("[" + k + "]");
-			double[] k_persist = fluxLimits_persistent.get(k);
-			double[] k_volatile = fluxLimits_volatile.get(k);
-
-			System.out.println("\tLower: " + k_persist[0] + " | " + k_volatile[0] + "\tDiff: " + (Math.abs(k_persist[0]) - Math.abs(k_volatile[0])));
-			if((Math.abs(k_persist[0]) - Math.abs(k_volatile[0])) > 0.0001)
-				System.err.println("BUG!!!!!");
-			System.out.println("\tUpper: " + k_persist[1] + " | " + k_volatile[1] + "\tDiff: " + (Math.abs(k_persist[1]) - Math.abs(k_volatile[1])));
-			if((Math.abs(k_persist[1]) - Math.abs(k_volatile[1])) > 0.0001)
-				System.err.println("BUG!!!!!");
+	}
+	
+	private static SteadyStateSimulationResult simulate(ISteadyStateModel model, boolean isMaximization, String fluxID, SolverType solverType, EnvironmentalConditions envCond, GeneticConditions geneCond){
+		SteadyStateSimulationResult result = null;
+		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envCond, geneCond, model, SimulationProperties.FBA);
+		cc.setMaximization(isMaximization);
+		cc.setFBAObjSingleFlux(fluxID, 1.0);
+		cc.setSolver(solverType);
+		try {
+			result = cc.simulate();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		// for (String r : fluxLimits_persistent.keySet()) {
-		// System.out.print(r);
-		// for (double d : fluxLimits_persistent.get(r)) {
-		// System.out.print("\t"+d);
-		// }
-		// System.out.println();
-		// }
-
-		// EnvironmentalConditions envCond = new EnvironmentalConditions();
-		// envCond.addReactionConstraint("R_Biomass_Ecoli_core_w_GAM", new
-		// ReactionConstraint(0.81274653, 1000.0));
-		//
-		// SimulationSteadyStateControlCenter cc = new
-		// SimulationSteadyStateControlCenter(envCond, null, model,
-		// SimulationProperties.FBA);
-		// cc.setMaximization(true);
-		// cc.setSolver(SolverType.CPLEX3);
-		// cc.setFBAObjSingleFlux("R_EX_succ_e", 1.0);
-		//
-		// SteadyStateSimulationResult result = cc.simulate();
-		//
-		// System.out.println(result.getOFvalue());
-
+		return result;
 	}
 
 }
