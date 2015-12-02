@@ -22,7 +22,7 @@ public class WeightedBPObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String	WBP_PARAM_MAX_PRODUCT	= "MaxProduct";
 	public static final String	WBP_PARAM_ALPHA			= "Alpha";
 	
-	protected final double worstFitness = Double.NEGATIVE_INFINITY;
+	protected final double worstFitness = -Double.MAX_VALUE;
 	
 	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
 		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();

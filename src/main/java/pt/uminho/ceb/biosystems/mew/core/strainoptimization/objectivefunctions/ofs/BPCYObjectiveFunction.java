@@ -38,7 +38,7 @@ public class BPCYObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String	BPCY_PARAM_BIOMASS		= "Biomass";
 	public static final String	BPCY_PARAM_PRODUCT		= "Product";
 	public static final String	BPCY_PARAM_SUBSTRATE	= "Substrate";
-	protected final double		worstFitness			= Double.NEGATIVE_INFINITY;
+	protected final double		worstFitness			= -Double.MAX_VALUE;
 	protected double			substrateValue;
 	
 	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
@@ -81,7 +81,13 @@ public class BPCYObjectiveFunction extends AbstractObjectiveFunction {
 		else
 			substrateValue = 1.0;
 			
-		if (substrateValue < MIN_PRECISION) return Double.NaN;
+		if (substrateValue < MIN_PRECISION) {
+			return getWorstFitness();
+		}
+		
+		if(Double.isNaN(biomassValue) || Double.isNaN(desiredFlux) || Double.isNaN(substrateValue)){
+			return getWorstFitness();
+		}
 		
 		double fitness = (biomassValue * desiredFlux) / substrateValue;
 		Debugger.debug(biomassId + ":" + biomassValue + "|" + desiredFluxId + ":" + desiredFlux + "|" + substrateId + ":" + substrateValue + "|F:" + fitness);

@@ -68,6 +68,8 @@ public class FluxValueObjectiveFunction extends AbstractObjectiveFunction {
 		String reactionID = (String) getParameterValue(FV_PARAM_REACTION);
 		FluxValueMap fluxValues = simResult.getFluxValues();
 		Double fluxValue = fluxValues.getValue(reactionID);
+		if(Double.isNaN(fluxValue))
+			fluxValue = getWorstFitness();
 		Debugger.debug(reactionID + ": " + fluxValue + "\t" + simResult.getReactionList().keySet());
 		return fluxValue;
 	}

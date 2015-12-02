@@ -27,6 +27,7 @@ import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.AbstractObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 
@@ -54,6 +55,10 @@ public class SumOfFluxesObjectiveFunction extends AbstractObjectiveFunction {
 		super(maximize, fluxesToSum);
 	}
 	
+	public SumOfFluxesObjectiveFunction(Map<String, Object> configuration) throws InvalidObjectiveFunctionConfiguration {
+		super(configuration);
+	}
+	
 	public SumOfFluxesObjectiveFunction(Boolean maximize) {
 		super(maximize);
 	}
@@ -64,7 +69,7 @@ public class SumOfFluxesObjectiveFunction extends AbstractObjectiveFunction {
 		if (params.length == 1) {
 			setParameterValue(SUM_F_PARAM_FLUXES_TO_SUM, null);
 		} else if (params.length == 2) {
-			setParameterValue(SUM_F_PARAM_FLUXES_TO_SUM, params[2]);
+			setParameterValue(SUM_F_PARAM_FLUXES_TO_SUM, params[1]);
 		} else {
 			Set<String> fluxes = new HashSet<String>();
 			String[] range = (String[]) Arrays.copyOfRange(params, 1, params.length);
@@ -100,7 +105,7 @@ public class SumOfFluxesObjectiveFunction extends AbstractObjectiveFunction {
 	
 	@Override
 	public double getWorstFitness() {
-		return Double.NEGATIVE_INFINITY; //NOTE: the worst fitness is always negative infinity.
+		return -Double.MAX_VALUE; //NOTE: the worst fitness is always negative double max value.
 	}
 	
 	

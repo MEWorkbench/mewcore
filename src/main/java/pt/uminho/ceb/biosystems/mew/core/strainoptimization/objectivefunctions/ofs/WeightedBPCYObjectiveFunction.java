@@ -7,6 +7,7 @@ import java.util.Map;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
@@ -16,6 +17,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.I
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
 import pt.uminho.ceb.biosystems.mew.core.utils.Debugger;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
 
 public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 	
@@ -69,13 +71,12 @@ public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 		double alpha = (double) getParameterValue(WBPCY_PARAM_ALPHA);
 		SolverType lpSolver = (SolverType) getParameterValue(WBPCY_PARAM_SOLVER);
 		
-		
 		double fvaMaxProd = 0;
 		double fvaMinProd = 0;
 		double biomassFluxValue = simResult.getFluxValues().getValue(biomassId) * 0.99999;
 		ISteadyStateModel model = simResult.getModel();
 		
-		if (biomassFluxValue > 0) {
+		if (!Double.isNaN(biomassFluxValue) && biomassFluxValue > 0) {
 			
 			GeneticConditions gc = simResult.getGeneticConditions();
 			
@@ -117,11 +118,15 @@ public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 			if (Double.isNaN(fvaMinProd)) fvaMinProd = 0;
 			
 			if (Double.isNaN(fvaMaxProd)) fvaMaxProd = 0;
+			
+			
+			double ret = biomassFluxValue * (alpha * fvaMaxProd + (1 - alpha) * fvaMinProd);
+			Debugger.debug("bx = " + biomassFluxValue + "\t fvaMax = " + fvaMaxProd + "\t fvaMin = " + fvaMinProd + "\t of = " + ret + "\talpha = " + alpha);
+			return ret;
+			
+		}else{
+			return getWorstFitness();
 		}
-		
-		double ret = biomassFluxValue * (alpha * fvaMaxProd + (1 - alpha) * fvaMinProd);
-		Debugger.debug("bx = " + biomassFluxValue + "\t fvaMax = " + fvaMaxProd + "\t fvaMin = " + fvaMinProd + "\t of = " + ret + "\talpha = " + alpha);
-		return ret;
 	}
 	
 	@Override

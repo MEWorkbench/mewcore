@@ -19,7 +19,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
@@ -49,7 +49,7 @@ public class YieldMinimumBiomassObjectiveFunction extends AbstractObjectiveFunct
 	protected boolean		biomassComputed		= false;
 	
 	public Map<String, ObjectiveFunctionParameterType> loadParameters(){
-		Map<String, ObjectiveFunctionParameterType> myparams = new HashMap<>();
+		Map<String, ObjectiveFunctionParameterType> myparams = new LinkedHashMap<>();
 		myparams.put(YIELD_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(YIELD_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(YIELD_PARAM_MIN_BIOMASS_PERCENTAGE, ObjectiveFunctionParameterType.DOUBLE);
@@ -127,7 +127,6 @@ public class YieldMinimumBiomassObjectiveFunction extends AbstractObjectiveFunct
 			minimumBiomassValue = biomass * minBiomassPercentage;
 		}
 		
-		System.out.println("\nwt biomass= " + biomass + " | min biomass= " + minimumBiomassValue + " | min percent= " + minBiomassPercentage);
 		biomassComputed = true;
 	}
 	

@@ -83,7 +83,7 @@ public class NumKnockoutsObjectiveFunction extends AbstractObjectiveFunction {
 	
 	@Override
 	public double getWorstFitness() {
-		return -Double.MAX_VALUE; //NOTE: the worst fitness is always negative infinity.
+		return -Double.MAX_VALUE; //NOTE: the worst fitness is always negative double max value.
 	}
 	
 	public String toString() {
