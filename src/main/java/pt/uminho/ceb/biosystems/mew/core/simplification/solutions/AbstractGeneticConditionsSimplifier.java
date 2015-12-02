@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
@@ -22,11 +22,11 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	
 	protected Map<String, SimulationSteadyStateControlCenter>	ccs						= null;
 	protected Map<String, Map<String, Object>>					simulationConfiguration	= null;
-	protected ISteadyStateGeneReactionModel						model					= null;
+	protected ISteadyStateModel									model					= null;
 	
 	public AbstractGeneticConditionsSimplifier(Map<String, Map<String, Object>> simulationConfiguration) {
 		this.simulationConfiguration = simulationConfiguration;
-		this.model = (ISteadyStateGeneReactionModel) simulationConfiguration.values().iterator().next().get(SimulationProperties.MODEL);
+		this.model = (ISteadyStateModel) simulationConfiguration.values().iterator().next().get(SimulationProperties.MODEL);
 	}
 	
 	protected abstract SimulationSteadyStateControlCenter getControlCenterForMethod(String method) throws Exception;
