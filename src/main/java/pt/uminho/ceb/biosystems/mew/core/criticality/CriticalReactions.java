@@ -55,6 +55,8 @@ public class CriticalReactions implements Serializable {
 	protected List<String> criticalReactionIds = null;
 
 	
+	public CriticalReactions(){	}	
+	
 	public CriticalReactions(ISteadyStateModel model, 
 			EnvironmentalConditions env, 
 			SolverType solver)
@@ -197,7 +199,7 @@ public class CriticalReactions implements Serializable {
 	
 	public void addCriticalReaction (String reactionId)
 	{
-		criticalReactionIds.add(reactionId);
+		getCriticalReactionIds().add(reactionId);
 	}
 	
 	public int numberCriticalReactions ()
@@ -222,6 +224,8 @@ public class CriticalReactions implements Serializable {
 	}
 
 	public List<String> getCriticalReactionIds() {
+		if(criticalReactionIds == null)
+			criticalReactionIds = new ArrayList<String>();
 		return criticalReactionIds;
 	}
 
@@ -231,8 +235,8 @@ public class CriticalReactions implements Serializable {
 	
 	public void addCriticalReactionIds(List<String> criticalReactionIds) {
 		for(String id: criticalReactionIds)
-			if(!this.criticalReactionIds.contains(id))
-				this.criticalReactionIds.add(id);
+			if(!getCriticalReactionIds().contains(id))
+				getCriticalReactionIds().add(id);
 	}
 	
 	public void setTransportReactionsAsCritical(){

@@ -113,7 +113,7 @@ public class CriticalGenes extends CriticalReactions {
 	
 	public void addCriticalGene (String geneId)
 	{
-		criticalGenesIds.add(geneId);
+		getCriticalGenesIds().add(geneId);
 	}
 
 	public int numberCriticalGenes ()
@@ -122,6 +122,8 @@ public class CriticalGenes extends CriticalReactions {
 	}
 
 	public List<String> getCriticalGenesIds() {
+		if(criticalGenesIds == null)
+			criticalGenesIds = new ArrayList<String>();
 		return criticalGenesIds;
 	}
 
