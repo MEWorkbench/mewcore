@@ -85,6 +85,8 @@ public class WeightedYIELDObjectiveFunction extends AbstractObjectiveFunction {
 			center = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
 			center.setSolver(lpSolver);
 			center.setFBAObjSingleFlux(desiredFluxId, 1.0);
+			if(gc.isOverUnder())
+				center.setOverUnder2StepApproach(true);
 		}
 		
 		center.setGeneticConditions(gc);
@@ -93,7 +95,9 @@ public class WeightedYIELDObjectiveFunction extends AbstractObjectiveFunction {
 		SteadyStateSimulationResult fvaMaxResult = null;
 		
 		try {
+//			System.out.println("EVALUATION FVA MAX!!!");
 			fvaMaxResult = (SteadyStateSimulationResult) center.simulate();
+//			System.out.println("EVALUATION FVA MAX DONE!!!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,7 +110,7 @@ public class WeightedYIELDObjectiveFunction extends AbstractObjectiveFunction {
 			
 			try {
 				fvaMinResult = (SteadyStateSimulationResult) center.simulate();
-				//				center.forceSolverCleanup();
+//								center.forceSolverCleanup();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

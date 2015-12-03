@@ -28,10 +28,13 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 	@Override
 	public List<T> simplifySolution(T solution) throws Exception {
 		
+		System.out.print("SIMPLIFYING "+solution.getGeneticConditions().toString());
 		IGeneticConditionsSimplifiedResult simpResults = getSimplifier().simplifyGeneticConditions(solution.getGeneticConditions(),configuration.getObjectiveFunctionsMap());
-
+		System.out.println("DONE");
+		
 		List<T> toret = new ArrayList<T>();
 		for (int i = 0; i < simpResults.size(); i++) {
+			System.out.println(i);
 			GeneticConditions gc = simpResults.getSimplifiedGeneticConditions().get(i);
 			SteadyStateMultiSimulationResult res = simpResults.getSimplifiedSimulationResults().get(i);
 			T simpSol = createSolution(gc, res.getSimulations(),simpResults.getSimplifiedFitnesses());
@@ -56,8 +59,9 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 		List<T> originalList = resultSet.getResultList();
 		List<T> simplifiedList = new ArrayList<>();
 		
-		for (T solution : originalList)
+		for (T solution : originalList){
 			simplifiedList.addAll(simplifySolution(solution));
+		}
 		
 		return simplifiedList;
 	}

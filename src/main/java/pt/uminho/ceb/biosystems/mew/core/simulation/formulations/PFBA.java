@@ -28,14 +28,14 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.Lis
 
 public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends AbstractSSBasicSimulation<LPProblem> {
 	
-	public static final double	DEFAULT_RELAX					= 1;
-	
+	public static final double	DEFAULT_RELAX					= 1.0d - 1e-5;
+																
 	protected T					internalProblem					= null;
 	protected LPConstraint		parsimoniousConstraint			= null;
-	
+																
 	protected boolean			_updateParsimoniousConstraint	= false;
 	protected boolean			_replaceParsimoniousConstraint	= false;
-	
+																
 	public PFBA(ISteadyStateModel model) {
 		super(model);
 		initParsimoniousProperties();
@@ -115,11 +115,11 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 	
 	protected LPConstraint createParsimoniousConstraint(double objectiveValue) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		
-		LPConstraintType type = LPConstraintType.LESS_THAN; 
+		LPConstraintType type = LPConstraintType.LESS_THAN;
 //		double value = objectiveValue;
 		
-		if(getInternalProblem().getProblem().getObjectiveFunction().isMaximization()){
-			type = LPConstraintType.GREATER_THAN; 
+		if (getInternalProblem().getProblem().getObjectiveFunction().isMaximization()) {
+			type = LPConstraintType.GREATER_THAN;
 		}
 		
 		LPProblemRow fbaRow = getInternalProblem().getProblem().getObjectiveFunction().getRow().clone();
@@ -223,11 +223,8 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 			coef = DEFAULT_RELAX;
 		}
 		
-//		System.out.println(">>>>>>>RELAX = "+coef);
 		
-//		setProperty(SimulationProperties.RELAX_COEF, coef);
-		
-		coef = (getInternalProblem().getProblem().getObjectiveFunction().isMaximization()) ? coef : 1+(1-coef);
+		coef = (getInternalProblem().getProblem().getObjectiveFunction().isMaximization()) ? coef : 1 + (1 - coef);
 		
 		return coef;
 	}
@@ -254,7 +251,7 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 	}
 	
 	@Override
-	public String getObjectiveFunctionToString() {		
+	public String getObjectiveFunctionToString() {
 		return "min Σ|V|";
 	}
 	
@@ -268,8 +265,9 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 		switch (event.getPropertyName()) {
 			case ListenerHashMap.PROP_PUT: {
 				
-				if (debug) System.out.println("[" + getClass().getSimpleName() + "]: got event [PUT]: " + event.getKey() + " from " + evt.getOldValue() + " to " + evt.getNewValue());
-				
+				if (debug)
+					System.out.println("[" + getClass().getSimpleName() + "]: got event [PUT]: " + event.getKey() + " from " + evt.getOldValue() + " to " + evt.getNewValue());
+					
 				if (key.equals(SimulationProperties.SOLVER)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
 				}
@@ -284,13 +282,13 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 				
 				if (key.equals(SimulationProperties.ENVIRONMENTAL_CONDITIONS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-					if(problem!=null)
+					if (problem != null)
 						_updateParsimoniousConstraint = true;
 				}
 				
 				if (key.equals(SimulationProperties.GENETIC_CONDITIONS)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-					if(problem!=null)
+					if (problem != null)
 						_updateParsimoniousConstraint = true;
 				}
 				
@@ -310,8 +308,9 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 			}
 			case ListenerHashMap.PROP_UPDATE: {
 				
-				if (debug) System.out.println("[" + getClass().getSimpleName() + "]: got event [UPDATE]: " + event.getKey() + " from " + evt.getOldValue() + " to " + evt.getNewValue());
-				
+				if (debug)
+					System.out.println("[" + getClass().getSimpleName() + "]: got event [UPDATE]: " + event.getKey() + " from " + evt.getOldValue() + " to " + evt.getNewValue());
+					
 				if (key.equals(SimulationProperties.SOLVER)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
 				}
@@ -353,7 +352,7 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 			}
 			default:
 				break;
-		
+				
 		}
 	}
 	
@@ -362,17 +361,17 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 		super.clearAllProperties();
 		getInternalProblem().clearAllProperties();
 	}
-
+	
 	@Override
 	public void preSimulateActions() {
-		if(_replaceParsimoniousConstraint){
+		if (_replaceParsimoniousConstraint) {
 			replaceParsimoniousOFConstraint();
-		}else if(_updateParsimoniousConstraint)
+		} else if (_updateParsimoniousConstraint)
 			updateParsimoniousOFConstraint();
 	}
-
+	
 	@Override
-	public void postSimulateActions() {		
+	public void postSimulateActions() {
 		_replaceParsimoniousConstraint = false;
 		_updateParsimoniousConstraint = false;
 	}

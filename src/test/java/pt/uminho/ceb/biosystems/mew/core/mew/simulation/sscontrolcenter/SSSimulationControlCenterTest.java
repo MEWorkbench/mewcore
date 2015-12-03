@@ -3725,7 +3725,7 @@ public class SSSimulationControlCenterTest {
 		_solvers = new IndexedHashMap<String, SolverType>();
 //		_solvers.put("GLPK", SolverType.GLPK);
 //		_solvers.put("CLP", SolverType.CLP);
-		_solvers.put("CPLEX", SolverType.CPLEX);
+		_solvers.put("CPLEX", SolverType.CPLEX3);
 		
 		_methods = new IndexedHashMap<String, String>();
 		_methods.put("FBA", SimulationProperties.FBA);
