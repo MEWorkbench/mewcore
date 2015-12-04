@@ -28,7 +28,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.Lis
 
 public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends AbstractSSBasicSimulation<LPProblem> {
 	
-	public static final double	DEFAULT_RELAX					= 1.0d - 1e-5;
+	public static final double	DEFAULT_RELAX					= 0.99999;
 																
 	protected T					internalProblem					= null;
 	protected LPConstraint		parsimoniousConstraint			= null;
@@ -127,6 +127,7 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 		
 //		System.out.println("CREATE CONSTRAINT = "+cont.toString()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().isMaximization()+"\t"+getInternalProblem().getProblem().getObjectiveFunction().toString()+"\t"+getRelaxCoef()+"\t[v="+getProblem().getNumberVariables()+"\\c="+getProblem().getNumberConstraints());
 		return cont;
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -225,7 +226,6 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 		
 		
 		coef = (getInternalProblem().getProblem().getObjectiveFunction().isMaximization()) ? coef : 1 + (1 - coef);
-		
 		return coef;
 	}
 	
@@ -317,8 +317,8 @@ public class PFBA<T extends AbstractSSBasicSimulation<LPProblem>> extends Abstra
 				
 				if (key.equals(SimulationProperties.IS_MAXIMIZATION)) {
 					getInternalProblem().setProperty((String) event.getKey(), evt.getNewValue());
-//					_updateParsimoniousConstraint = true;
-					_replaceParsimoniousConstraint = true;
+					_updateParsimoniousConstraint = true;
+//					_replaceParsimoniousConstraint = true;
 				}
 				
 				if (key.equals(SimulationProperties.OBJECTIVE_FUNCTION)) {
