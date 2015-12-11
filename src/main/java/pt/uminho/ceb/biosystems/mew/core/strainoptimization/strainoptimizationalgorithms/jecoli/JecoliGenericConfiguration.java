@@ -7,6 +7,7 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.statistics.Statistic
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.ITerminationCriteria;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.InvalidTerminationCriteriaParameter;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.NumFunctionEvaluationsListenerHybridTerminationCriteria;
+import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.components.ArchiveManager;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
@@ -215,6 +216,14 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 	
 	public void setMaxAllowedSwaps(int maxAllowedSwaps) {
 		propertyMap.put(JecoliOptimizationProperties.MAX_ALLOWED_SWAPS, maxAllowedSwaps);
+	}
+	
+	public void setArchiveManager(ArchiveManager archiveManager){
+		propertyMap.put(JecoliOptimizationProperties.ARCHIVE_MANAGER, archiveManager);
+	}
+	
+	public ArchiveManager getArchiveManager(){
+		return (ArchiveManager) propertyMap.get(JecoliOptimizationProperties.ARCHIVE_MANAGER);
 	}
 	
 }

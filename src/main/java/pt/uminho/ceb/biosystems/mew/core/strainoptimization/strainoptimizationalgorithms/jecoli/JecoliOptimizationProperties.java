@@ -29,6 +29,9 @@ public class JecoliOptimizationProperties implements Serializable {
 	public static final String	NOT_ALLOWED_IDS						= "jecoli.notallowedids";
 	public static final String	TERMINATION_CRITERIA				= "jecoli.terminationcriteria";
 	public static final String	STATISTICS_CONFIGURATION			= "jecoli.statistics.configuration";
+	public static final String	ARCHIVE_MANAGER						= "jecoli.archivemanager";
+	public static final String	ARCHIVE_PLOTTER						= "jecoli.archivemanager.plotter";
+	public static final String	EVALUATION_LISTENER					= "jecoli.evaluationlistener";
 	
 	//Jecoli EA
 	public static final String	POPULATION_SIZE						= "jecoli.ea.populationsize";
