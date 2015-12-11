@@ -14,7 +14,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyS
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public abstract class AbstractGeneticConditionsSimplifier implements ISimplifierGeneticConditions {
@@ -60,9 +59,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		List<String> iDsIterator = new ArrayList<String>(ids);
 		
 		GeneticConditions finalSolution = conditions.clone();
-//		System.out.println("going GC");
 		Map<String, SteadyStateSimulationResult> finalResults = simulateGeneticConditions(finalSolution, objectiveFunctions);
-//		System.out.println("Done with GC!");
 		double[] finalFitnesses = initialFitnesses;
 		
 		for (String id : iDsIterator) {
@@ -73,7 +70,6 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			
 			Map<String, SteadyStateSimulationResult> results = simulateGeneticConditions(finalSolution, objectiveFunctions);
 			
-			findNaNInResults(results);
 			double[] simpfitnesses = evaluateSolution(results, objectiveFunctions);
 			
 			if (isBetter(finalFitnesses, simpfitnesses, objectiveFunctions)) {
