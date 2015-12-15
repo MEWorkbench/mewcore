@@ -7,13 +7,13 @@ import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGen
 import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ReactionsSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.StrainOptimizationResultsSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.ROUSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.ROUSolutionSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
-public class ROUSolutionSimplifier<C extends JecoliGenericConfiguration> extends StrainOptimizationResultsSimplifier<C, ROUSolution> {
+public class ROUSolutionSimplifier<C extends ISteadyStateConfiguration> extends StrainOptimizationResultsSimplifier<C, ROUSolution> {
 	
 	public ROUSolutionSimplifier(C configuration) {
 		super(configuration);

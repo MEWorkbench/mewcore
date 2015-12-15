@@ -10,7 +10,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.IJecoliConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
 
 /**
@@ -22,7 +22,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
  * @param <T> extension of JecoliGeneric Configuration
  * @param <E> extension of an IStrainOptimizationResult
  */
-public interface IJecoliOptimizationStrategyConverter<T extends JecoliGenericConfiguration,E extends IStrainOptimizationResult> extends Serializable {
+public interface IJecoliOptimizationStrategyConverter<T extends IJecoliConfiguration,E extends IStrainOptimizationResult> extends Serializable {
     /**
      * Creates a solution set based on a configuration and a list of solutions
      * @param configuration

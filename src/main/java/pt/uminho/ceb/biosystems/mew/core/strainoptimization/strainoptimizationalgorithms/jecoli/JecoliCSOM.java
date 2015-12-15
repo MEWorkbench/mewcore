@@ -43,7 +43,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 /**
  * Created by ptiago on 03-03-2015.
  */
-public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T> {
+public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T> implements IJecoliStrainOptimizationAlgorithm<T> {
 	
 	private static final long serialVersionUID = 1L;
 	

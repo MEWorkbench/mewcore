@@ -7,13 +7,14 @@ import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGen
 import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ReactionsSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISwapsSteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.StrainOptimizationResultsSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.RKRSSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.RKRSSolutionSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
-public class RKRSSolutionSimplifier<C extends JecoliGenericConfiguration> extends StrainOptimizationResultsSimplifier<C, RKRSSolution>{
+public class RKRSSolutionSimplifier<C extends  ISteadyStateConfiguration & ISwapsSteadyStateConfiguration> extends StrainOptimizationResultsSimplifier<C, RKRSSolution>{
 
 	public RKRSSolutionSimplifier(C configuration) {
 		super(configuration);

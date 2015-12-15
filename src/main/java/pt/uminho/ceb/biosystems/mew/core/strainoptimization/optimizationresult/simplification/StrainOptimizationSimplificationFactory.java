@@ -7,12 +7,15 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGeneSteadyStateConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.GKSolutionSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.GOUSolutionSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.RKRSSolutionSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.RKSolutionSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.ROUSolutionSimplifier;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
 public class StrainOptimizationSimplificationFactory {
 
@@ -56,9 +59,9 @@ protected static Map<String, Class<? extends IStrainOptimizationResultsSimplifie
 		return setSimplifiers;
 	}
 	
-	public IStrainOptimizationResultsSimplifier getSimplifierInstance(String id, JecoliGenericConfiguration configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		Class<? extends IStrainOptimizationResultsSimplifier> ofKlazz = simplifiers.get(id);		
-		IStrainOptimizationResultsSimplifier instance = ofKlazz.getConstructor(JecoliGenericConfiguration.class).newInstance(configuration);
+	public <T extends ISteadyStateConfiguration> IStrainOptimizationResultsSimplifier getSimplifierInstance(String id, T configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Class<? extends IStrainOptimizationResultsSimplifier> ofKlazz = simplifiers.get(id);
+		IStrainOptimizationResultsSimplifier instance = ofKlazz.getConstructor(ISteadyStateConfiguration.class).newInstance(configuration);
 		return instance;
 	}	
 	

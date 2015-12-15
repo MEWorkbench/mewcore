@@ -5,16 +5,17 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISwapsSteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.rkrs.RKRSStrategyReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.RKRSSolution;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
 /**
  * Created by ptiago on 24-03-2015.
  */
-public class RKRSSolutionSet<T extends JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,RKRSSolution> {
+public class RKRSSolutionSet<T extends ISteadyStateConfiguration & ISwapsSteadyStateConfiguration> extends AbstractStrainOptimizationResultSet<T,RKRSSolution> {
     
 	private static final long	serialVersionUID	= 1L;
 

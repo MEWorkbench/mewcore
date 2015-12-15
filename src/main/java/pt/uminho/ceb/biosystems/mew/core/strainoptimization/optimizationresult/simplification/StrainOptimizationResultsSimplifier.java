@@ -9,11 +9,11 @@ import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGen
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
-public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGenericConfiguration, T extends IStrainOptimizationResult> implements IStrainOptimizationResultsSimplifier<C, T> {
+public abstract class StrainOptimizationResultsSimplifier<C extends ISteadyStateConfiguration, T extends IStrainOptimizationResult> implements IStrainOptimizationResultsSimplifier<C, T> {
 
 	protected ISimplifierGeneticConditions simplifier;
 	protected C configuration;
@@ -28,13 +28,10 @@ public abstract class StrainOptimizationResultsSimplifier<C extends JecoliGeneri
 	@Override
 	public List<T> simplifySolution(T solution) throws Exception {
 		
-		System.out.print("SIMPLIFYING "+solution.getGeneticConditions().toString());
 		IGeneticConditionsSimplifiedResult simpResults = getSimplifier().simplifyGeneticConditions(solution.getGeneticConditions(),configuration.getObjectiveFunctionsMap());
-		System.out.println("DONE");
 		
 		List<T> toret = new ArrayList<T>();
 		for (int i = 0; i < simpResults.size(); i++) {
-			System.out.println(i);
 			GeneticConditions gc = simpResults.getSimplifiedGeneticConditions().get(i);
 			SteadyStateMultiSimulationResult res = simpResults.getSimplifiedSimulationResults().get(i);
 			T simpSol = createSolution(gc, res.getSimulations(),simpResults.getSimplifiedFitnesses());

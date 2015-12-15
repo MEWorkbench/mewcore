@@ -5,16 +5,17 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGeneSteadyStateConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.io.gou.GOUStrategyReader;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.GOUSolution;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
 /**
  * Created by ptiago on 18-03-2015.
  */
-public class GOUSolutionSet<T extends  JecoliGenericConfiguration> extends AbstractStrainOptimizationResultSet<T,GOUSolution> {
+public class GOUSolutionSet<T extends ISteadyStateConfiguration & IGeneSteadyStateConfiguration> extends AbstractStrainOptimizationResultSet<T,GOUSolution> {
     
 	private static final long	serialVersionUID	= 1L;
 
@@ -37,7 +38,7 @@ public class GOUSolutionSet<T extends  JecoliGenericConfiguration> extends Abstr
 	}
 
 	@Override
-	public IStrainOptimizationReader getSolutionReaderInstance() {
+	public IStrainOptimizationReader getSolutionReaderInstance() throws Exception {
 		return new GOUStrategyReader(baseConfiguration.getGeneReactionSteadyStateModel());
 	}
 }
