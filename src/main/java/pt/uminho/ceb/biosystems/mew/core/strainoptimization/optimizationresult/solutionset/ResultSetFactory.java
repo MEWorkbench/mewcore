@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 
 public class ResultSetFactory {
@@ -54,8 +55,7 @@ protected static Map<String, Class<? extends IStrainOptimizationResultSet>> solu
 	
 	public <C extends IGenericConfiguration> IStrainOptimizationResultSet getResultSetInstance(String id, C configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<? extends IStrainOptimizationResultSet> ofKlazz = solutionSets.get(id);
-		Class<?> confClass = configuration.getClass();
-		IStrainOptimizationResultSet instance = ofKlazz.getConstructor(confClass).newInstance(configuration);
+		IStrainOptimizationResultSet instance = ofKlazz.getConstructor(ISteadyStateConfiguration.class).newInstance(configuration);
 		return instance;
 	}
 	
