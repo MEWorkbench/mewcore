@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra;
 
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -104,21 +103,7 @@ public abstract class MFAAlgebra implements ISteadyStateSimulationMethod, IMFASi
 	@Override
 	public Class<?> getFormulationClass() {return null;}	
 	@Override
-	public void setRecreateOF(boolean recreateOF) {}
-	@Override
-	public boolean isRecreateOF() {return false;}
-	@Override
 	public void clearAllProperties(){
 		propreties.clear();
 	};
-	@Override
-	public void preSimulateActions(){};
-	@Override
-	public void postSimulateActions(){};
-	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener){};
-	@Override
-	public void saveModelToMPS(String file, boolean includeTime){};	
-	@Override
-	public void forceSolverCleanup() {}
 }

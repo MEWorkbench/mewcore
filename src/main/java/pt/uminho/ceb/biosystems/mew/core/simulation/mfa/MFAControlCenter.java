@@ -12,6 +12,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateMode
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.AbstractSimulationMethodsFactory;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.AbstractSimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.IConvexSteadyStateSimulationMethod;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ISteadyStateSimulationMethod;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
@@ -92,7 +93,9 @@ public class MFAControlCenter extends AbstractSimulationSteadyStateControlCenter
 	public SteadyStateSimulationResult simulate() throws Exception {		
 		if (lastMethod == null || forceRecreate) {
 			lastMethod = getFactory().getMethod(this.methodType, methodProperties, model);
-			lastMethod.addPropertyChangeListener(this);
+			if(lastMethod!=null && IConvexSteadyStateSimulationMethod.class.isAssignableFrom(lastMethod.getClass())){
+				((IConvexSteadyStateSimulationMethod)lastMethod).addPropertyChangeListener(this);				
+			}
 			forceRecreate = false;
 		} else {
 			lastMethod.putAllProperties(methodProperties);

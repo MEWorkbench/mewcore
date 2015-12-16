@@ -89,7 +89,9 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		
 		if (lastMethod == null || forceRecreate) {
 			lastMethod = getFactory().getMethod(this.methodType, methodProperties, model);
-			lastMethod.addPropertyChangeListener(this);
+			if(lastMethod!=null && IConvexSteadyStateSimulationMethod.class.isAssignableFrom(lastMethod.getClass())){
+				((IConvexSteadyStateSimulationMethod)lastMethod).addPropertyChangeListener(this);				
+			}
 			forceRecreate = false;
 		} else {
 			lastMethod.putAllProperties(methodProperties);
@@ -204,7 +206,8 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 	 * calls (e.g., C calls from CPLEX)
 	 */
 	public void forceSolverCleanup() {
-		if (lastMethod != null)
-			lastMethod.forceSolverCleanup();
+		if (lastMethod != null && IConvexSteadyStateSimulationMethod.class.isAssignableFrom(lastMethod.getClass())){
+			((IConvexSteadyStateSimulationMethod)lastMethod).forceSolverCleanup();			
+		}
 	}
 }

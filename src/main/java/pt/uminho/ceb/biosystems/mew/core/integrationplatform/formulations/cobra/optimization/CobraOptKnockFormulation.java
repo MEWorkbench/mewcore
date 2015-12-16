@@ -25,10 +25,9 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesLi
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 
-public class CobraOptKnockFormulation extends ConnectionFormulation{
-
-	String modelNameFromOptFlux;
+public class CobraOptKnockFormulation extends ConnectionFormulation {
 	
+	String modelNameFromOptFlux;
 	
 	public CobraOptKnockFormulation(ISteadyStateModel model) throws MatlabConnectionException, MatlabInvocationException {
 		super(model, new MatlabConnection());
@@ -37,12 +36,12 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 	
 	private void initFormulation(ISteadyStateModel model) {
 		modelNameFromOptFlux = model.getId();
-		if(modelNameFromOptFlux == null || modelNameFromOptFlux.equals(""))
+		if (modelNameFromOptFlux == null || modelNameFromOptFlux.equals(""))
 			modelNameFromOptFlux = "model";
-		if(modelNameFromOptFlux.startsWith("."))
+		if (modelNameFromOptFlux.startsWith("."))
 			modelNameFromOptFlux = "DOT" + modelNameFromOptFlux;
 	}
-
+	
 	@Override
 	protected Map<String, Object> createConverterParameteres() {
 		
@@ -56,10 +55,9 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 		prop.put(OptimizationProperties.MIN_GROWTH, properties.get(OptimizationProperties.MIN_GROWTH));
 		prop.put(OptimizationProperties.TIME_LIMIT, properties.get(OptimizationProperties.TIME_LIMIT));
 		
-		
 		return prop;
 	}
-
+	
 	@Override
 	protected void initPropsKeys() {
 		super.initPropsKeys();
@@ -67,10 +65,9 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 	}
 	
 	@Override
-	public void prepareMatlabEnvironment() {		
+	public void prepareMatlabEnvironment() {
 		try {
-			
-			
+		
 //			Set<String> test = ManagerExceptionUtils.testCast(properties, Set.class, "KOList", true);
 //			
 //			for (String string : test) {
@@ -79,28 +76,28 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 			
 			Set<String> allReactions = new LinkedHashSet<>(model.getReactions().keySet());
 			
-			if(properties.containsKey(OptimizationProperties.SELECTED_RXNS)){
-				Set<String> selectedRxns = (Set<String>)properties.get(OptimizationProperties.SELECTED_RXNS);
+			if (properties.containsKey(OptimizationProperties.SELECTED_RXNS)) {
+				Set<String> selectedRxns = (Set<String>) properties.get(OptimizationProperties.SELECTED_RXNS);
 				converter.sendStringList("selectedRxnList", selectedRxns.toArray(new String[selectedRxns.size()]));
 				converter.runCommand("selectedRxnList = selectedRxnList.';");
 				allReactions.removeAll(selectedRxns);
 			}
 			
 			int maxKOs = 3;
-			if(properties.containsKey(OptimizationProperties.MAX_KOS))
+			if (properties.containsKey(OptimizationProperties.MAX_KOS))
 				maxKOs = (int) properties.get(OptimizationProperties.MAX_KOS);
 			converter.sendInteger("options.numDel", maxKOs);
 			
 //			Define objective product reaction
 			String productFlux = model.getBiomassFlux();
-			if(properties.containsKey(OptimizationProperties.PRODUCT_FLUX))
+			if (properties.containsKey(OptimizationProperties.PRODUCT_FLUX))
 				productFlux = (String) properties.get(OptimizationProperties.PRODUCT_FLUX);
 			converter.sendString("options.targetRxn", productFlux);
 			allReactions.remove(productFlux);
 			
 //			Define possible constraints
-			if(properties.containsKey(OptimizationProperties.CONSTRAINED_REACTIONS)){
-				Set<ConstrainedReaction> constrainedReactionsList = new LinkedHashSet<ConstrainedReaction>((Set)properties.get(OptimizationProperties.CONSTRAINED_REACTIONS));
+			if (properties.containsKey(OptimizationProperties.CONSTRAINED_REACTIONS)) {
+				Set<ConstrainedReaction> constrainedReactionsList = new LinkedHashSet<ConstrainedReaction>((Set) properties.get(OptimizationProperties.CONSTRAINED_REACTIONS));
 				List<String> rxnList = new ArrayList<String>();
 				List<Double> valuesList = new ArrayList<Double>();
 //				String[] rxnList = new String[constrainedReactionsList.size()+1];
@@ -109,7 +106,7 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 				//int i = 0;
 				boolean hasBiomassConstraint = false;
 				for (ConstrainedReaction constrainedReaction : constrainedReactionsList) {
-					if(constrainedReaction.getReactionID().equals(model.getBiomassFlux()))
+					if (constrainedReaction.getReactionID().equals(model.getBiomassFlux()))
 						hasBiomassConstraint = true;
 					rxnList.add(constrainedReaction.getReactionID());
 					valuesList.add(constrainedReaction.getConstraintValue());
@@ -119,10 +116,9 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 					allReactions.remove(constrainedReaction.getReactionID());
 					//i++;
 				}
-				if(!hasBiomassConstraint)
-				{
+				if (!hasBiomassConstraint) {
 					rxnList.add(model.getBiomassFlux());
-					valuesList.add((double)properties.get(OptimizationProperties.MIN_GROWTH));
+					valuesList.add((double) properties.get(OptimizationProperties.MIN_GROWTH));
 					senseList += "G";
 				}
 				allReactions.remove(model.getBiomassFlux());
@@ -130,13 +126,12 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 				converter.sendStringList("constrOpt.rxnList", rxnList.toArray(new String[rxnList.size()]));
 				converter.sendDoubleList("constrOpt.values", new ArrayList(Arrays.asList(valuesList)));
 				converter.sendString("constrOpt.sense", senseList);
-			}
-			else{
+			} else {
 				
 				List<String> rxnList = new ArrayList<String>();
 				rxnList.add(model.getBiomassFlux());
 				List<Double> valuesList = new ArrayList<Double>();
-				valuesList.add((double)properties.get(OptimizationProperties.MIN_GROWTH));
+				valuesList.add((double) properties.get(OptimizationProperties.MIN_GROWTH));
 				String senseList = "G";
 				
 				converter.sendStringList("constrOpt.rxnList", rxnList.toArray(new String[rxnList.size()]));
@@ -146,45 +141,43 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 			
 			// Define TimeLimit
 			int timeLimit = 3600;
-			if(properties.containsKey(OptimizationProperties.TIME_LIMIT)){
+			if (properties.containsKey(OptimizationProperties.TIME_LIMIT)) {
 				timeLimit = (int) properties.get(OptimizationProperties.TIME_LIMIT);
 			}
 			converter.sendInteger("optKnockTimeLimit", timeLimit);
-			converter.runFunction("changeCobraSolverParams", 
-					Arrays.asList(new String[]{"'MILP'","'timeLimit'","optKnockTimeLimit"}), 
-					Arrays.asList(new String[]{}));
-			
+			converter.runFunction("changeCobraSolverParams",
+					Arrays.asList(new String[] { "'MILP'", "'timeLimit'", "optKnockTimeLimit" }),
+					Arrays.asList(new String[] {}));
+					
 		} catch (Exception e) {
 			throw new CobraMatlabFormulationException(e);
 		}
 	}
 	
 	@Override
-	public void executeSimulationCommand()
-	{
+	public void executeSimulationCommand() {
 		
 		try {
 			getConverter().runFunction("OptKnock", //"listOfSelectedRxns"
-					Arrays.asList(new String[]{modelNameFromOptFlux, "selectedRxnList", "options", "constrOpt"}), 
+					Arrays.asList(new String[] { modelNameFromOptFlux, "selectedRxnList", "options", "constrOpt" }),
 //					Arrays.asList(new String[]{modelNameFromOptFlux, "selectedRxnList", 
 //					"options", "constrOpt"}),
-					Arrays.asList(new String[]{"optKnockSol","bilevelMILPproblem"}));
+					Arrays.asList(new String[] { "optKnockSol", "bilevelMILPproblem" }));
 		} catch (Exception e) {
 			throw new CobraMatlabFormulationException(e);
 		}
 	}
 	
 	@Override
-	public SteadyStateSimulationResult parseMatlabOutput()
-	{
+	public SteadyStateSimulationResult parseMatlabOutput() {
 		SteadyStateSimulationResult result = new SteadyStateSimulationResult(model, "", null);
 		
-		try{
+		try {
 //			
 			double[] fluxes = getConverter().getVariableDoubleList("optKnockSol.fluxes");
-			String[] rxns = getConverter().getVariableStringList(modelNameFromOptFlux+".rxns");
+			String[] rxns = getConverter().getVariableStringList(modelNameFromOptFlux + ".rxns");
 //			
-			String[] koRxnsList = getConverter().getVariableStringList("optKnockSol"+".rxnList");
+			String[] koRxnsList = getConverter().getVariableStringList("optKnockSol" + ".rxnList");
 //			
 			FluxValueMap fluxValues = new FluxValueMap();
 			for (int i = 0; i < rxns.length; i++)
@@ -192,12 +185,9 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 //			
 			
 			getConverter().runFunction("testOptKnockSol",
-					Arrays.asList(new String[]{modelNameFromOptFlux, "options.targetRxn", "optKnockSol.rxnList"}),
-					Arrays.asList(new String[]{"growthRate","minProd","maxProd"}));
-
-			
-			
-			
+					Arrays.asList(new String[] { modelNameFromOptFlux, "options.targetRxn", "optKnockSol.rxnList" }),
+					Arrays.asList(new String[] { "growthRate", "minProd", "maxProd" }));
+					
 //		
 //			
 			result.setOFvalue((getConverter().getVariableDoubleList("optKnockSol.obj"))[0]);
@@ -210,19 +200,19 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 				kos.put(reaction, new ReactionConstraint(0, 0));
 			}
 			
-			result.setEnvironmentalConditions((EnvironmentalConditions)properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
+			result.setEnvironmentalConditions((EnvironmentalConditions) properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
 			result.setGeneticConditions(new GeneticConditions(new ReactionChangesList(Arrays.asList(koRxnsList))));
 //			
 			result.setMethod("Cobra OptKnock");
 //			
 			
 			return result;
-		
-		} catch(Exception e) {
+			
+		} catch (Exception e) {
 			throw new CobraMatlabFormulationException(e);
 		}
 	}
-
+	
 //	@Override
 //	public SteadyStateOptimizationResult parseMatlabOptimizationOutput(
 //			SteadyStateSimulationResult simulationResult) {
@@ -235,51 +225,12 @@ public class CobraOptKnockFormulation extends ConnectionFormulation{
 //		return null;
 //	}
 	
-	
 	public static void main(String[] args) {
 		ConstrainedReaction react = new ConstrainedReaction("T", 10.0, "<");
 		System.out.println(ConstrainedReaction.parseConstraintSense(react));
 	}
-
-	@Override
-	public void preSimulateActions() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void postSimulateActions() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void clearAllProperties() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setRecreateOF(boolean recreateOF) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isRecreateOF() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void saveModelToMPS(String file, boolean includeTime) {
-		// TODO Auto-generated method stub
-		
 	}
 }

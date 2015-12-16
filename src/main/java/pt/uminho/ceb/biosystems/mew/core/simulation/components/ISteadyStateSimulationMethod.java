@@ -18,7 +18,6 @@
  */
 package pt.uminho.ceb.biosystems.mew.core.simulation.components;
 
-import java.beans.PropertyChangeListener;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,10 +27,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.Mand
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
 
 public interface ISteadyStateSimulationMethod {
-	
-	void preSimulateActions();
-	
-	void postSimulateActions();
 	
 	SteadyStateSimulationResult simulate() throws Exception;
 	
@@ -58,14 +53,4 @@ public interface ISteadyStateSimulationMethod {
 	<T> T getProperty(String k);
 	
 	Class<?> getFormulationClass();
-	
-	void setRecreateOF(boolean recreateOF);
-	
-	boolean isRecreateOF();
-	
-	void addPropertyChangeListener(PropertyChangeListener listener);
-	
-	void saveModelToMPS(String file, boolean includeTime);
-	
-	void forceSolverCleanup();
 }

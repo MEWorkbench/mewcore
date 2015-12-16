@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.integrationplatform.formulations.cobra.simulation;
 
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,17 +137,6 @@ public class CobraLinearMOMAFormulation extends ConnectionFormulation{
 		}
 	}
 
-	@Override
-	public void preSimulateActions() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void postSimulateActions() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void clearAllProperties() {
@@ -156,27 +144,4 @@ public class CobraLinearMOMAFormulation extends ConnectionFormulation{
 		
 	}
 
-	@Override
-	public void setRecreateOF(boolean recreateOF) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isRecreateOF() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void saveModelToMPS(String file, boolean includeTime) {
-		// TODO Auto-generated method stub
-		
-	}
 }

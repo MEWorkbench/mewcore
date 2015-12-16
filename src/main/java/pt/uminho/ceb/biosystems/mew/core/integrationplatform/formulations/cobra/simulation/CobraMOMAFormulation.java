@@ -16,14 +16,13 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
 
-public class CobraMOMAFormulation extends ConnectionFormulation{
-
-	Boolean isMaximized = true;
-	Map<String, Double> obj_coef = null;
-	String modelNameFromOptFlux;
-	String modelNameWT;
+public class CobraMOMAFormulation extends ConnectionFormulation {
 	
-	
+	Boolean				isMaximized	= true;
+	Map<String, Double>	obj_coef	= null;
+	String				modelNameFromOptFlux;
+	String				modelNameWT;
+						
 	public CobraMOMAFormulation(ISteadyStateModel model) throws MatlabConnectionException, MatlabInvocationException {
 		super(model, new MatlabConnection());
 		initFormulation(model);
@@ -31,33 +30,32 @@ public class CobraMOMAFormulation extends ConnectionFormulation{
 	
 	private void initFormulation(ISteadyStateModel model) {
 		modelNameFromOptFlux = model.getId();
-		if(modelNameFromOptFlux == null || modelNameFromOptFlux.equals(""))
+		if (modelNameFromOptFlux == null || modelNameFromOptFlux.equals(""))
 			modelNameFromOptFlux = "model";
-		if(modelNameFromOptFlux.startsWith("."))
+		if (modelNameFromOptFlux.startsWith("."))
 			modelNameFromOptFlux = "DOT" + modelNameFromOptFlux;
-		
+			
 		modelNameFromOptFlux = model.getId();
 		modelNameWT = modelNameFromOptFlux + "_WT";
 	}
-
+	
 	@Override
 	protected Map<String, Object> createConverterParameteres() {
 		return null;
 	}
-
+	
 	@Override
 	protected void initPropsKeys() {
 		super.initPropsKeys();
 		mandatoryProps.add(SimulationProperties.IS_MAXIMIZATION);
 		possibleProperties.add(SimulationProperties.OBJECTIVE_FUNCTION);
 	}
-
 	
 	@Override
 	public void prepareMatlabEnvironment() {
-		try{
+		try {
 			isMaximized = ManagerExceptionUtils.testCast(properties, Boolean.class, SimulationProperties.IS_MAXIMIZATION, false);
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			isMaximized = true;
 		}
@@ -78,7 +76,6 @@ public class CobraMOMAFormulation extends ConnectionFormulation{
 //			getConverter().runFunction("changeObjective", Arrays.asList(new String[]{modelNameWT, "'"+obj_coef.entrySet().iterator().next().getKey()+"'"}), 
 //					Arrays.asList(new String[]{modelNameWT}));
 		
-		
 		try {
 			converter.sendModel(model, modelNameWT);
 		} catch (Exception e) {
@@ -87,34 +84,31 @@ public class CobraMOMAFormulation extends ConnectionFormulation{
 	}
 	
 	@Override
-	public void executeSimulationCommand()
-	{
+	public void executeSimulationCommand() {
 		
 		try {
-			getConverter().runFunction("MOMA", 
-					Arrays.asList(new String[]{modelNameWT, modelNameFromOptFlux}), 
-					Arrays.asList(new String[]{"solutionDel","solutionWT","totalFluxDiff","solStatus"}));
+			getConverter().runFunction("MOMA",
+					Arrays.asList(new String[] { modelNameWT, modelNameFromOptFlux }),
+					Arrays.asList(new String[] { "solutionDel", "solutionWT", "totalFluxDiff", "solStatus" }));
 		} catch (Exception e) {
 			throw new CobraMatlabFormulationException(e);
 		}
 	}
 	
 	@Override
-	public SteadyStateSimulationResult parseMatlabOutput()
-	{
+	public SteadyStateSimulationResult parseMatlabOutput() {
 		SteadyStateSimulationResult result = new SteadyStateSimulationResult(model, "", null);
 		
-		try{
+		try {
 			
 			double[] primal = getConverter().getVariableDoubleList("solutionDel.x");
 			
-			String[] rxns = getConverter().getVariableStringList(modelNameWT+".rxns");
+			String[] rxns = getConverter().getVariableStringList(modelNameWT + ".rxns");
 			
 			FluxValueMap fluxValues = new FluxValueMap();
 			for (int i = 0; i < rxns.length; i++)
 				fluxValues.put(rxns[i], primal[i]);
-			
-			
+				
 			// Função objetivo
 //			getConverter().runFunction("checkObjective", Arrays.asList(new String[]{modelNameWT}), Arrays.asList(new String[]{"objectiveAbbr"}));
 //			String oFString = getConverter().getVariableString("objectiveAbbr");
@@ -123,8 +117,6 @@ public class CobraMOMAFormulation extends ConnectionFormulation{
 //			result.setOFvalue((getConverter().getVariableDoubleList("solutionDel.f"))[0]);
 //			result.setSolverOutput((getConverter().getVariableString("solutionWT.solver")));
 //			result.setFluxValues(fluxValues);
-			
-			
 			
 			//getConverter().runFunction("checkObjective", Arrays.asList(new String[]{modelNameWT}), Arrays.asList(new String[]{"objectiveAbbr"}));
 			//String oFString = getConverter().getVariableString("objectiveAbbr");
@@ -135,8 +127,7 @@ public class CobraMOMAFormulation extends ConnectionFormulation{
 //			
 //			double resultDiff = ;
 //			System.out.println(resultDiff);
-		
-			
+
 //			result.setOFvalue((getConverter().getVariableDoubleList("solutionDel.f"))[0]);
 			result.setOFvalue((getConverter().getVariableDoubleList("totalFluxDiff"))[0]);
 			result.setSolverOutput((getConverter().getVariableString("solutionWT.solver")));
@@ -144,50 +135,14 @@ public class CobraMOMAFormulation extends ConnectionFormulation{
 			
 			result.setMethod("Cobra MOMA");
 			return result;
-		
-		} catch(Exception e) {
+			
+		} catch (Exception e) {
 			throw new CobraMatlabFormulationException(e);
 		}
 	}
-
-	@Override
-	public void preSimulateActions() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void postSimulateActions() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void clearAllProperties() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setRecreateOF(boolean recreateOF) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isRecreateOF() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void saveModelToMPS(String file, boolean includeTime) {
 		// TODO Auto-generated method stub
 		
 	}
