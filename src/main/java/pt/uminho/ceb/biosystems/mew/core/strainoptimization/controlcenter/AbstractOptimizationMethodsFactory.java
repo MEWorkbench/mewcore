@@ -1,30 +1,30 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.RegistMethodException;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.NoConstructorMethodException;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.UnregistaredMethodException;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.RegistMethodException;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.NoConstructorMethodException;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.UnregistaredMethodException;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.algorithm.AbstractStrainOptimizationAlgorithm;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
-
 /**
  * Class for spawning concrete method algorithms. Note: The algorithm classes
  * have to contain at least an empty constructor
  */
-public class AbstractOptimizationMethodsFactory implements Serializable {
-	
+public class AbstractOptimizationMethodsFactory<T> implements Serializable {
+
 	private static final long		serialVersionUID	= 1L;
 	/**
 	 * Map of methods
 	 */
 	protected Map<String, Class<?>>	mapMethods;
-	
+
+
 	/**
 	 *
 	 * @param id method identification
@@ -33,7 +33,7 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 	public void registerMethod(String id, Class<?> method) {
 		mapMethods.put(id, method);
 	}
-	
+
 	/**
 	 *
 	 * @return The set of registered method identifications
@@ -42,21 +42,21 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 		LinkedHashSet<String> setMethods = new LinkedHashSet<String>();
 		for (String methodId : mapMethods.keySet())
 			setMethods.add(methodId);
-		
+
 		return setMethods;
 	}
-	
+
 	/**
 	 * Initializes the instance variable mapMethods to the value in the
 	 * parameter
-	 * 
+	 *
 	 * @param mapMethods Map of methods
 	 */
 	public AbstractOptimizationMethodsFactory(Map<String, Class<?>> mapMethods) {
 		this.mapMethods = mapMethods;
 		//		methodProperties = new HashMap<String, Object>();
 	}
-	
+
 	/**
 	 *
 	 * @param methodId previously registered method/problem in the factory
@@ -68,7 +68,7 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 		if (!mapMethods.containsKey(methodId)) throw new UnregistaredMethodException(methodId);
 		return mapMethods.get(methodId);
 	}
-	
+
 	/**
 	 *
 	 * @param methodId The name of the method/problem to create
@@ -79,14 +79,14 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 	 * @throws UnregistaredMethodException - The method is not registered in the
 	 *             factory
 	 */
-	public AbstractStrainOptimizationAlgorithm getMethod(String methodId, IGenericConfiguration genericConfiguration) throws InstantiationException, InvocationTargetException, UnregistaredMethodException {
-		
-		AbstractStrainOptimizationAlgorithm method = null;
-		
+	public T getMethod(String methodId, IGenericConfiguration genericConfiguration) throws InstantiationException, InvocationTargetException, UnregistaredMethodException {
+
+		T method = null;
+
 		Class<?> klass = getClassProblem(methodId);
-		
+
 		try {
-			method = (AbstractStrainOptimizationAlgorithm) klass.getDeclaredConstructor().newInstance();
+			method = (T) klass.getDeclaredConstructor().newInstance();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		} catch (SecurityException e) {
@@ -100,11 +100,10 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-		
-		method.putAllProperties(genericConfiguration);
+
 		return method;
 	}
-	
+
 	/**
 	 *
 	 * @param methodId The name of the method/Problem
@@ -114,7 +113,7 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 	 * @throws NoConstructorMethodException
 	 */
 	public void addStrainOptimizationMethod(String methodId, Class<?> method) throws RegistMethodException, NoConstructorMethodException {
-		
+
 		if (mapMethods.containsKey(methodId)) throw new RegistMethodException("The optimization method " + methodId + " is already registed");
 		if (method == null) throw new RegistMethodException("The optimization method is already a null class");
 		try {
@@ -122,17 +121,18 @@ public class AbstractOptimizationMethodsFactory implements Serializable {
 		} catch (Exception e) {
 			throw new NoConstructorMethodException(method);
 		}
-		
+
 		mapMethods.put(methodId, method);
-		
+
 	}
-	
+
 	/**
 	 * Removes the method/problem with id from the favtory
-	 * 
+	 *
 	 * @param id
 	 */
 	public void unregisterMethod(String id) {
 		mapMethods.remove(id);
 	}
 }
+

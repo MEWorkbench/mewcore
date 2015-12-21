@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.algorithm.AbstractStrainOptimizationAlgorithm;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
@@ -74,7 +75,7 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		if (strategy == null) throw new Exception("Strategy Not Defined");
 		if (!validateStrategy(strategy)) throw new Exception("Invalid Strategy: " + strategy);
 		String methodType = optimizationAlgorithm + strategy;
-		return factory.getMethod(methodType, genericConfiguration).execute();
+		return ((AbstractStrainOptimizationAlgorithm) factory.getMethod(methodType, genericConfiguration)).execute();
 	}
 	
 	protected boolean validateStrategy(String strategy) {
