@@ -15,18 +15,18 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.listenermap.Lis
 
 public abstract class AbstractSimulationSteadyStateControlCenter implements PropertyChangeListener, Serializable {
 	
-	private static final long serialVersionUID = 1L;
-	
-	public static final boolean _debug = false;
-	
-	protected ISteadyStateModel model;
-	
-	protected String methodType = SimulationProperties.FBA;
-	
-	protected ISteadyStateSimulationMethod lastMethod;
-	
-	protected ListenerHashMap<String, Object> methodProperties;
-	
+	private static final long					serialVersionUID	= 1L;
+																	
+	public static final boolean					_debug				= false;
+																	
+	protected ISteadyStateModel					model;
+												
+	protected String							methodType			= SimulationProperties.FBA;
+																	
+	protected ISteadyStateSimulationMethod		lastMethod;
+												
+	protected ListenerHashMap<String, Object>	methodProperties;
+												
 	protected abstract AbstractSimulationMethodsFactory getFactory();
 	
 	public abstract void addUnderOverRef() throws Exception;
@@ -148,8 +148,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		return lastMethod;
 	}
 	
-	
-	public FluxValueMap getWTReference(){
+	public FluxValueMap getWTReference() {
 		FluxValueMap wtref = (FluxValueMap) getProperty(SimulationProperties.WT_REFERENCE);
 		return wtref;
 	}
@@ -216,8 +215,9 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	};
 	
 	public void saveModelToMPSFile(String file, Boolean includeTime) {
-		if (lastMethod != null)
-			lastMethod.saveModelToMPS(file, includeTime);
+		if (lastMethod != null && IConvexSteadyStateSimulationMethod.class.isAssignableFrom(lastMethod.getClass())) {
+			((IConvexSteadyStateSimulationMethod) lastMethod).saveModelToMPS(file, includeTime);
+		}
 	}
 	
 }

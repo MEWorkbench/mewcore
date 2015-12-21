@@ -12,9 +12,9 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.I
 
 /**
  * Base class To Create Algorithms
- * @param <T> extends JecoliGenericConfiguration
+ * @param <T> extends IGenericConfiguration
  */
-public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConfiguration> implements Serializable{
+public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConfiguration> implements IStrainOptimizationAlgorithm<T>, Serializable{
     
 	private static final long	serialVersionUID	= 1L;
 	/**
@@ -47,6 +47,7 @@ public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConf
      * @return a specific solution set
      * @throws Exception if the method configuration is not well specified
      */
+    
     protected abstract IStrainOptimizationResultSet execute(T configuration) throws Exception;
 
     /**
@@ -85,4 +86,8 @@ public abstract class AbstractStrainOptimizationAlgorithm<T extends IGenericConf
     public Object getProperty(String id){
         return algorithmConfiguration.getProperty(id);
     }
+
+	public T getAlgorithmConfiguration() {
+		return algorithmConfiguration;
+	}
 }

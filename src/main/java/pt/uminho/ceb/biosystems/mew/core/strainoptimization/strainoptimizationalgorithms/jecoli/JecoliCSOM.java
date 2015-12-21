@@ -10,6 +10,7 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.IAlgorithm
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.IAlgorithmResult;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.evaluationfunction.AbstractMultiobjectiveEvaluationFunction;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.evaluationfunction.IEvaluationFunction;
+import pt.uminho.ceb.biosystems.jecoli.algorithm.components.evaluationfunction.IEvaluationFunctionListener;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.container.ReproductionOperatorContainer;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IElementsRepresentation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.IRepresentation;
@@ -19,6 +20,7 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.componen
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.components.ArchiveManagerBestSolutions;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.components.InsertionStrategy;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.components.ProcessingStrategy;
+import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.plotting.IPlotter;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.trimming.ITrimmingFunction;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.trimming.ZitzlerTruncation;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
@@ -41,7 +43,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 /**
  * Created by ptiago on 03-03-2015.
  */
-public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T> {
+public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T> implements IJecoliStrainOptimizationAlgorithm<T> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -145,10 +147,19 @@ public abstract class JecoliCSOM<T extends JecoliGenericConfiguration, E extends
 	
 	public IStrainOptimizationResultSet execute(T configuration) throws Exception {
 		configuration.validate();
-		ISteadyStateDecoder decoder = optimizationStrategyConverter.createDecoder(configuration);
+		IEvaluationFunctionListener<?> listener = (IEvaluationFunctionListener<?>) algorithmConfiguration.getProperty(JecoliOptimizationProperties.EVALUATION_LISTENER);
+		IPlotter<?> plotter = (IPlotter<?>) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_PLOTTER);
+		ISteadyStateDecoder decoder = optimizationStrategyConverter.createDecoder(configuration);		
 		AbstractMultiobjectiveEvaluationFunction evaluationFunction = computeStrainOptimizationEvaluationFunction(configuration, decoder);
+		if(listener!=null){
+			evaluationFunction.addEvaluationFunctionListener(listener);
+			listener.setMaxValue(algorithmConfiguration.getTerminationCriteria().getNumericTerminationValue().intValue());
+		}
 		IAlgorithm<IRepresentation> algorithm = createAlgorithm(decoder, evaluationFunction);
-		ArchiveManager archiveManager = configureDefaultArchive(algorithm, evaluationFunction);
+		ArchiveManager archiveManager = (algorithmConfiguration.getArchiveManager() != null) ? algorithmConfiguration.getArchiveManager() : configureDefaultArchive(algorithm, evaluationFunction);
+		if(plotter!=null){
+			archiveManager.setPlotter(plotter);			
+		}
 		IAlgorithmResult result = algorithm.run();
 		
 		return processAlgorithmResult(archiveManager, configuration, evaluationFunction, result, decoder);

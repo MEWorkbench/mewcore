@@ -19,8 +19,8 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyState
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.IConvexSteadyStateSimulationMethod;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReactionBounds;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.ISteadyStateSimulationMethod;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.OverrideSteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
@@ -60,7 +60,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
  * @since metabolic3persistent
  * @param <T>
  */
-public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements ISteadyStateSimulationMethod, PropertyChangeListener {
+public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements IConvexSteadyStateSimulationMethod, PropertyChangeListener {
 	
 	/** debug flag */
 	protected static boolean						debug				= false;

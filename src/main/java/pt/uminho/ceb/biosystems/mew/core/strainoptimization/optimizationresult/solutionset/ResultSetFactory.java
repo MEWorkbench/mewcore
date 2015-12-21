@@ -7,8 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 
 public class ResultSetFactory {
 
@@ -52,10 +52,9 @@ protected static Map<String, Class<? extends IStrainOptimizationResultSet>> solu
 		return setSolutionSets;
 	}
 	
-	public <C extends JecoliGenericConfiguration> IStrainOptimizationResultSet getResultSetInstance(String id, C configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public <C extends IGenericConfiguration> IStrainOptimizationResultSet getResultSetInstance(String id, C configuration) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<? extends IStrainOptimizationResultSet> ofKlazz = solutionSets.get(id);
-		Class<?> confClass = configuration.getClass();
-		IStrainOptimizationResultSet instance = ofKlazz.getConstructor(confClass).newInstance(configuration);
+		IStrainOptimizationResultSet instance = ofKlazz.getConstructor(IGenericConfiguration.class).newInstance(configuration);
 		return instance;
 	}
 	

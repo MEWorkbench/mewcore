@@ -105,6 +105,41 @@ public class AbstractOptimizationMethodsFactory<T> implements Serializable {
 	}
 
 	/**
+	 * Returns an instance of a method without initializing a configuration 
+	 * 
+	 * @param methodId
+	 * @param genericConfiguration
+	 * @return
+	 * @throws InstantiationException
+	 * @throws InvocationTargetException
+	 * @throws UnregistaredMethodException
+	 */
+	public AbstractStrainOptimizationAlgorithm getMethod(String methodId) throws InstantiationException, InvocationTargetException, UnregistaredMethodException {
+		
+		AbstractStrainOptimizationAlgorithm method = null;
+		
+		Class<?> klass = getClassProblem(methodId);
+		
+		try {
+			method = (AbstractStrainOptimizationAlgorithm) klass.getDeclaredConstructor().newInstance();
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		
+		return method;
+	}
+	
+	/**
 	 *
 	 * @param methodId The name of the method/Problem
 	 * @param method The problem/method class
