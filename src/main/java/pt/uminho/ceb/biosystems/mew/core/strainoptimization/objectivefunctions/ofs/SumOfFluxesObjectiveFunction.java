@@ -111,7 +111,7 @@ public class SumOfFluxesObjectiveFunction extends AbstractObjectiveFunction {
 	
 	public String toString() {
 		String objSense = (Boolean) (getParameterValue(SUM_F_PARAM_MAXIMIZATION)) ? "Maximize " : "Minimize ";
-		return objSense + "Metabolic Activity";
+		return objSense + "Metabolic Activity of "+ (Set<String>) (getParameterValue(SUM_F_PARAM_FLUXES_TO_SUM)) ;
 	}
 	
 	@Override
@@ -172,5 +172,9 @@ public class SumOfFluxesObjectiveFunction extends AbstractObjectiveFunction {
 	@Override
 	public String getID() {
 		return ID;
+	}
+	
+	public Set<String> getFluxes(){
+		return (Set<String>) getParameterValue(SUM_F_PARAM_FLUXES_TO_SUM);
 	}
 }
