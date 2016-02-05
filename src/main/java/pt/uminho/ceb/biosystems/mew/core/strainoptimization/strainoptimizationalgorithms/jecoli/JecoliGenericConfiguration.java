@@ -11,6 +11,7 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.componen
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGeneSteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISwapsSteadyStateConfiguration;
@@ -39,93 +40,36 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 	}
 	
 	private void loadMandatoryOptionalProperties() {
-		mandatoryPropertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, String.class);
-		mandatoryPropertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, String.class);
+		mandatoryPropertyMap.put(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, String.class);
+		mandatoryPropertyMap.put(GenericOptimizationProperties.OPTIMIZATION_STRATEGY, String.class);
 		
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, Boolean.class);
-		mandatoryPropertyMap.put(JecoliOptimizationProperties.STEADY_STATE_MODEL, ISteadyStateModel.class);
+		mandatoryPropertyMap.put(GenericOptimizationProperties.STEADY_STATE_MODEL, ISteadyStateModel.class);
 		
-		mandatoryPropertyMap.put(JecoliOptimizationProperties.SIMULATION_CONFIGURATION, Map.class);
-//		mandatoryPropertyMap.put(JecoliOptimizationProperties.SOLVER, SolverType.class);
-//		mandatoryPropertyMap.put(JecoliOptimizationProperties.SIMULATION_METHOD_LIST, List.class);
-//		mandatoryPropertyMap.put(JecoliOptimizationProperties.IS_MAXIMIZATION, Boolean.class);
-		mandatoryPropertyMap.put(JecoliOptimizationProperties.MAP_OF2_SIM, IndexedHashMap.class);
+		mandatoryPropertyMap.put(GenericOptimizationProperties.SIMULATION_CONFIGURATION, Map.class);
+		mandatoryPropertyMap.put(GenericOptimizationProperties.MAP_OF2_SIM, IndexedHashMap.class);
 		mandatoryPropertyMap.put(JecoliOptimizationProperties.TERMINATION_CRITERIA, ITerminationCriteria.class);
 		
 		// Recent change - It was mandatory
-		optionalPropertyMap.put(JecoliOptimizationProperties.NOT_ALLOWED_IDS, List.class);
-//		optionalPropertyMap.put(JecoliOptimizationProperties.ENVIRONMENTAL_CONDITIONS, EnvironmentalConditions.class);
-//		optionalPropertyMap.put(JecoliOptimizationProperties.REFERENCE_FLUX_DISTRIBUITION, FluxValueMap.class);
-//		optionalPropertyMap.put(JecoliOptimizationProperties.OU_2_STEP_APPROACH, Boolean.class);
+		optionalPropertyMap.put(GenericOptimizationProperties.NOT_ALLOWED_IDS, List.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.STATISTICS_CONFIGURATION, StatisticsConfiguration.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.REACTION_SWAP_MAP, Map.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.OU_RANGE, Pair.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.MAX_ALLOWED_SWAPS, Integer.class);
-		optionalPropertyMap.put(JecoliOptimizationProperties.MAX_SET_SIZE, Integer.class);
+		optionalPropertyMap.put(GenericOptimizationProperties.MAX_SET_SIZE, Integer.class);
 	}
-	
-//	public EnvironmentalConditions getEnvironmentalConditions() {
-//		return (EnvironmentalConditions) propertyMap.get(JecoliOptimizationProperties.ENVIRONMENTAL_CONDITIONS);
-//	}
-//	
-//	public SolverType getSolver() {
-//		return (SolverType) propertyMap.get(JecoliOptimizationProperties.SOLVER);
-//	}
-	
-//	@SuppressWarnings("unchecked")
-//	public List<String> getSimulationMethodList() {
-//		Collection<String> collection = (Collection<String>) propertyMap.get(JecoliOptimizationProperties.SIMULATION_METHOD_LIST);
-//		return new ArrayList<String>(collection);
-//	}
-	
-//	public FluxValueMap getReferenceFluxDistribution() {
-//		return (FluxValueMap) propertyMap.get(JecoliOptimizationProperties.REFERENCE_FLUX_DISTRIBUITION);
-//	}
-//	
-//	public Boolean getIsMaximization() {
-//		return (Boolean) propertyMap.get(JecoliOptimizationProperties.IS_MAXIMIZATION);
-//	}
-//	
-//	public Boolean getOu2StepApproach() {
-//		return (Boolean) propertyMap.get(JecoliOptimizationProperties.OU_2_STEP_APPROACH);
-//	}
 	
 	public int getNumberOfObjectives() {
 		return getObjectiveFunctionsMap().size();
 	}
 	
 	public int getMaxSetSize() {
-		return getDefaultValue(JecoliOptimizationProperties.MAX_SET_SIZE, 1);
+		return getDefaultValue(GenericOptimizationProperties.MAX_SET_SIZE, 1);
 	}
 	
 	public void setIsVariableSizeGenome(boolean isVariableSizeGenome) {
 		propertyMap.put(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, isVariableSizeGenome);
 	}
-	
-//	public void setEnvironmentalConditions(EnvironmentalConditions environmentalConditions) {
-//		propertyMap.put(JecoliOptimizationProperties.ENVIRONMENTAL_CONDITIONS, environmentalConditions);
-//	}
-//	
-//	public void setSolver(SolverType solver) {
-//		propertyMap.put(JecoliOptimizationProperties.SOLVER, solver);
-//	}
-//	
-//	public void setSimulationMethod(List<String> simulationMethodList) {
-//		propertyMap.put(JecoliOptimizationProperties.SIMULATION_METHOD_LIST, simulationMethodList);
-//	}
-//	
-//	public void setIsMaximization(boolean isMaximization) {
-//		propertyMap.put(JecoliOptimizationProperties.IS_MAXIMIZATION, isMaximization);
-//	}
-//	
-//	public void setOu2StepApproach(boolean ou2StepApproach) {
-//		propertyMap.put(JecoliOptimizationProperties.OU_2_STEP_APPROACH, ou2StepApproach);
-//	}
-	
-//	public void setModel(ISteadyStateModel model) {
-//		propertyMap.put(JecoliOptimizationProperties.STEADY_STATE_MODEL, model);
-//	}
-	
 	
 	
 	public void setDecoder(ISteadyStateDecoder decoder) {
@@ -133,15 +77,15 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 	}
 	
 	public void setNotAllowedIds(List<String> notAllowedIds) {
-		propertyMap.put(JecoliOptimizationProperties.NOT_ALLOWED_IDS, notAllowedIds);
+		propertyMap.put(GenericOptimizationProperties.NOT_ALLOWED_IDS, notAllowedIds);
 	}
 	
 	public List<String> getNonAllowedIds() {
-		return (List<String>) propertyMap.get(JecoliOptimizationProperties.NOT_ALLOWED_IDS);
+		return (List<String>) propertyMap.get(GenericOptimizationProperties.NOT_ALLOWED_IDS);
 	}
 	
 	public void setMaxSetSize(int maxSetSize) {
-		propertyMap.put(JecoliOptimizationProperties.MAX_SET_SIZE, maxSetSize);
+		propertyMap.put(GenericOptimizationProperties.MAX_SET_SIZE, maxSetSize);
 	}
 	
 	public StatisticsConfiguration getStatisticsConfiguration() {
@@ -185,46 +129,46 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 	// From ISteadyStateConfiguration
 	
 	public String getOptimizationStrategy() {
-		return (String) propertyMap.get(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY);
+		return (String) propertyMap.get(GenericOptimizationProperties.OPTIMIZATION_STRATEGY);
 	}
 	
 	public boolean getIsGeneOptimization() {
-		return getDefaultValue(JecoliOptimizationProperties.IS_GENE_OPTIMIZATION, false);
+		return getDefaultValue(GenericOptimizationProperties.IS_GENE_OPTIMIZATION, false);
 	}
 	
 	public boolean getIsOverUnderExpression() {
-		return getDefaultValue(JecoliOptimizationProperties.IS_OVER_UNDER_EXPRESSION, false);
+		return getDefaultValue(GenericOptimizationProperties.IS_OVER_UNDER_EXPRESSION, false);
 	}
 	
 	public void setOptimizationStrategy(String optimizationStrategy) {
 		String strategy = optimizationStrategy.toUpperCase();
-		propertyMap.put(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, strategy);
+		propertyMap.put(GenericOptimizationProperties.OPTIMIZATION_STRATEGY, strategy);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public IndexedHashMap<IObjectiveFunction, String> getObjectiveFunctionsMap() {
-		return (IndexedHashMap<IObjectiveFunction, String>) propertyMap.get(JecoliOptimizationProperties.MAP_OF2_SIM);
+		return (IndexedHashMap<IObjectiveFunction, String>) propertyMap.get(GenericOptimizationProperties.MAP_OF2_SIM);
 	}
 	
 	public void setObjectiveFunctionsMap(IndexedHashMap<IObjectiveFunction, String> objectiveFunctionMap) {
-		propertyMap.put(JecoliOptimizationProperties.MAP_OF2_SIM, objectiveFunctionMap);
+		propertyMap.put(GenericOptimizationProperties.MAP_OF2_SIM, objectiveFunctionMap);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<String,Map<String,Object>> getSimulationConfiguration(){
-		return (Map<String, Map<String, Object>>) propertyMap.get(JecoliOptimizationProperties.SIMULATION_CONFIGURATION);
+		return (Map<String, Map<String, Object>>) propertyMap.get(GenericOptimizationProperties.SIMULATION_CONFIGURATION);
 	}
 
 	public void setSimulationConfiguration(Map<String, Map<String, Object>> simulationConfiguration) {
-		propertyMap.put(JecoliOptimizationProperties.SIMULATION_CONFIGURATION, simulationConfiguration);
+		propertyMap.put(GenericOptimizationProperties.SIMULATION_CONFIGURATION, simulationConfiguration);
 	}
 	
 	public ISteadyStateModel getSteadyStateModel() {
-		return (ISteadyStateModel) propertyMap.get(JecoliOptimizationProperties.STEADY_STATE_MODEL);
+		return (ISteadyStateModel) propertyMap.get(GenericOptimizationProperties.STEADY_STATE_MODEL);
 	}
 	
 	public void setModel(ISteadyStateModel model) {
-		propertyMap.put(JecoliOptimizationProperties.STEADY_STATE_MODEL, model);
+		propertyMap.put(GenericOptimizationProperties.STEADY_STATE_MODEL, model);
 	}
 	
 	
@@ -232,7 +176,7 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 	// From IGeneSteadyStateConfiguration
 	
 	public ISteadyStateGeneReactionModel getGeneReactionSteadyStateModel() throws Exception {
-		Object o = propertyMap.get(JecoliOptimizationProperties.STEADY_STATE_MODEL);
+		Object o = propertyMap.get(GenericOptimizationProperties.STEADY_STATE_MODEL);
 		if(ISteadyStateGeneReactionModel.class.isAssignableFrom(o.getClass())){
 			return (ISteadyStateGeneReactionModel) o;
 		}else{

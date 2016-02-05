@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea;
 
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 
@@ -17,7 +18,7 @@ public class JecoliEACSOMConfig extends JecoliGenericConfiguration{
 
 	public JecoliEACSOMConfig() {
         super();
-        this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"EA");
+        this.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM,"EA");
     }
 
     public int getPopulationSize() {

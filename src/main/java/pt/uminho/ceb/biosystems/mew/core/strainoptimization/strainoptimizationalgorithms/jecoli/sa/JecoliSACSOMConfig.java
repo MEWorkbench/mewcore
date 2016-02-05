@@ -2,6 +2,7 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationa
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.simulatedannealing.AnnealingSchedule;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.simulatedannealing.IAnnealingSchedule;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
@@ -17,7 +18,7 @@ public class JecoliSACSOMConfig extends JecoliGenericConfiguration implements IG
 
 	public JecoliSACSOMConfig() {
 		super();
-		this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, "SA");
+		this.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, "SA");
 	}
 	
 	public IAnnealingSchedule getAnnealingSchedule() {

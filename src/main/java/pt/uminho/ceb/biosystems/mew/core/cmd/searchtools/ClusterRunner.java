@@ -13,6 +13,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter.StrainOptimizationControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
@@ -172,16 +173,16 @@ public class ClusterRunner {
 		}
 		
 		GenericConfiguration genericConfiguration = new GenericConfiguration();
-		genericConfiguration.setProperty(JecoliOptimizationProperties.STEADY_STATE_MODEL, model);
-		genericConfiguration.setProperty(JecoliOptimizationProperties.STEADY_STATE_GENE_REACTION_MODEL, model);
-		genericConfiguration.setProperty(JecoliOptimizationProperties.MAX_SET_SIZE, _configuration.getMaxSize());
+		genericConfiguration.setProperty(GenericOptimizationProperties.STEADY_STATE_MODEL, model);
+		genericConfiguration.setProperty(GenericOptimizationProperties.STEADY_STATE_GENE_REACTION_MODEL, model);
+		genericConfiguration.setProperty(GenericOptimizationProperties.MAX_SET_SIZE, _configuration.getMaxSize());
 		genericConfiguration.setProperty(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, _configuration.isVariableSize());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.NOT_ALLOWED_IDS, _configuration.getOptimizationCriticalIDs());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY, _configuration.getOptimizationStrategy());		
-		genericConfiguration.setProperty(JecoliOptimizationProperties.MAP_OF2_SIM, _configuration.getObjectiveFunctions());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.SIMULATION_CONFIGURATION, simulationConfiguration);
+		genericConfiguration.setProperty(GenericOptimizationProperties.NOT_ALLOWED_IDS, _configuration.getOptimizationCriticalIDs());
+		genericConfiguration.setProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY, _configuration.getOptimizationStrategy());		
+		genericConfiguration.setProperty(GenericOptimizationProperties.MAP_OF2_SIM, _configuration.getObjectiveFunctions());
+		genericConfiguration.setProperty(GenericOptimizationProperties.SIMULATION_CONFIGURATION, simulationConfiguration);
 		genericConfiguration.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA, _configuration.getTerminationCriteria());
-		genericConfiguration.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, _configuration.getAlgorithm().toString());
+		genericConfiguration.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, _configuration.getAlgorithm().toString());
 		
 		// redirect java output
 		if (_configuration.isRedirectOutput()) {
