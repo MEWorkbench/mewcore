@@ -982,18 +982,18 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 	}
 	
 //	@Test
-	public static void main(String... args) throws Exception {
-		String test = "@FUNC[getContainer]";
-		
-		Matcher m = INTERNAL_METHOD_PATTERN.matcher(test);
-		
-		if (m.matches()) {
-			String group1 = m.group(1);			
-			System.out.println("match = "+group1);
-		} else {
-			System.out.println("no match");
-		}
-		
-	}
+//	public static void main(String... args) throws Exception {
+//		String test = "@FUNC[getContainer]";
+//		
+//		Matcher m = INTERNAL_METHOD_PATTERN.matcher(test);
+//		
+//		if (m.matches()) {
+//			String group1 = m.group(1);			
+//			System.out.println("match = "+group1);
+//		} else {
+//			System.out.println("no match");
+//		}
+//		
+//	}
 	
 }
