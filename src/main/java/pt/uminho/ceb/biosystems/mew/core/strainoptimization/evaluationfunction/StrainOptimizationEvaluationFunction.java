@@ -36,7 +36,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
  * @since Jan 10, 2014
  * @author pmaia updated in Oct 15, 2015
  */
-public class StrainOptimizationEvaluationFunction extends AbstractMultiobjectiveEvaluationFunction<IRepresentation> {
+public class StrainOptimizationEvaluationFunction extends AbstractMultiobjectiveEvaluationFunction<IRepresentation> implements IOptimizationEvaluationFunction {
 	
 	private static final long	serialVersionUID	= 1L;
 	protected final boolean		_debug				= false;
