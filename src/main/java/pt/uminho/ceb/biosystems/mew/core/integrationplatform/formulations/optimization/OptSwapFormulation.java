@@ -10,7 +10,7 @@ import java.util.Set;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.ConstrainedReaction;
-import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.OptimizationProperties;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.CobraStrainOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.converter.ConnectionFormulation;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
@@ -32,10 +32,10 @@ public class OptSwapFormulation extends ConnectionFormulation {
 		Map<String, Object> prop = new HashMap<String, Object>();
 		prop.put(SimulationProperties.ENVIRONMENTAL_CONDITIONS, properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
 		
-		prop.put(OptimizationProperties.TIME_LIMIT, properties.get(OptimizationProperties.TIME_LIMIT));
-		prop.put(OptimizationProperties.PRODUCT_FLUX, properties.get(OptimizationProperties.PRODUCT_FLUX));
-		prop.put(OptimizationProperties.SELECTED_RXNS, properties.get(OptimizationProperties.SELECTED_RXNS));
-		prop.put(OptimizationProperties.MAX_KOS, properties.get(OptimizationProperties.MAX_KOS));
+		prop.put(CobraStrainOptimizationProperties.TIME_LIMIT, properties.get(CobraStrainOptimizationProperties.TIME_LIMIT));
+		prop.put(CobraStrainOptimizationProperties.PRODUCT_FLUX, properties.get(CobraStrainOptimizationProperties.PRODUCT_FLUX));
+		prop.put(CobraStrainOptimizationProperties.SELECTED_RXNS, properties.get(CobraStrainOptimizationProperties.SELECTED_RXNS));
+		prop.put(CobraStrainOptimizationProperties.MAX_MODIFICATIONS, properties.get(CobraStrainOptimizationProperties.MAX_MODIFICATIONS));
 		prop.put("MAX_SWAP", properties.get("MAX_SWAP"));
 		prop.put("NUM_INTERVENTIONS", properties.get("NUM_INTERVENTIONS"));
 		prop.put("CRITICAL_RXNS", properties.get("CRITICAL_RXNS"));
@@ -64,16 +64,16 @@ public class OptSwapFormulation extends ConnectionFormulation {
 			
 			Set<String> allReactions = new LinkedHashSet<>(model.getReactions().keySet());
 			
-			if (properties.containsKey(OptimizationProperties.SELECTED_RXNS)) {
-				Set<String> selectedRxns = (Set<String>) properties.get(OptimizationProperties.SELECTED_RXNS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.SELECTED_RXNS)) {
+				Set<String> selectedRxns = (Set<String>) properties.get(CobraStrainOptimizationProperties.SELECTED_RXNS);
 				converter.sendStringList("selectedRxnList", selectedRxns.toArray(new String[selectedRxns.size()]));
 				converter.runCommand("opt.knockableRxns = selectedRxnList.';");
 				allReactions.removeAll(selectedRxns);
 			}
 			
 			int maxKOs = -1;
-			if (properties.containsKey(OptimizationProperties.MAX_KOS))
-				maxKOs = (int) properties.get(OptimizationProperties.MAX_KOS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.MAX_MODIFICATIONS))
+				maxKOs = (int) properties.get(CobraStrainOptimizationProperties.MAX_MODIFICATIONS);
 			converter.sendInteger("opt.knockoutNum", maxKOs);
 			
 			int maxSwaps = -1;
@@ -90,8 +90,8 @@ public class OptSwapFormulation extends ConnectionFormulation {
 			
 //			Define objective product reaction
 			String productFlux = model.getBiomassFlux();
-			if (properties.containsKey(OptimizationProperties.PRODUCT_FLUX))
-				productFlux = (String) properties.get(OptimizationProperties.PRODUCT_FLUX);
+			if (properties.containsKey(CobraStrainOptimizationProperties.PRODUCT_FLUX))
+				productFlux = (String) properties.get(CobraStrainOptimizationProperties.PRODUCT_FLUX);
 			converter.sendString("opt.targetRxn", productFlux);
 			allReactions.remove(productFlux);
 			
@@ -145,8 +145,8 @@ public class OptSwapFormulation extends ConnectionFormulation {
 			
 			// Define TimeLimit
 			int timeLimit = 3600;
-			if (properties.containsKey(OptimizationProperties.TIME_LIMIT))
-				timeLimit = (int) properties.get(OptimizationProperties.TIME_LIMIT);
+			if (properties.containsKey(CobraStrainOptimizationProperties.TIME_LIMIT))
+				timeLimit = (int) properties.get(CobraStrainOptimizationProperties.TIME_LIMIT);
 			converter.sendInteger("opt.solverParams.maxTime", timeLimit);
 			
 			int useCobraSolver = 1;

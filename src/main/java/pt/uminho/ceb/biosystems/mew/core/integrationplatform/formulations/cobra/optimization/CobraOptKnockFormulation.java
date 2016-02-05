@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.integrationplatform.formulations.cobra.optimization;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,11 +10,12 @@ import java.util.Set;
 
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.CobraStrainOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.ConstrainedReaction;
-import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.OptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.converter.ConnectionFormulation;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.exceptions.CobraMatlabFormulationException;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.formulations.cobra.CobraMethods;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
@@ -48,12 +48,12 @@ public class CobraOptKnockFormulation extends ConnectionFormulation {
 		Map<String, Object> prop = new HashMap<String, Object>();
 		prop.put(SimulationProperties.ENVIRONMENTAL_CONDITIONS, properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
 		
-		prop.put(OptimizationProperties.SELECTED_RXNS, properties.get(OptimizationProperties.SELECTED_RXNS));
-		prop.put(OptimizationProperties.PRODUCT_FLUX, properties.get(OptimizationProperties.PRODUCT_FLUX));
-		prop.put(OptimizationProperties.CONSTRAINED_REACTIONS, properties.get(OptimizationProperties.CONSTRAINED_REACTIONS));
-		prop.put(OptimizationProperties.MAX_KOS, properties.get(OptimizationProperties.MAX_KOS));
-		prop.put(OptimizationProperties.MIN_GROWTH, properties.get(OptimizationProperties.MIN_GROWTH));
-		prop.put(OptimizationProperties.TIME_LIMIT, properties.get(OptimizationProperties.TIME_LIMIT));
+		prop.put(CobraStrainOptimizationProperties.SELECTED_RXNS, properties.get(CobraStrainOptimizationProperties.SELECTED_RXNS));
+		prop.put(CobraStrainOptimizationProperties.PRODUCT_FLUX, properties.get(CobraStrainOptimizationProperties.PRODUCT_FLUX));
+		prop.put(CobraStrainOptimizationProperties.CONSTRAINED_REACTIONS, properties.get(CobraStrainOptimizationProperties.CONSTRAINED_REACTIONS));
+		prop.put(CobraStrainOptimizationProperties.MAX_MODIFICATIONS, properties.get(CobraStrainOptimizationProperties.MAX_MODIFICATIONS));
+		prop.put(CobraStrainOptimizationProperties.MIN_GROWTH, properties.get(CobraStrainOptimizationProperties.MIN_GROWTH));
+		prop.put(CobraStrainOptimizationProperties.TIME_LIMIT, properties.get(CobraStrainOptimizationProperties.TIME_LIMIT));
 		
 		return prop;
 	}
@@ -76,28 +76,28 @@ public class CobraOptKnockFormulation extends ConnectionFormulation {
 			
 			Set<String> allReactions = new LinkedHashSet<>(model.getReactions().keySet());
 			
-			if (properties.containsKey(OptimizationProperties.SELECTED_RXNS)) {
-				Set<String> selectedRxns = (Set<String>) properties.get(OptimizationProperties.SELECTED_RXNS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.SELECTED_RXNS)) {
+				Set<String> selectedRxns = (Set<String>) properties.get(CobraStrainOptimizationProperties.SELECTED_RXNS);
 				converter.sendStringList("selectedRxnList", selectedRxns.toArray(new String[selectedRxns.size()]));
 				converter.runCommand("selectedRxnList = selectedRxnList.';");
 				allReactions.removeAll(selectedRxns);
 			}
 			
 			int maxKOs = 3;
-			if (properties.containsKey(OptimizationProperties.MAX_KOS))
-				maxKOs = (int) properties.get(OptimizationProperties.MAX_KOS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.MAX_MODIFICATIONS))
+				maxKOs = (int) properties.get(CobraStrainOptimizationProperties.MAX_MODIFICATIONS);
 			converter.sendInteger("options.numDel", maxKOs);
 			
 //			Define objective product reaction
 			String productFlux = model.getBiomassFlux();
-			if (properties.containsKey(OptimizationProperties.PRODUCT_FLUX))
-				productFlux = (String) properties.get(OptimizationProperties.PRODUCT_FLUX);
+			if (properties.containsKey(CobraStrainOptimizationProperties.PRODUCT_FLUX))
+				productFlux = (String) properties.get(CobraStrainOptimizationProperties.PRODUCT_FLUX);
 			converter.sendString("options.targetRxn", productFlux);
 			allReactions.remove(productFlux);
 			
 //			Define possible constraints
-			if (properties.containsKey(OptimizationProperties.CONSTRAINED_REACTIONS)) {
-				Set<ConstrainedReaction> constrainedReactionsList = new LinkedHashSet<ConstrainedReaction>((Set) properties.get(OptimizationProperties.CONSTRAINED_REACTIONS));
+			if (properties.containsKey(CobraStrainOptimizationProperties.CONSTRAINED_REACTIONS)) {
+				Set<ConstrainedReaction> constrainedReactionsList = new LinkedHashSet<ConstrainedReaction>((Set) properties.get(CobraStrainOptimizationProperties.CONSTRAINED_REACTIONS));
 				List<String> rxnList = new ArrayList<String>();
 				List<Double> valuesList = new ArrayList<Double>();
 //				String[] rxnList = new String[constrainedReactionsList.size()+1];
@@ -118,7 +118,7 @@ public class CobraOptKnockFormulation extends ConnectionFormulation {
 				}
 				if (!hasBiomassConstraint) {
 					rxnList.add(model.getBiomassFlux());
-					valuesList.add((double) properties.get(OptimizationProperties.MIN_GROWTH));
+					valuesList.add((double) properties.get(CobraStrainOptimizationProperties.MIN_GROWTH));
 					senseList += "G";
 				}
 				allReactions.remove(model.getBiomassFlux());
@@ -131,7 +131,7 @@ public class CobraOptKnockFormulation extends ConnectionFormulation {
 				List<String> rxnList = new ArrayList<String>();
 				rxnList.add(model.getBiomassFlux());
 				List<Double> valuesList = new ArrayList<Double>();
-				valuesList.add((double) properties.get(OptimizationProperties.MIN_GROWTH));
+				valuesList.add((double) properties.get(CobraStrainOptimizationProperties.MIN_GROWTH));
 				String senseList = "G";
 				
 				converter.sendStringList("constrOpt.rxnList", rxnList.toArray(new String[rxnList.size()]));
@@ -141,8 +141,8 @@ public class CobraOptKnockFormulation extends ConnectionFormulation {
 			
 			// Define TimeLimit
 			int timeLimit = 3600;
-			if (properties.containsKey(OptimizationProperties.TIME_LIMIT)) {
-				timeLimit = (int) properties.get(OptimizationProperties.TIME_LIMIT);
+			if (properties.containsKey(CobraStrainOptimizationProperties.TIME_LIMIT)) {
+				timeLimit = (int) properties.get(CobraStrainOptimizationProperties.TIME_LIMIT);
 			}
 			converter.sendInteger("optKnockTimeLimit", timeLimit);
 			converter.runFunction("changeCobraSolverParams",
@@ -202,9 +202,8 @@ public class CobraOptKnockFormulation extends ConnectionFormulation {
 			
 			result.setEnvironmentalConditions((EnvironmentalConditions) properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
 			result.setGeneticConditions(new GeneticConditions(new ReactionChangesList(Arrays.asList(koRxnsList))));
-//			
-			result.setMethod("Cobra OptKnock");
-//			
+			
+			result.setMethod(CobraMethods.COBRAFBA);
 			
 			return result;
 			

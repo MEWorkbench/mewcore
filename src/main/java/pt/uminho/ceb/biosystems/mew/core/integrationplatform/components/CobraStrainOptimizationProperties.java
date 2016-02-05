@@ -1,12 +1,12 @@
 package pt.uminho.ceb.biosystems.mew.core.integrationplatform.components;
 
-public class OptimizationProperties {
+public class CobraStrainOptimizationProperties {
 
 	public final static String KO_LIST ="knockoutList";
 	public final static String ENVIRONMENTAL_CONDITIONS = "environmentalConditions";
 	
 	public final static String PRODUCT_FLUX = "productFlux";
-	public static final String MAX_KOS = "maxKOs";
+	public static final String MAX_MODIFICATIONS = "maxModifications";
 	public final static String TIME_LIMIT = "timeLimit";
 	public static final String SELECTED_RXNS = "selectedRxns";
 	
