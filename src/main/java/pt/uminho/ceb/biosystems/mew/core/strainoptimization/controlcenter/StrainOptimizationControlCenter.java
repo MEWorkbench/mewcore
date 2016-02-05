@@ -2,9 +2,9 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.algorithm.AbstractStrainOptimizationAlgorithm;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGOUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKCSOM;
@@ -65,49 +65,19 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		CplexParamConfiguration.setBooleanParam("PreInd", true);
 		CplexParamConfiguration.setIntegerParam("HeurFreq", -1);
 		
-		String optimizationAlgorithm = (String) genericConfiguration.getProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM);
+		String optimizationAlgorithm = (String) genericConfiguration.getProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM);
+		String strategy = (String) genericConfiguration.getProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY);
 		
 		if (optimizationAlgorithm == null) throw new Exception("Optimization Method Not Defined");
-		if (!validateOptimizationAlgorithm(optimizationAlgorithm)) throw new Exception("Invalid Optimization Method: " + optimizationAlgorithm);
-		
-		String strategy = (String) genericConfiguration.getProperty(JecoliOptimizationProperties.OPTIMIZATION_STRATEGY);
-		
 		if (strategy == null) throw new Exception("Strategy Not Defined");
-		if (!validateStrategy(strategy)) throw new Exception("Invalid Strategy: " + strategy);
+		
+//		if (!validateOptimizationAlgorithm(optimizationAlgorithm)) throw new Exception("Invalid Optimization Method: " + optimizationAlgorithm);
+//		if (!validateStrategy(strategy)) throw new Exception("Invalid Strategy: " + strategy);
+		
+		if(!factory.validate(optimizationAlgorithm,strategy)) throw new Exception("There is no optimization algorithm ["+optimizationAlgorithm+"] registered for strategy ["+strategy+"]");
+		
 		String methodType = optimizationAlgorithm + strategy;
 		return ((AbstractStrainOptimizationAlgorithm) factory.getMethod(methodType, genericConfiguration)).execute();
-	}
-	
-	protected boolean validateStrategy(String strategy) {
-		switch (strategy) {
-			case "RK":
-				return true;
-			case "GK":
-				return true;
-			case "ROU":
-				return true;
-			case "GOU":
-				return true;
-			case "RKRS":
-				return true;
-			default:
-				return false;
-		}
-	}
-	
-	protected boolean validateOptimizationAlgorithm(String optimizationAlgorithm) {
-		switch (optimizationAlgorithm) {
-			case "EA":
-				return true;
-			case "SA":
-				return true;
-			case "SPEA2":
-				return true;
-			case "PBIL":
-				return true;
-			default:
-				return false;
-		}
 	}
 	
 }
