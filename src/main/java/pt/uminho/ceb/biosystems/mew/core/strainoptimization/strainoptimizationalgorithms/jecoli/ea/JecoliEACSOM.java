@@ -31,8 +31,6 @@ public abstract class JecoliEACSOM<E extends IJecoliOptimizationStrategyConverte
 
 	private static final long	serialVersionUID	= 1L;
 
-
-
 	public JecoliEACSOM(E converter){
         super(converter);
         algorithmConfiguration = new JecoliEACSOMConfig();

@@ -98,6 +98,10 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		return getDefaultValue(JecoliOptimizationProperties.MAX_SET_SIZE, 1);
 	}
 	
+	public int getMinSetSize() {
+		return getDefaultValue(JecoliOptimizationProperties.MIN_SET_SIZE, 1);
+	}
+	
 	public void setIsVariableSizeGenome(boolean isVariableSizeGenome) {
 		propertyMap.put(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, isVariableSizeGenome);
 	}

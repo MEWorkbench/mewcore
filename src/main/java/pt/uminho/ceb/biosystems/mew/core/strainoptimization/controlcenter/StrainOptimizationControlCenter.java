@@ -9,6 +9,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEARKRSCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAROUCSOM;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.randomsearch.strategy.JecoliRANDOMRKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAGKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSAGOUCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.sa.strategy.JecoliSARKCSOM;
@@ -50,6 +51,9 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		factory.registerMethod("SPEA2ROU", JecoliSPEA2ROUCSOM.class);
 		factory.registerMethod("SPEA2GOU", JecoliSPEA2GOUCSOM.class);
 		factory.registerMethod("SPEA2RKRS", JecoliSPEA2RKRSCSOM.class);
+		
+		//Random search Methods
+		factory.registerMethod("RANDOMRK", JecoliRANDOMRKCSOM.class);
 		
 		//PBIL Based Methods
 	}
@@ -103,6 +107,8 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 			case "SPEA2":
 				return true;
 			case "PBIL":
+				return true;
+			case "RANDOM":
 				return true;
 			default:
 				return false;

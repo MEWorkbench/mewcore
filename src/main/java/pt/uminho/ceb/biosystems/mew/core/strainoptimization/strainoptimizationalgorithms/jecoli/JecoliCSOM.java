@@ -39,17 +39,19 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.a
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.IJecoliOptimizationStrategyConverter;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
 
 /**
  * Created by ptiago on 03-03-2015.
  */
-public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T> implements IJecoliStrainOptimizationAlgorithm<T> {
-	
-	private static final long serialVersionUID = 1L;
-	
+public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJecoliOptimizationStrategyConverter> extends AbstractStrainOptimizationAlgorithm<T>
+		implements IJecoliStrainOptimizationAlgorithm<T> {
+		
+	private static final long									serialVersionUID	= 1L;
+																					
 	protected Map<String, SimulationSteadyStateControlCenter>	controlCenters;
 	protected E													optimizationStrategyConverter;
-	
+																
 	public JecoliCSOM(E optimizationStrategyConverter) {
 		this.optimizationStrategyConverter = optimizationStrategyConverter;
 	}
@@ -57,14 +59,24 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ArchiveManager configureDefaultArchive(IAlgorithm optimizationAlgorithm, IEvaluationFunction evaluationFunction) {
 		
+		InsertionStrategy insertionEventType = (InsertionStrategy) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_INSERT_EVENT_TYPE);
+		InsertionStrategy insertionFilter = (InsertionStrategy) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_INSERT_FILTER);
+		ProcessingStrategy processingStategyFilter = (ProcessingStrategy) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_PROCESSING_STRATEGY);
+		
+		insertionEventType = (insertionEventType == null) ? InsertionStrategy.ADD_ON_SINGLE_EVALUATION_FUNCTION_EVENT : insertionEventType;
+		insertionFilter = (insertionFilter == null) ? InsertionStrategy.ADD_SMART_KEEP_BEST : insertionFilter;
+		processingStategyFilter = (processingStategyFilter == null) ? ProcessingStrategy.PROCESS_ARCHIVE_ON_SINGLE_EVALUATION_FUNCTION_EVENT : processingStategyFilter;
+		
 		ArchiveManager archive = new ArchiveManagerBestSolutions(
 				optimizationAlgorithm,
-				InsertionStrategy.ADD_ON_SINGLE_EVALUATION_FUNCTION_EVENT,
-				InsertionStrategy.ADD_SMART,
-				ProcessingStrategy.PROCESS_ARCHIVE_ON_SINGLE_EVALUATION_FUNCTION_EVENT,
+				insertionEventType,
+				insertionFilter,
+				processingStategyFilter,
 				true);
 				
-		archive.setMaximumArchiveSize(100);
+		Integer maxArchiveSize = (Integer) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_MAX_SIZE);
+		
+		archive.setMaximumArchiveSize(maxArchiveSize != null ? maxArchiveSize : 100);
 		
 		ITrimmingFunction trimmer = (evaluationFunction.getNumberOfObjectives() > 1) ? new ZitzlerTruncation(archive.getMaximumArchiveSize(), evaluationFunction)
 				: new SelectionValueTrimmer(archive.getMaximumArchiveSize(), 0.000002);
@@ -95,35 +107,51 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 			
 			GeneticConditions gc = decoder.decode(solution.getRepresentation());
 			
-			for (String method : simConfiguration.keySet()) {
-				Map<String, Object> methodConf = simConfiguration.get(method);
-				String simMethod = (String) methodConf.get(SimulationProperties.METHOD_ID);
-				ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
-				EnvironmentalConditions envConditions = (EnvironmentalConditions) methodConf.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS);
-				SolverType solver = (SolverType) methodConf.get(SimulationProperties.SOLVER);
-				Boolean isMaximization = (Boolean) methodConf.get(SimulationProperties.IS_MAXIMIZATION);
-				Boolean overUnder2StepApproach = (Boolean) methodConf.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
-				FluxValueMap wtReference = (FluxValueMap) methodConf.get(SimulationProperties.WT_REFERENCE);
-				FluxValueMap ouReference = (FluxValueMap) methodConf.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
-				
-				if(controlCenters.get(methodConf)==null){
-					controlCenters.put(method, new SimulationSteadyStateControlCenter(methodConf));
-				}else{
-					controlCenters.get(method).setMaximization(isMaximization);
-					controlCenters.get(method).setWTReference(wtReference);
-					controlCenters.get(method).setOverUnder2StepApproach(overUnder2StepApproach);
-					controlCenters.get(method).setUnderOverRef(ouReference);
-					controlCenters.get(method).setEnvironmentalConditions(envConditions);
-					controlCenters.get(method).setGeneticConditions(gc);					
-				}
-				
-				SteadyStateSimulationResult res = controlCenters.get(method).simulate();
-				simulations.put(simMethod, res);
+			Boolean resimulateArchive = (Boolean) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_RESIMULATE_WHEN_FINISH);
+			
+			if(resimulateArchive==null || resimulateArchive.equals(Boolean.TRUE)){
+				for (String method : simConfiguration.keySet()) {
+					Map<String, Object> methodConf = simConfiguration.get(method);
+					String simMethod = (String) methodConf.get(SimulationProperties.METHOD_ID);
+					ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
+					EnvironmentalConditions envConditions = (EnvironmentalConditions) methodConf.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS);
+					SolverType solver = (SolverType) methodConf.get(SimulationProperties.SOLVER);
+					Boolean isMaximization = (Boolean) methodConf.get(SimulationProperties.IS_MAXIMIZATION);
+					Boolean overUnder2StepApproach = (Boolean) methodConf.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
+					FluxValueMap wtReference = (FluxValueMap) methodConf.get(SimulationProperties.WT_REFERENCE);
+					FluxValueMap ouReference = (FluxValueMap) methodConf.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
+					
+					if (controlCenters.get(methodConf) == null) {
+						controlCenters.put(method, new SimulationSteadyStateControlCenter(methodConf));
+					} else {
+						controlCenters.get(method).setMaximization(isMaximization);
+						controlCenters.get(method).setWTReference(wtReference);
+						controlCenters.get(method).setOverUnder2StepApproach(overUnder2StepApproach);
+						controlCenters.get(method).setUnderOverRef(ouReference);
+						controlCenters.get(method).setEnvironmentalConditions(envConditions);
+						controlCenters.get(method).setGeneticConditions(gc);
+					}
+					
+					SteadyStateSimulationResult res = controlCenters.get(method).simulate();
+					simulations.put(simMethod, res);
+				}				
 			}
 			
 			IStrainOptimizationResult strainOptimizationResult = createSolutionResult(configuration, simulations, gc, fitnesses);
 			strainOptimizationSolutionList.add(strainOptimizationResult);
 		}
+		
+		String basename = (String) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_BASE_NAME);
+		if (basename != null && finalSolutionSet.getNumberOfSolutions() > 0) {
+			System.out.println("Saving bests...");
+			((ArchiveManagerBestSolutions) archive).writeBestSolutionsToFile(
+					basename + ".best",
+					Delimiter.COMMA.toString(),
+					true,
+					decoder);
+			System.out.println("Saved bests to " + basename + ".best");
+		}
+		
 		return createSolutionSet(configuration, strainOptimizationSolutionList);
 	}
 	
@@ -145,20 +173,21 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 	
 	protected abstract ReproductionOperatorContainer createAlgorithmReproductionOperatorContainer() throws Exception;
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public IStrainOptimizationResultSet execute(T configuration) throws Exception {
 		configuration.validate();
 		IEvaluationFunctionListener<?> listener = (IEvaluationFunctionListener<?>) algorithmConfiguration.getProperty(JecoliOptimizationProperties.EVALUATION_LISTENER);
 		IPlotter<?> plotter = (IPlotter<?>) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_PLOTTER);
-		ISteadyStateDecoder decoder = optimizationStrategyConverter.createDecoder(configuration);		
+		ISteadyStateDecoder decoder = optimizationStrategyConverter.createDecoder(configuration);
 		AbstractMultiobjectiveEvaluationFunction evaluationFunction = computeStrainOptimizationEvaluationFunction(configuration, decoder);
-		if(listener!=null){
+		if (listener != null) {
 			evaluationFunction.addEvaluationFunctionListener(listener);
 			listener.setMaxValue(algorithmConfiguration.getTerminationCriteria().getNumericTerminationValue().intValue());
 		}
 		IAlgorithm<IRepresentation> algorithm = createAlgorithm(decoder, evaluationFunction);
 		ArchiveManager archiveManager = (algorithmConfiguration.getArchiveManager() != null) ? algorithmConfiguration.getArchiveManager() : configureDefaultArchive(algorithm, evaluationFunction);
-		if(plotter!=null){
-			archiveManager.setPlotter(plotter);			
+		if (plotter != null) {
+			archiveManager.setPlotter(plotter);
 		}
 		IAlgorithmResult result = algorithm.run();
 		

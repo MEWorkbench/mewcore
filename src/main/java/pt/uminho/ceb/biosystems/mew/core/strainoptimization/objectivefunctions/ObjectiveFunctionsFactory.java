@@ -2,6 +2,7 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -20,7 +21,9 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.o
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.ProductYieldObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.TurnoverObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBiomassYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ObjectiveFunctionsFactory {
@@ -33,6 +36,7 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.put(BPCYObjectiveFunction.ID, BPCYObjectiveFunction.class);
 		mapObjectiveFunctions.put(WeightedBPCYObjectiveFunction.ID, WeightedBPCYObjectiveFunction.class);
 		mapObjectiveFunctions.put(WeightedYIELDObjectiveFunction.ID, WeightedYIELDObjectiveFunction.class);
+		mapObjectiveFunctions.put(WeightedBiomassYIELDObjectiveFunction.ID, WeightedBiomassYIELDObjectiveFunction.class);
 		mapObjectiveFunctions.put(CYIELDObjectiveFunction.ID, CYIELDObjectiveFunction.class);
 		mapObjectiveFunctions.put(NumKnockoutsObjectiveFunction.ID, NumKnockoutsObjectiveFunction.class);
 		mapObjectiveFunctions.put(FluxValueObjectiveFunction.ID, FluxValueObjectiveFunction.class);
@@ -149,7 +153,11 @@ public class ObjectiveFunctionsFactory {
 	private Class<?>[] getArgumentsClasses(Object[] initArgs) {
 		Class<?>[] klazzes = new Class<?>[initArgs.length];
 		for (int i = 0; i < initArgs.length; i++) {
-			klazzes[i] = initArgs[i].getClass();
+			if(initArgs[i] instanceof Enum<?>){
+				klazzes[i] = ((Enum<?>)initArgs[i]).getDeclaringClass();
+			}else{
+				klazzes[i] = initArgs[i].getClass();				
+			}
 		}
 		return klazzes;
 	}
@@ -163,11 +171,22 @@ public class ObjectiveFunctionsFactory {
 		MapUtils.prettyPrint(of.getValues());
 	}
 	
-	@Test
+//	@Test
 	public void testParams() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		ObjectiveFunctionsFactory fact = new ObjectiveFunctionsFactory();
 		Map<String, ObjectiveFunctionParameterType> types = fact.getObjectiveFunctionParameterTypes("BPCY");
 		MapUtils.prettyPrint(types);
 	}
 	
+	@Test
+	public void testEnum(){
+		SolverType clp = SolverType.CLP;
+		
+		SolverType cplex3 = SolverType.CPLEX3;
+		
+		Object[] initArgs = new Object[]{clp, cplex3};
+		Class<?>[] argumentClasses = getArgumentsClasses(initArgs);
+		
+		System.out.println(Arrays.toString(argumentClasses));
+	}
 }

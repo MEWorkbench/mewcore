@@ -21,9 +21,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
  * Created by ptiago on 19-03-2015.
  */
 public class JecoliRKConverter<T extends JecoliGenericConfiguration> implements IJecoliOptimizationStrategyConverter<T, RKSolution> {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -46,7 +44,8 @@ public class JecoliRKConverter<T extends JecoliGenericConfiguration> implements 
 		ISteadyStateModel model = configuration.getSteadyStateModel();
 		List<String> notAllowedIDs = configuration.getNonAllowedIds();
 		ISteadyStateDecoder decoder = new RKDecoder(model);
-		if (notAllowedIDs != null) decoder.addNotAllowedIds(notAllowedIDs);
+		if (notAllowedIDs != null)
+			decoder.addNotAllowedIds(notAllowedIDs);
 		return decoder;
 	}
 	
@@ -54,6 +53,7 @@ public class JecoliRKConverter<T extends JecoliGenericConfiguration> implements 
 	public ISolutionFactory<?> createSolutionFactory(T configuration, ISteadyStateDecoder decoder, AbstractMultiobjectiveEvaluationFunction<?> evaluationFunction) {
 		int maxSetValue = decoder.getNumberVariables();
 		int maxSetSize = configuration.getMaxSetSize();
-		return new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, evaluationFunction.getNumberOfObjectives());
+		int minSetSize = configuration.getMinSetSize();
+		return new IntegerSetRepresentationFactory(maxSetValue, maxSetSize, minSetSize, evaluationFunction.getNumberOfObjectives());
 	}
 }

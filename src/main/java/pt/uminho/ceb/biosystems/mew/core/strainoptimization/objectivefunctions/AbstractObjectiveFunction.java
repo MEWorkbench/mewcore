@@ -62,6 +62,7 @@ public abstract class AbstractObjectiveFunction implements IObjectiveFunction, S
 	public Map<String, Object> copyConfiguration() {
 		Map<String, Object> newConf = new HashMap<>();
 		
+		newConf.put(OBJECTIVE_FUNCTION_ID, getID());
 		for (String id : mandatoryParameters().keySet()) {
 			newConf.put(id, values.get(id));
 		}
