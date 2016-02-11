@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.UnregistaredMethodException;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.algorithm.IAlgorithm;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 
-public abstract class AbstractMethodsFactory<T>  implements Serializable {
+public abstract class AbstractMethodsFactory<T extends IAlgorithm>  implements Serializable {
 
 	private static final long		serialVersionUID	= 1L;
 	/**
@@ -94,6 +95,7 @@ public abstract class AbstractMethodsFactory<T>  implements Serializable {
 			e.printStackTrace();
 		}
 
+		method.putAllProperties(genericConfiguration);
 		return method;
 	}
 	
