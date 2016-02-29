@@ -1,5 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.matlab.cobra;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -26,10 +28,15 @@ public class SingleTests {
 	
 	SteadyStateModel model;
 	
+	private String getFile(String fileName){
+		URL nyData = getClass().getClassLoader().getResource(fileName);
+		return nyData.getFile();
+	}
+	
 	@Before
 	public void init() throws Exception{
 		//JSBMLReader reader = new JSBMLReader("files/models/Ec_iJR904.xml", "1",false);
-		JSBMLReader reader = new JSBMLReader("files/models/ecoli_core_model.xml", "1",false);
+		JSBMLReader reader = new JSBMLReader(getFile("models/ecoli_core_model.xml"), "1",false);
 		
 		Container cont = new Container(reader);
 		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));

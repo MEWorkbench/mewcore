@@ -12,6 +12,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
@@ -19,7 +20,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.JecoliGKConverter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGKCSOM;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 /**
@@ -32,7 +32,7 @@ public class JecoliEAGeneKnockoutCSOMTest {
         JecoliEAGKCSOM algorithm = new JecoliEAGKCSOM();
 
         JecoliEACSOMConfig config = new JecoliEACSOMConfig();
-        config.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"SA");
+        config.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM,"SA");
 
         String modelFile = "/home/ptiago/Silico/IPCRES/Propanediol/iMM904_Methylglyoxal.xml";
         JSBMLReader modelReader = new JSBMLReader(modelFile,"PT",false);
@@ -50,14 +50,14 @@ public class JecoliEAGeneKnockoutCSOMTest {
         config.setOptimizationStrategy("GK");
         config.setOptimizationStrategyConverter(new JecoliGKConverter<>());
         config.setIsVariableSizeGenome(true);
-        config.setEnvironmentalConditions(env);
-        config.setSolver(SolverType.CPLEX3);
+//        config.setEnvironmentalConditions(env);
+//        config.setSolver(SolverType.CPLEX3);
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
-        config.setSimulationMethod(simulationMethodList);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setOu2StepApproach(true);
+//        config.setSimulationMethod(simulationMethodList);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setOu2StepApproach(true);
         config.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA,new NumFunctionEvaluationsListenerHybridTerminationCriteria(100));
         config.setMaxSetSize(10);
         algorithm.setAlgorithmConfiguration(config);

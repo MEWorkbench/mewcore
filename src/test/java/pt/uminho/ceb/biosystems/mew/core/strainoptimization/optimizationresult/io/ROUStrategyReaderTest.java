@@ -13,15 +13,14 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter.StrainOptimizationControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.ROUSolutionSet;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.JecoliGKConverter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEACSOMConfig;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
@@ -34,7 +33,7 @@ public class ROUStrategyReaderTest extends AbstractStrategyReader {
         List<Pair<Double,List<Pair<String,Double>>>>  originalSolutionList =createOriginalSolutionList();
         StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
         JecoliEACSOMConfig config = new JecoliEACSOMConfig();
-        config.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"SA");
+        config.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM,"SA");
         String resultFileLocation = "./TestData/ROU.data";
         String modelFile = "./TestModel/iMM904_Methylglyoxal.xml";
         JSBMLReader modelReader = new JSBMLReader(modelFile,"PT",false);
@@ -52,14 +51,14 @@ public class ROUStrategyReaderTest extends AbstractStrategyReader {
         config.setOptimizationStrategy("ROU");
         config.setOptimizationStrategyConverter(new JecoliGKConverter<>());
         config.setIsVariableSizeGenome(true);
-        config.setEnvironmentalConditions(env);
-        config.setSolver(SolverType.CPLEX3);
+//        config.setEnvironmentalConditions(env);
+//        config.setSolver(SolverType.CPLEX3);
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
-        config.setSimulationMethod(simulationMethodList);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setOu2StepApproach(true);
+//        config.setSimulationMethod(simulationMethodList);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setOu2StepApproach(true);
 
         IStrainOptimizationResultSet newResultSet = new ROUSolutionSet(config);
         newResultSet.readSolutionsFromFile(resultFileLocation);

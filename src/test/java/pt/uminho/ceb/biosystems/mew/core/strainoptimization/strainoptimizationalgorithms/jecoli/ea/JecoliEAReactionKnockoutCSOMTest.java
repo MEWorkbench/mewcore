@@ -12,11 +12,11 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter.StrainOptimizationControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 /**
@@ -27,7 +27,7 @@ public class JecoliEAReactionKnockoutCSOMTest {
     public void executeAlgorithm(String algorithm,String strategy) throws Exception {
         StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
         JecoliEACSOMConfig config = new JecoliEACSOMConfig();
-        config.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,algorithm);
+        config.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM,algorithm);
         config.setOptimizationStrategy(strategy);
         String modelFile = "/home/ptiago/Silico/IPCRES/Propanediol/iMM904_Methylglyoxal.xml";
         JSBMLReader modelReader = new JSBMLReader(modelFile,"PT",false);
@@ -45,14 +45,14 @@ public class JecoliEAReactionKnockoutCSOMTest {
 
         //config.setOptimizationStrategyConverter(new JecoliRKConverter<>());
         config.setIsVariableSizeGenome(true);
-        config.setEnvironmentalConditions(env);
-        config.setSolver(SolverType.CPLEX3);
+//        config.setEnvironmentalConditions(env);
+//        config.setSolver(SolverType.CPLEX3);
         List<String> simulationMethodList = new ArrayList<>();
         simulationMethodList.add("FBA");
-        config.setSimulationMethod(simulationMethodList);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setOu2StepApproach(true);
+//        config.setSimulationMethod(simulationMethodList);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setOu2StepApproach(true);
         config.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA,new NumFunctionEvaluationsListenerHybridTerminationCriteria(100));
 /*
         IStrainOptimizationResultSet resultSet = (IStrainOptimizationResultSet) cc.execute(config);
