@@ -45,7 +45,7 @@ public class JecoliOptimizationProperties implements Serializable {
 	public static final String	GROW_PROBABILITY						= "jecoli.ea.grow.probability";
 	public static final String	SHRINK_PROBABILITY						= "jecoli.ea.shrink.probability";
 	
-	public static final String	MUTATION_RADIUS_PERCENTAGE							= "jecoli.ea.mutation.radius";
+	public static final String	MUTATION_RADIUS_PERCENTAGE				= "jecoli.ea.mutation.radius";
 																		
 	//JecoliSA
 	public static final String	ANNEALING_SCHEDULE						= "jecoli.sa.annealingschedule";

@@ -76,7 +76,7 @@ public class RuiTestClean {
 		bw.flush();
 		bw.close();
 		
-		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS);
+		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS2);
 		ccTest.setSolver(SolverType.CPLEX);
 //		ccTest.setWTReference(reference.getFluxValues()); 
 		

@@ -133,8 +133,9 @@ public abstract class AbstractSSReferenceSimulation<T extends LPProblem> extends
 	}
 	
 	public void preSimulateActions(){
-		if(resetReference)
-			setReference(null);
+		if(resetReference){
+			setReference(null);			
+		}
 	};
 	
 	public void postSimulateActions(){

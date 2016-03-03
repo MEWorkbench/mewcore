@@ -98,6 +98,9 @@ public class SimulationProperties {
 	public static final String	ER_FBA								= "ER_FBA";
 	public static final String	ER_LMOMA							= "ER_LMOMA";
 	public static final String	ER_MIMBL							= "ER_MIMBL";
+									
+	/** TDPS2 - Maia */
+	public static final String	TDPS2								= "TDPS2";
 																	
 	public static FluxValueMap simulateWT(ISteadyStateModel model, EnvironmentalConditions envCond, SolverType solver) throws Exception {
 		

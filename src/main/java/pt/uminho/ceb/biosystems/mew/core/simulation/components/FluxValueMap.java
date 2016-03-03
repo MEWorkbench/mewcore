@@ -120,10 +120,10 @@ public class FluxValueMap extends MapStringNum implements Serializable {
 				throw new IOException("Invalid format at line "+lineCounter+". Input must contain only two columns.");
 			}
 			else{
-				String id = tokens[0];
+				String id = tokens[0].trim();
 				Double value = null;
 				try{
-					value = Double.parseDouble(tokens[1]);
+					value = Double.parseDouble(tokens[1].trim());
 				}catch(NumberFormatException e){
 					br.close();
 					throw new IOException("Invalid format at line "+lineCounter+". Expecting real value at second column but found "+tokens[1]+".");
