@@ -27,6 +27,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.UnderOverSingleReference;
+import pt.uminho.ceb.biosystems.mew.core.simulation.exceptions.AutomaticOverUnderSimulationException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
@@ -282,7 +283,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 				try {
 					reference = computeOverUnderReference(model, environmentalConditions, geneticConditions);
 				} catch (Exception e) {
-					e.printStackTrace();
+					throw new AutomaticOverUnderSimulationException(e); 
 				}
 			} else
 				reference = (FluxValueMap) ManagerExceptionUtils.testCast(properties, FluxValueMap.class, SimulationProperties.OVERUNDER_REFERENCE_FLUXES, false);
@@ -296,7 +297,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		return overrideRC;
 	}
 	
-	public FluxValueMap computeOverUnderReference(ISteadyStateModel model, EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions) throws Exception{
+	public FluxValueMap computeOverUnderReference(ISteadyStateModel model, EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions) throws PropertyCastException, MandatoryPropertyException{
 		
 		if(_ouRefCenter==null){
 			_ouRefCenter = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
@@ -325,7 +326,12 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		_ouRefCenter.setEnvironmentalConditions(environmentalConditions);
 		_ouRefCenter.setGeneticConditions(gc);
 		
-		SteadyStateSimulationResult res = _ouRefCenter.simulate();
+		SteadyStateSimulationResult res;
+		try {
+			res = _ouRefCenter.simulate();
+		} catch (Exception e) {
+			throw new AutomaticOverUnderSimulationException(e);
+		}
 //		System.out.println("["+getClass().getSimpleName()+"] overUnder2stepApproach ("+res.getOFString()+" = "+res.getOFvalue()+")");
 //		System.out.println("\tGC FULL = "+geneticConditions.toStringOptions(",",false));
 //		System.out.println("\tGC REF  = "+gc.toStringOptions(",",false));
