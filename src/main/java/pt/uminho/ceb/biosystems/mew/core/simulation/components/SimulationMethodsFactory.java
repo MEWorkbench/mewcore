@@ -47,13 +47,9 @@ public class SimulationMethodsFactory extends AbstractSimulationMethodsFactory{
 		
 		Class<T> ret = null;
 		
-		try{
-			ParameterizedType parameterizedType =
-				       (ParameterizedType) klass.getGenericSuperclass();
-			ret = (Class<T>) parameterizedType.getActualTypeArguments()[0];
-		}catch (Exception e) {
-//			e.printStackTrace();
-		}
+		ParameterizedType parameterizedType =
+			       (ParameterizedType) klass.getGenericSuperclass();
+		ret = (Class<T>) parameterizedType.getActualTypeArguments()[0];
 		
 		return ret;
 	}
