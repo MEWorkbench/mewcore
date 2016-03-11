@@ -1,6 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions;
 
-public class PropertyCastException extends Exception {
+public class PropertyCastException extends RuntimeException {
 
 	/**
 	 * 
