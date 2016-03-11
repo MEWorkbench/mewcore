@@ -62,7 +62,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		factory = new SimulationMethodsFactory(mapMethods);
 	}
 	
-	public SimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) throws Exception {
+	public SimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) {
 		super(simulationConfiguration);
 		SolverType solver = (SolverType) simulationConfiguration.get(SimulationProperties.SOLVER);
 		Boolean isMaximization = (Boolean) simulationConfiguration.get(SimulationProperties.IS_MAXIMIZATION);
@@ -151,7 +151,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		addProperty(SimulationProperties.IS_OVERUNDER_SIMULATION, false);
 	}
 	
-	public void setGenesKnockoutConditions(Set<String> knockoutIds) throws Exception {
+	public void setGenesKnockoutConditions(Set<String> knockoutIds) {
 		GeneChangesList geneList = new GeneChangesList(knockoutIds);
 		GeneticConditions genConditions = new GeneticConditions(geneList, (ISteadyStateGeneReactionModel) model, false);
 		

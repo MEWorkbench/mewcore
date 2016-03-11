@@ -1,9 +1,15 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 
+import java.lang.reflect.InvocationTargetException;
+
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.UnregistaredMethodException;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.algorithm.AbstractStrainOptimizationAlgorithm;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.exceptions.OptimizationAlgorithmNotDefinedException;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.exceptions.StrategyNotDefinedException;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.exceptions.UnregisteredAlgorithmStrategyException;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy.JecoliEAGOUCSOM;
@@ -55,7 +61,7 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		//PBIL Based Methods
 	}
 	
-	public IStrainOptimizationResultSet execute(IGenericConfiguration genericConfiguration) throws Exception {
+	public IStrainOptimizationResultSet execute(IGenericConfiguration genericConfiguration) throws InstantiationException, InvocationTargetException, UnregistaredMethodException, Exception {
 		
 		AbstractObjTerm.setMaxValue(Double.MAX_VALUE);
 		AbstractObjTerm.setMinValue(-Double.MAX_VALUE);
@@ -68,13 +74,13 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		String optimizationAlgorithm = (String) genericConfiguration.getProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM);
 		String strategy = (String) genericConfiguration.getProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY);
 		
-		if (optimizationAlgorithm == null) throw new Exception("Optimization Method Not Defined");
-		if (strategy == null) throw new Exception("Strategy Not Defined");
+		if (optimizationAlgorithm == null) throw new OptimizationAlgorithmNotDefinedException("Optimization algorithm not defined");
+		if (strategy == null) throw new StrategyNotDefinedException("Strategy not defined");
 		
 //		if (!validateOptimizationAlgorithm(optimizationAlgorithm)) throw new Exception("Invalid Optimization Method: " + optimizationAlgorithm);
 //		if (!validateStrategy(strategy)) throw new Exception("Invalid Strategy: " + strategy);
 		
-		if(!factory.validate(optimizationAlgorithm,strategy)) throw new Exception("There is no optimization algorithm ["+optimizationAlgorithm+"] registered for strategy ["+strategy+"]");
+		if(!factory.validate(optimizationAlgorithm,strategy)) throw new UnregisteredAlgorithmStrategyException("There is no optimization algorithm ["+optimizationAlgorithm+"] registered for strategy ["+strategy+"]");
 		
 		String methodType = optimizationAlgorithm + strategy;
 		return ((AbstractStrainOptimizationAlgorithm) factory.getMethod(methodType, genericConfiguration)).execute();

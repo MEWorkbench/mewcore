@@ -60,7 +60,7 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		initializeControlCenters();
 	}
 	
-	protected void initializeControlCenters() throws Exception {
+	protected void initializeControlCenters() {
 		_controlCenters = new HashMap<String, SimulationSteadyStateControlCenter>();
 		
 		for (String method : _simulationConfiguration.keySet()) {
@@ -229,8 +229,9 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		GeneticConditions gc = null;
 		try {
 			gc = _decoder.decode(solution);
-			//			System.out.println("Eval testing sol "+gc.toStringOptions(", ", true));
+//			System.out.println("Eval testing sol "+gc.toStringOptions(", ", true));
 		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 		
 		Map<String, SteadyStateSimulationResult> results = new HashMap<String, SteadyStateSimulationResult>();

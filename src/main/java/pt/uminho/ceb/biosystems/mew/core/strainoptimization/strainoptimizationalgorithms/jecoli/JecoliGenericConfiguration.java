@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +11,13 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.
 import pt.uminho.ceb.biosystems.jecoli.algorithm.multiobjective.archive.components.ArchiveManager;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGeneSteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISwapsSteadyStateConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.InvalidConfigurationException;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
@@ -204,4 +207,38 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		propertyMap.put(JecoliOptimizationProperties.REACTION_SWAP_MAP, reactionSwapMap);
 	}
 	
+	@Override
+	public void validate() throws InvalidConfigurationException, ClassCastException {
+		super.validate();
+		
+		List<String> nonDefinedPropertyList = new ArrayList<>();
+		
+		if(getIsOverUnderExpression()){
+			for (String methodID : getSimulationConfiguration().keySet()) {
+				Map<String, Object> mapByMethodID = getSimulationConfiguration().get(methodID);
+				
+				boolean isSimOverUnder = false;
+				if(mapByMethodID.containsKey(SimulationProperties.IS_OVERUNDER_SIMULATION))
+					isSimOverUnder = (boolean) mapByMethodID.get(SimulationProperties.IS_OVERUNDER_SIMULATION);
+				
+				if(!isSimOverUnder)
+					nonDefinedPropertyList.add(SimulationProperties.IS_OVERUNDER_SIMULATION + " in simulation configuration ID: " +methodID);
+				
+			}
+		}else{
+			for (String methodID : getSimulationConfiguration().keySet()) {
+				Map<String, Object> mapByMethodID = getSimulationConfiguration().get(methodID);
+				
+				boolean isSimOverUnder = false;
+				if(mapByMethodID.containsKey(SimulationProperties.IS_OVERUNDER_SIMULATION))
+					isSimOverUnder = (boolean) mapByMethodID.get(SimulationProperties.IS_OVERUNDER_SIMULATION);
+				
+				if(isSimOverUnder)
+					nonDefinedPropertyList.add(SimulationProperties.IS_OVERUNDER_SIMULATION + " in simulation configuration ID: " +methodID);
+				
+			}
+		}
+		
+		if (nonDefinedPropertyList.size() > 0) throw new InvalidConfigurationException(nonDefinedPropertyList);
+	}
 }

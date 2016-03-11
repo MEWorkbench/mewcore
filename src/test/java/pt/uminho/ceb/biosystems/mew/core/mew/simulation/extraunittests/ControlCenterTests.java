@@ -36,7 +36,7 @@ public class ControlCenterTests {
 	static public void setData() throws Exception {
 		// input Modelo
 		//exception.expect(FileNotFoundException.class);
-		JSBMLReader reader = new JSBMLReader("files/models/ecoli_core_model.xml", "1", false);
+		JSBMLReader reader = new JSBMLReader(ControlCenterTests.class.getClassLoader().getResource("models/ecoli_core_model.xml").getFile(), "1", false);
 		
 		// Container
 		Container cont = new Container(reader);
@@ -44,7 +44,7 @@ public class ControlCenterTests {
 		cont.removeMetabolites(met);
 		model = (SteadyStateModel) ContainerConverter.convert(cont);
 		
-		cc = new SimulationSteadyStateControlCenter(null, null, model, null);
+		cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
 	}
 	
 	
@@ -53,7 +53,7 @@ public class ControlCenterTests {
 
 		cc.setMethodType(SimulationProperties.FBA);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(SolverType.CLP);
 		
 		EnvironmentalConditions envCond = new EnvironmentalConditions();
 		envCond.put("R_EX_o2_e", new ReactionConstraint(0, 1000));
@@ -86,7 +86,7 @@ public class ControlCenterTests {
 	public void MOMA() throws Exception {
 		cc.setMethodType(SimulationProperties.MOMA);
 //		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(SolverType.CLP);
 		
 		
 		EnvironmentalConditions envCond = new EnvironmentalConditions();
@@ -156,7 +156,7 @@ public class ControlCenterTests {
 	public void ROOM() throws Exception {
 		cc.setMethodType(SimulationProperties.ROOM);
 //		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(SolverType.CLP);
 		
 		SteadyStateSimulationResult result = cc.simulate();
 		
@@ -168,16 +168,16 @@ public class ControlCenterTests {
 		System.out.println("Solver type: "+result.getSolutionType());
 		System.out.println("EnvCond:");
 		MapUtils.prettyPrint(result.getEnvironmentalConditions());
-		System.out.println("GenCond:");
-		MapUtils.prettyPrint(result.getGeneticConditions().getGeneList());
-		MapUtils.prettyPrint(result.getGeneticConditions().getReactionList());
+//		System.out.println("GenCond:");
+//		MapUtils.prettyPrint(result.getGeneticConditions().getGeneList());
+//		MapUtils.prettyPrint(result.getGeneticConditions().getReactionList());
 	}
 	
 	@Test
 	public void PFBA() throws Exception {
 		cc.setMethodType(SimulationProperties.PFBA);
-//		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setMaximization(true);
+		cc.setSolver(SolverType.CLP);
 		
 		SteadyStateSimulationResult result = cc.simulate();
 		
@@ -189,9 +189,9 @@ public class ControlCenterTests {
 		System.out.println("Solver type: "+result.getSolutionType());
 		System.out.println("EnvCond:");
 		MapUtils.prettyPrint(result.getEnvironmentalConditions());
-		System.out.println("GenCond:");
-		MapUtils.prettyPrint(result.getGeneticConditions().getGeneList());
-		MapUtils.prettyPrint(result.getGeneticConditions().getReactionList());
+//		System.out.println("GenCond:");
+//		MapUtils.prettyPrint(result.getGeneticConditions().getGeneList());
+//		MapUtils.prettyPrint(result.getGeneticConditions().getReactionList());
 	}
 	
 //	@Test

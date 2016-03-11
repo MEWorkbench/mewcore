@@ -8,7 +8,11 @@ import pt.uminho.ceb.biosystems.mew.core.model.exceptions.NonExistentIdException
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
 
 public class SimulationProperties {
 	
@@ -86,7 +90,7 @@ public class SimulationProperties {
 	 **********************/
 	public static final String DSPP_FIRST_STAGE_ENV_COND = "DSPP_FIRST_STAGE_ENV_CONDITION";
 	
-	public static FluxValueMap simulateWT(ISteadyStateModel model, EnvironmentalConditions envCond, SolverType solver) throws Exception {
+	public static FluxValueMap simulateWT(ISteadyStateModel model, EnvironmentalConditions envCond, SolverType solver) throws WrongFormulationException, SolverException, PropertyCastException, MandatoryPropertyException  {
 		
 		PFBA<FBA> pfba = new PFBA<FBA>(model);
 		pfba.setEnvironmentalConditions(envCond);
@@ -105,19 +109,14 @@ public class SimulationProperties {
 			
 			String metId = model.getMetaboliteId(i);
 			double turnover = 0;
-			try {
-				turnover = getTurnOverMetabolite(model, fluxes, metId);
-			} catch (NonExistentIdException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			turnover = getTurnOverMetabolite(model, fluxes, metId);
 			ret.put(metId, turnover);
 		}
 		
 		return ret;
 	}
 	
-	private static Double getTurnOverMetabolite(ISteadyStateModel model, Map<String, Double> fluxes, String metabolite_id) throws NonExistentIdException {
+	private static Double getTurnOverMetabolite(ISteadyStateModel model, Map<String, Double> fluxes, String metabolite_id) {
 		double result = 0.0;
 		
 		int met_idx = model.getMetaboliteIndex(metabolite_id);

@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.formulations;
 
-import java.io.IOException;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.enums.ReactionType;
@@ -29,7 +28,7 @@ public class MOMA extends AbstractSSReferenceSimulation<QPProblem> {
 	}
 	
 	@Override
-	protected void createObjectiveFunction() throws PropertyCastException, MandatoryPropertyException {
+	protected void createObjectiveFunction() throws PropertyCastException, MandatoryPropertyException{
 		getWTReference();
 		boolean useDrains = getUseDrainsInRef();
 		
@@ -67,7 +66,7 @@ public class MOMA extends AbstractSSReferenceSimulation<QPProblem> {
 	}
 	
 	@Override
-	protected LPSolution simulateProblem() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, IOException, SolverException {
+	protected LPSolution simulateProblem() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, SolverException {
 		return super.simulateProblem();
 	}
 	

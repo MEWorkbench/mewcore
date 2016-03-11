@@ -2,7 +2,6 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -338,7 +337,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		return res.getFluxValues();
 	}
 	
-	protected LPSolution simulateProblem() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, IOException, SolverException {
+	protected LPSolution simulateProblem() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, SolverException {
 		
 		if (debug) System.out.println("\n[" + getClass().getSimpleName() + "]:\n" + MapUtils.prettyToString(properties, "=", "\n\t"));
 		SolverType solverType = getSolverType();
@@ -363,15 +362,14 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			solution = _solver.solve();
 			String file = (String) properties.get(SimulationProperties.DEBUG_SOLVER_MODEL);
 			if (file != null) _solver.saveModelToMPS(file, true);
-		} catch (Exception e) {
+		} finally {
 			String file = (String) properties.get(SimulationProperties.DEBUG_SOLVER_MODEL);
 			if (file != null) _solver.saveModelToMPS(file, true);
-			e.printStackTrace();
+			unsetVariables(override);
+			_recreateProblem = false;
+			setRecreateOF(false);
 		}
 		
-		unsetVariables(override);
-		_recreateProblem = false;
-		setRecreateOF(false);
 //		_solver.resetSolver();
 		
 		return solution;
@@ -383,7 +381,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 	}
 	
 	
-	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
+	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException  {
 		
 		problem = null;
 		objTerms.clear();
@@ -401,34 +399,29 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			IQPSolver solver = solverType.qpSolver((QPProblem) p);
 			try {
 				solution = solver.solve();
-				String file = (String) properties.get(SimulationProperties.DEBUG_SOLVER_MODEL);
-				if (file != null) solver.saveModelToMPS(file, true);
-			} catch (Exception e) {
+			} finally {
 				String file = (String) properties.get(SimulationProperties.DEBUG_SOLVER_MODEL);
 				if (file != null && solver!=null) solver.saveModelToMPS(file, true);
-				e.printStackTrace();
+				setRecreateOF(false);
 			}
 		} else {
 			_solver = solverType.lpSolver(p);
 			try {
 				solution = _solver.solve();
-				String file = (String) properties.get(SimulationProperties.DEBUG_SOLVER_MODEL);
-				if (file != null) _solver.saveModelToMPS(file, true);
-			} catch (Exception e) {
+			} finally{
 				String file = (String) properties.get(SimulationProperties.DEBUG_SOLVER_MODEL);
 				if (file != null && _solver!=null) _solver.saveModelToMPS(file, true);
-				e.printStackTrace();
+				setRecreateOF(false);
 			}
 		}
 		
-		setRecreateOF(false);
+		
 		
 		return solution;
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void recreateObjectiveFunction() {
-		try {
 			objTerms.clear();
 			
 			if (debug_times) initTime = System.currentTimeMillis();
@@ -458,13 +451,9 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			problem.updateLPObjectiveFunction();
 			if (debug_times) times.put("recreateObjectiveFunction.updateLPObjectiveFunction", System.currentTimeMillis() - initTime);
 			
-		} catch (WrongFormulationException | PropertyCastException | MandatoryPropertyException e) {
-			e.printStackTrace();
-
-		}
 	}
 	
-	public SteadyStateSimulationResult simulate() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, IOException, SolverException {
+	public SteadyStateSimulationResult simulate() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, SolverException {
 		
 		if (debug_times) initTime = System.currentTimeMillis();
 		preSimulateActions();
@@ -633,17 +622,13 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 				if (debug) System.out.println("[" + getClass().getSimpleName() + "]: got event [UPDATE]: " + event.getKey() + " from " + evt.getOldValue() + " to " + evt.getNewValue());
 				
 				if (event.getKey().equals(SimulationProperties.IS_MAXIMIZATION)) {
-					SolverType solver = null;
-					try {
-						solver = getSolverType();
-					} catch (PropertyCastException | MandatoryPropertyException e) {					
-						e.printStackTrace();
-					}
+					SolverType solver = getSolverType();
 					
-					if(solver!=null && solver.supportsPersistentModel())
-						problem.changeObjectiveSense((boolean) evt.getNewValue());
-					else
-						setRecreateOF(true);
+					if(solver!=null && solver.supportsPersistentModel()){
+						problem.changeObjectiveSense((boolean) evt.getNewValue());						
+					} else{
+						setRecreateOF(true);						
+					}
 				}
 				
 				if (event.getKey().equals(SimulationProperties.OBJECTIVE_FUNCTION)) {

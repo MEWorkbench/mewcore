@@ -120,7 +120,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		return lastMethod.simulate();
 	}
 	
-	public void setUnderOverRef(FluxValueMap ref) throws Exception {
+	public void setUnderOverRef(FluxValueMap ref) {
 		if (ref == null) {
 			removeProperty(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
 		} else
