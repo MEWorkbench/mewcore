@@ -379,9 +379,8 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		if(_solver!=null)
 			_solver.resetSolver();
 	}
-	
-	
-	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException  {
+
+	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		
 		problem = null;
 		objTerms.clear();

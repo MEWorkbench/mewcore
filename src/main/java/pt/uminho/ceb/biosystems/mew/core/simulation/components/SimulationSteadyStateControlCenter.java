@@ -77,6 +77,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		setUnderOverRef(ouReference);
 	}
 	
+	
 	public SimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
 		super(environmentalConditions, geneticConditions, model, methodType);
@@ -165,6 +166,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 	}
 	
 	public void setOverUnder2StepApproach(Boolean ou2stepApproach) {
+
 		addProperty(SimulationProperties.OVERUNDER_2STEP_APPROACH, ou2stepApproach);
 	}
 	
