@@ -27,7 +27,7 @@ public class RKSolution extends AbstractSolution {
 //	}
 	
 	public RKSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
-		super(solutionGeneticConditions, simulationResultMap,fitnesses);
+		super(solutionGeneticConditions, simulationResultMap, fitnesses);
 	}
 	
 	@Override

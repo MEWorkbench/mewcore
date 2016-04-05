@@ -1,6 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions;
 
-public class MandatoryPropertyException extends Exception{
+public class MandatoryPropertyException extends RuntimeException{
 
 	/**
 	 * 

@@ -27,7 +27,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
-public class RuiTestClean {
+public class TDPSTestClean {
 	
 	@Test
 	//iMM904 case study
@@ -76,7 +76,7 @@ public class RuiTestClean {
 		bw.flush();
 		bw.close();
 		
-		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS2);
+		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS);
 		ccTest.setSolver(SolverType.CPLEX);
 //		ccTest.setWTReference(reference.getFluxValues()); 
 		
