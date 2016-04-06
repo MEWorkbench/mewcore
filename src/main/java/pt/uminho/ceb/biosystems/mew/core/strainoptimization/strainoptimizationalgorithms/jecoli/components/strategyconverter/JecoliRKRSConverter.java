@@ -17,6 +17,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.RKRSSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.RKDecoder;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.RKRSDualSetRepresentationDecoder;
 
 /**
@@ -63,7 +64,10 @@ public class JecoliRKRSConverter<T extends JecoliGenericConfiguration> implement
 	public ISteadyStateDecoder createDecoder(JecoliGenericConfiguration configuration) throws Exception {
 		ISteadyStateModel model = configuration.getSteadyStateModel();
 		Map<String, List<String>> reactionSwapMap = configuration.getReactionSwapMap();
+		List<String> notAllowedIDs = configuration.getNonAllowedIds();		
 		ISteadyStateDecoder decoder = new RKRSDualSetRepresentationDecoder(model, reactionSwapMap);
+		if (notAllowedIDs != null)
+			decoder.addNotAllowedIds(notAllowedIDs);
 		return decoder;
 	}
 	

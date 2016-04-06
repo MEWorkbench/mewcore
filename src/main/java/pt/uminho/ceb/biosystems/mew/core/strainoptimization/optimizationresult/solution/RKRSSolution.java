@@ -3,10 +3,10 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
@@ -80,7 +80,7 @@ public class RKRSSolution extends AbstractSolution {
 	}
 	
 	public Set<String> getKnockoutSet() {
-		Set<String> knockoutSet = new HashSet<>();
+		Set<String> knockoutSet = new TreeSet<>();
 		MapStringNum map = (solutionGeneticConditions.isGenes()) ? solutionGeneticConditions.getGeneList() : solutionGeneticConditions.getReactionList();
 		for (String k : map.keySet()) {
 			if (!swapsMap.containsKey(k)) {
@@ -102,6 +102,25 @@ public class RKRSSolution extends AbstractSolution {
 	
 	public Map<String, List<String>> getSwapsMap() {
 		return swapsMap;
+	}
+
+	@Override
+	public String toStringHumanReadableGC(String delimiter) {
+		String[] knockoutSet = new String[getKnockoutSet().size()];
+		knockoutSet = getKnockoutSet().toArray(knockoutSet);
+		List<Pair<String, String>> swapSet = getReactionSwapList();		
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<knockoutSet.length;i++){
+			sb.append(knockoutSet[i]);
+			if(i<knockoutSet.length){
+				sb.append(delimiter);
+			}
+		}
+		
+		for(Pair<String,String> pair : swapSet){
+			sb.append(delimiter+pair.getA()+"~"+pair.getB());
+		}
+		return sb.toString();
 	}
 	
 }

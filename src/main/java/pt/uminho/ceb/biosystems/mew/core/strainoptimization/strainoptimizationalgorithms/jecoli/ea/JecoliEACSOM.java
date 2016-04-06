@@ -3,6 +3,7 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationa
 import java.util.ArrayList;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.IAlgorithm;
+import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.controller.IAlgorithmController;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.controller.InitialStateController;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.writer.IAlgorithmResultWriter;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.evaluationfunction.AbstractMultiobjectiveEvaluationFunction;
@@ -72,17 +73,17 @@ public abstract class JecoliEACSOM<E extends IJecoliOptimizationStrategyConverte
         ReproductionOperatorContainer reproductionOperatorContainer = createAlgorithmReproductionOperatorContainer();
         configuration.setReproductionOperatorContainer(reproductionOperatorContainer);
 
-        ReproductionOperatorContainer controllerContainer = new ReproductionOperatorContainer<>();
-        controllerContainer.addOperator(1.0, new SetNewIndividualMutation<>());
-
-
-        InitialStateController controller = new InitialStateController(controllerContainer, reproductionOperatorContainer);
+        IAlgorithmController controller = getAlgorithmController(reproductionOperatorContainer);
         return new EvolutionaryAlgorithm(configuration,controller);
     }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public IAlgorithmController getAlgorithmController(ReproductionOperatorContainer reproductionOperatorContainer) throws Exception{
+    	ReproductionOperatorContainer controllerContainer = new ReproductionOperatorContainer<>();
+        controllerContainer.addOperator(1.0, new SetNewIndividualMutation<>());
 
-
-
-
-
+        InitialStateController controller = new InitialStateController(controllerContainer, reproductionOperatorContainer);
+        return controller;
+    }
 
 }

@@ -47,4 +47,18 @@ public class RKSolution extends AbstractSolution {
 		
 	}
 	
+	@Override
+	public String toStringHumanReadableGC(String delimiter) {
+		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
+		List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();		
+		
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<reactionKnockoutList.size(); i++){
+			sb.append(reactionKnockoutList.get(i));
+			if(i<reactionKnockoutList.size()){
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
+	}
 }

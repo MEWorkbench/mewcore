@@ -229,7 +229,7 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		GeneticConditions gc = null;
 		try {
 			gc = _decoder.decode(solution);
-			//			System.out.println("Eval testing sol "+gc.toStringOptions(", ", true));
+//						System.out.println("Eval testing sol "+gc.toStringOptions(", ", true));
 		} catch (Exception e1) {
 		}
 		

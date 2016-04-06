@@ -121,7 +121,7 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 					FluxValueMap wtReference = (FluxValueMap) methodConf.get(SimulationProperties.WT_REFERENCE);
 					FluxValueMap ouReference = (FluxValueMap) methodConf.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
 					
-					if (controlCenters.get(methodConf) == null) {
+					if (controlCenters.get(method) == null) {
 						controlCenters.put(method, new SimulationSteadyStateControlCenter(methodConf));
 					} else {
 						controlCenters.get(method).setMaximization(isMaximization);
@@ -140,6 +140,7 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 			IStrainOptimizationResult strainOptimizationResult = createSolutionResult(configuration, simulations, gc, fitnesses);
 			strainOptimizationSolutionList.add(strainOptimizationResult);
 		}
+		
 		
 		String basename = (String) algorithmConfiguration.getProperty(JecoliOptimizationProperties.ARCHIVE_MANAGER_BASE_NAME);
 		if (basename != null && finalSolutionSet.getNumberOfSolutions() > 0) {

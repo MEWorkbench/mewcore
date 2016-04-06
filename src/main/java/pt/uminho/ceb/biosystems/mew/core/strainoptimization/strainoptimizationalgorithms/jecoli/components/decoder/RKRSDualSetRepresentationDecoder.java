@@ -34,6 +34,13 @@ public class RKRSDualSetRepresentationDecoder extends RKDecoder {
 	protected Map<String, String>				_reverseSwapsMap	= null;
 	protected Map<Integer, ReactionSwapData>	_reactionIndexMap	= null;
 	
+	public RKRSDualSetRepresentationDecoder(ISteadyStateModel model, Map<String, List<String>> swapsMap, List<Integer> notAllowedReactionKnockouts) {
+		super(model,notAllowedReactionKnockouts);
+		_swapsMap = swapsMap;
+		buildReverseSwapMap();
+		buildIndexMap();
+	}
+	
 	public RKRSDualSetRepresentationDecoder(ISteadyStateModel model, Map<String, List<String>> swapsMap) {
 		super(model);
 		_swapsMap = swapsMap;

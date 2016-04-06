@@ -48,4 +48,20 @@ public class ROUSolution extends AbstractSolution {
 		}
 		
 	}
+	
+	@Override
+	public String toStringHumanReadableGC(String delimiter) {
+		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
+		List<Pair<String, Double>> reactionExpressionList = reactionChangeList.getPairsList();
+		
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<reactionExpressionList.size(); i++){
+			Pair<String,Double> reactionExpression = reactionExpressionList.get(i);
+			sb.append(reactionExpression.getA() + "=" + reactionExpression.getB());
+			if(i<reactionExpressionList.size()){
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
+	}
 }

@@ -45,6 +45,21 @@ public class GOUSolution extends AbstractSolution {
 		for (Pair<String, Double> geneExpression : geneExpressionList) {
 			outputStream.write(INNER_DELIMITER + geneExpression.getA() + "=" + geneExpression.getB());
 		}
+	}
+	
+	@Override
+	public String toStringHumanReadableGC(String delimiter) {
+		GeneChangesList geneChangeList = solutionGeneticConditions.getGeneList();
+		List<Pair<String, Double>> geneExpressionList = geneChangeList.getPairsList();
 		
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<geneExpressionList.size(); i++){
+			Pair<String,Double> geneExpression = geneExpressionList.get(i);
+			sb.append(geneExpression.getA() + "=" + geneExpression.getB());
+			if(i<geneExpressionList.size()){
+				sb.append(delimiter);
+			}
+		}
+		return sb.toString();
 	}
 }

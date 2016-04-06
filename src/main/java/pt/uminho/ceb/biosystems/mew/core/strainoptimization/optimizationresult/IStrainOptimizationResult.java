@@ -57,4 +57,6 @@ public interface IStrainOptimizationResult extends IStrainOptimizationWriter {
 	
 	void setAttributes(List<Double> attributes);
 	
+	String toStringHumanReadableGC(String delimiter);
+	
 }
