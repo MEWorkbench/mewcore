@@ -118,6 +118,10 @@
 			<id>biosystems-releases</id>
 			<url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
 		</repository>
+		<repository>
+			<id>biosystems-snapshots</id>
+			<url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
+		</repository>
 	</repositories>
 
 	<distributionManagement>
