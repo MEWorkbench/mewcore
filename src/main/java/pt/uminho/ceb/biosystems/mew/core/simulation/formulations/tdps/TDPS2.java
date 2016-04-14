@@ -179,6 +179,17 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 		return new MILPProblem();
 	}
 	
+	@Override
+	public void createVariables(){
+		super.createVariables();
+		
+	}
+	
+	@Override
+	public void createConstraints(){
+		super.createConstraints();
+	}
+	
 	public Map<String, Integer> splitNegAndPosVariable(LPProblem problem, int idx, String posVarName, String negVarName, Double lower, Double upper) throws WrongFormulationException {
 		Map<String, Integer> variablePositions = new HashMap<String, Integer>();
 		
@@ -370,20 +381,17 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 			//if the reaction is irreversible ignore the split routine and add its index to the var mappings according to the split nomenclature: "TORV_"+name+"("+i+")_PST"
 			
 			if (overrideBounds.getReactionConstraint(i).getLowerLimit() >= 0 && overrideBounds.getReactionConstraint(i).getUpperLimit() > 0) {
-//			if (model.getReaction(i).getConstraints().getLowerLimit() >= 0 && model.getReaction(i).getConstraints().getUpperLimit() > 0) {
 				idToIndexVarMapings.put(idPositive, idToIndexVarMapings.get(id));
 				continue;
 			}
 			//if the reaction is irreversible ignore the split routine and add its index to the var mappings according to the split nomenclature: "TORV_"+name+"("+i+")_NGT";
 			if (overrideBounds.getReactionConstraint(i).getUpperLimit() <= 0 && overrideBounds.getReactionConstraint(i).getLowerLimit() < 0) {
-//			if (model.getReaction(i).getConstraints().getUpperLimit() <= 0 && model.getReaction(i).getConstraints().getLowerLimit() < 0) {
 				idToIndexVarMapings.put(idNegative, idToIndexVarMapings.get(id));
 				continue;
 			}
 			
-//				getO
+//			getO
 			ReactionConstraint rc = overrideBounds.getReactionConstraint(i);
-//			ReactionConstraint rc = null;
 			rc = (rc != null) ? rc : model.getReactionConstraint(i);
 			
 			Map<String, Integer> newVars;
@@ -393,26 +401,22 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 				newVars = splitNegAndPosVariable(problem, i, idPositive, idNegative, rc.getLowerLimit(), rc.getUpperLimit());
 				putNewVariables(newVars);
 			} catch (WrongFormulationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			//get its index	
-			int rxn = model.getReactionIndex(id);
 			//get the spilt variables' indexes	
-			int vpn = idToIndexVarMapings.get("TORV_" + id + "(" + rxn + ")" + "_PST");
-			int vnn = idToIndexVarMapings.get("TORV_" + id + "(" + rxn + ")" + "_NGT");
-			
+			int vpn = idToIndexVarMapings.get(idPositive);
+			int vnn = idToIndexVarMapings.get(idNegative);
+						
 			//get the number of variables
 			int varn = problem.getNumberVariables();
-			//create two boolean variables (one for each split variable)
-			problem.addIntVariable("y" + rxn, 0, 1);
-			problem.addIntVariable("w" + rxn, 0, 1);
+			problem.addIntVariable("y" + i, 0, 1);
+			problem.addIntVariable("w" + i, 0, 1);
 			//add the boolean variables to the var mappings
-			indexToIdVarMapings.put(varn, "y" + rxn);
-			indexToIdVarMapings.put(varn + 1, "w" + rxn);
-			idToIndexVarMapings.put("y" + rxn, varn);
-			idToIndexVarMapings.put("w" + rxn, varn + 1);
+			indexToIdVarMapings.put(varn, "y" + i);
+			indexToIdVarMapings.put(varn + 1, "w" + i);
+			idToIndexVarMapings.put("y" + i, varn);
+			idToIndexVarMapings.put("w" + i, varn + 1);
 			
 			//create two new rows
 			LPProblemRow binaryP = new LPProblemRow();
