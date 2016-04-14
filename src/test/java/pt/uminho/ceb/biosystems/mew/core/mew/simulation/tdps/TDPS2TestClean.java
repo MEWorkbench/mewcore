@@ -5,6 +5,7 @@ import static org.junit.Assert.assertArrayEquals;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -17,13 +18,12 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLRead
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS2;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS_FBA;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS_LMOMA;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
@@ -74,17 +74,28 @@ public class TDPS2TestClean {
 
 				
 		//Sol1
-		TDPS2.geneticModifications.put("R_PYRDC", 2.0);
-		TDPS2.geneticModifications.put("R_ACS", 2.0);
-		TDPS2.geneticModifications.put("R_ALDD2x", 2.0);
-		TDPS2.geneticModifications.put("R_PYRt2m", 0.5);
-		TDPS2.geneticModifications.put("R_MCR", 2.0);
-		TDPS2.geneticModifications.put("R_ACCOACr", 2.00);
+//		TDPS2.geneticModifications.put("R_PYRDC", 2.0);
+//		TDPS2.geneticModifications.put("R_ACS", 2.0);
+//		TDPS2.geneticModifications.put("R_ALDD2x", 2.0);
+//		TDPS2.geneticModifications.put("R_PYRt2m", 0.5);
+//		TDPS2.geneticModifications.put("R_MCR", 2.0);
+//		TDPS2.geneticModifications.put("R_ACCOACr", 2.00);
+		
+		Map<String,Double> exprs = new HashMap<String,Double>();
+		exprs.put("R_PYRDC", 2.0);
+		exprs.put("R_ACS", 2.0);
+		exprs.put("R_ALDD2x", 2.0);
+		exprs.put("R_PYRt2m", 0.5);
+		exprs.put("R_MCR", 2.0);
+		exprs.put("R_ACCOACr", 2.00);
+		GeneticConditions gc = new GeneticConditions(new ReactionChangesList(exprs));
+		ccTest.setGeneticConditions(gc);
 		
 		SteadyStateSimulationResult result = ccTest.simulate();
 		
 		Map<String,Double> netconversionMap = result.getNetConversionMap(true);
 		netconversionMap.put("OF", result.getOFvalue());
+		System.out.println(result.getOFvalue());
 		MapUtils.prettyPrint(netconversionMap);
 				
 		
