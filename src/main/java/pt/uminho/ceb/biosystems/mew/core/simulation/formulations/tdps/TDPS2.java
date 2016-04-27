@@ -14,6 +14,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReaction
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractSSReferenceSimulation;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.L1VarTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.VarTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
@@ -197,6 +198,11 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 		LPVariable normFoVarNeg = new LPVariable(negVarName, lower, 0);
 		LPVariable normFoVarPos = new LPVariable(posVarName, 0, upper);
 		
+//		System.out.println("LOWER = "+lower);
+//		System.out.println("UPPER= "+upper);
+		
+		System.out.println(idx+"\tNEG:["+0.0+","+(-lower)+"\tPOS:["+0.0+","+upper);
+		
 		int varPos = numVariables;
 		int varNeg = numVariables + 1;	
 		problem.addVariable(normFoVarPos);
@@ -378,8 +384,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 				continue;
 			}
 			
-			//if the reaction is irreversible ignore the split routine and add its index to the var mappings according to the split nomenclature: "TORV_"+name+"("+i+")_PST"
-			
+			//if the reaction is irreversible ignore the split routine and add its index to the var mappings according to the split nomenclature: "TORV_"+name+"("+i+")_PST"			
 			if (overrideBounds.getReactionConstraint(i).getLowerLimit() >= 0 && overrideBounds.getReactionConstraint(i).getUpperLimit() > 0) {
 				idToIndexVarMapings.put(idPositive, idToIndexVarMapings.get(id));
 				continue;
@@ -399,6 +404,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 				
 				//split reversible reactions into a positive Vp and a negative Vn half reaction
 				newVars = splitNegAndPosVariable(problem, i, idPositive, idNegative, rc.getLowerLimit(), rc.getUpperLimit());
+//				newVars = L1VarTerm.splitNegAndPosVariable(problem, i, idPositive, idNegative, rc.getLowerLimit(), rc.getUpperLimit());
 				putNewVariables(newVars);
 			} catch (WrongFormulationException e) {
 				e.printStackTrace();
@@ -437,6 +443,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 				// create: Vn > -1000 * Bn ; If the boolean variable is 1, Vn is higher than -1000,if it is 0, Vn has to be zero
 				
 				binaryN.addTerm(vnn, -1);
+//				binaryN.addTerm(vnn, 1);
 				binaryN.addTerm(varn + 1, -1000);
 				
 				LPConstraint MILPneg = new LPConstraint(LPConstraintType.LESS_THAN, binaryN, 0);

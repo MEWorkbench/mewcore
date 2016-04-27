@@ -94,12 +94,12 @@ public class CYIELDObjectiveFunction extends AbstractObjectiveFunction {
 		validator.setFormulasFromContainer();
 		String metSubstrate = model.getMetaboliteId(substrateIndex);
 		String metTarget = model.getMetaboliteId(targetIndex);
-		System.out.println("Sub [" + substrateID + "/" + substrateDrainIndex + "/" + substrateIndex + "/" + metSubstrate + "]");
-		System.out.println("Targ [" + productID + "/" + targetDrainIndex + "/" + targetIndex + "/" + metTarget + "]");
+//		System.out.println("Sub [" + substrateID + "/" + substrateDrainIndex + "/" + substrateIndex + "/" + metSubstrate + "]");
+//		System.out.println("Targ [" + productID + "/" + targetDrainIndex + "/" + targetIndex + "/" + metTarget + "]");
 		MetaboliteFormula metFormulaSubstrate = validator.getformula(metSubstrate);
 		MetaboliteFormula metFormulaTarget = validator.getformula(metTarget);
-		System.out.println(metFormulaSubstrate.getOriginalFormula());
-		System.out.println(metFormulaTarget.getOriginalFormula());
+//		System.out.println(metFormulaSubstrate.getOriginalFormula());
+//		System.out.println(metFormulaTarget.getOriginalFormula());
 		_carbonContentSubstrate = metFormulaSubstrate.getValue(CARBON);
 		_carbonContentTarget = metFormulaTarget.getValue(CARBON);
 		if (_carbonContentSubstrate <= 0) throw new Exception("[" + substrateID + "] has carbon content of zero (0). Please verify formula in the model.");

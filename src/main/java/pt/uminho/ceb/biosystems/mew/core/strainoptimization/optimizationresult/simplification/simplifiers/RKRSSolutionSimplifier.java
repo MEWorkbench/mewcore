@@ -5,6 +5,7 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ReactionsSimplifier;
+import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ReactionsSwapsSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
@@ -27,7 +28,7 @@ public class RKRSSolutionSimplifier<C extends  ISteadyStateConfiguration & ISwap
 	
 	
 	public ISimplifierGeneticConditions getSimplifierGeneticConditions(){
-		return new ReactionsSimplifier(configuration.getSimulationConfiguration());
+		return new ReactionsSwapsSimplifier(configuration.getSimulationConfiguration(),configuration.getReactionSwapMap());
 	}
 
 	@Override

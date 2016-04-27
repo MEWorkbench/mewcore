@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses)
 			throws Exception {
 		
+		
 		TreeSet<String> ids = new TreeSet<String>(getGeneticConditionsIDs(conditions));
 		
 		List<String> iDsIterator = new ArrayList<String>(ids);
@@ -63,6 +65,10 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		double[] finalFitnesses = initialFitnesses;
 		
 		for (String id : iDsIterator) {
+			
+//			System.out.println("Current solution fit: "+Arrays.toString(finalFitnesses)+"["+finalSolution.toUniqueString()+"]");
+			
+//			System.out.println("\tTrying ["+id+"]");
 			
 			double expLvl = getExpressionLevel(conditions, id);
 			
@@ -75,9 +81,10 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			if (isBetter(finalFitnesses, simpfitnesses, objectiveFunctions)) {
 					finalFitnesses = simpfitnesses;
 					finalResults = results;
-				//NOTE: SE ISTO NAO ESTIVER A FUNCIONAR EM CONDICOES, O PROBLEMA PODE SER DAQUI
+//					System.out.println("\tBetter");
 			} else {
 				nextGeneticCondition(finalSolution, id, expLvl);
+//				System.out.println("\tWorst ["+Arrays.toString(simpfitnesses)+"]");
 			}
 		}
 		

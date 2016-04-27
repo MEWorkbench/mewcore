@@ -72,14 +72,6 @@ public class TDPS2TestClean {
 		ccTest.addProperty(SimulationProperties.TDPS_REMOVE_METABOLITES, metabolites2remove);
 		ccTest.setWTReference(getReference("/home/pmaia/ownCloud/documents/TDPS/results.txt"));
 
-				
-		//Sol1
-//		TDPS2.geneticModifications.put("R_PYRDC", 2.0);
-//		TDPS2.geneticModifications.put("R_ACS", 2.0);
-//		TDPS2.geneticModifications.put("R_ALDD2x", 2.0);
-//		TDPS2.geneticModifications.put("R_PYRt2m", 0.5);
-//		TDPS2.geneticModifications.put("R_MCR", 2.0);
-//		TDPS2.geneticModifications.put("R_ACCOACr", 2.00);
 		
 		Map<String,Double> exprs = new HashMap<String,Double>();
 		exprs.put("R_PYRDC", 2.0);
