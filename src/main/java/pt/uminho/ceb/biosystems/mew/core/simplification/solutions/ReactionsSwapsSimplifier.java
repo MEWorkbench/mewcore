@@ -20,11 +20,11 @@ public class ReactionsSwapsSimplifier extends ReactionsSimplifier {
 		this.swapsMap = swapsMap;
 		buildReverseMap();
 		
-		System.out.println("========[ SWAPS MAP ]========");
-		MapUtils.prettyPrint(swapsMap);
+//		System.out.println("========[ SWAPS MAP ]========");
+//		MapUtils.prettyPrint(swapsMap);
 //		
-		System.out.println("========[ REVERSE MAP ]========");
-		MapUtils.prettyPrint(reverseMap);
+//		System.out.println("========[ REVERSE MAP ]========");
+//		MapUtils.prettyPrint(reverseMap);
 	}
 	
 	private void buildReverseMap() {
@@ -46,11 +46,11 @@ public class ReactionsSwapsSimplifier extends ReactionsSimplifier {
 				diff = CollectionUtils.getSetDiferenceValues(swaps, gc.getReactionList().keySet());
 				for (String d : diff) {
 					gc.getReactionList().addReaction(d, 0.0);
-					System.out.println("\t\tRGC-ADD: [" + d + "]");
+//					System.out.println("\t\tRGC-ADD: [" + d + "]");
 				}
 			}
 			gc.getReactionList().removeReaction(id);
-			System.out.println("\t\tRGC-REM: [" + id + "]");
+//			System.out.println("\t\tRGC-REM: [" + id + "]");
 		}
 	}
 	
@@ -60,11 +60,11 @@ public class ReactionsSwapsSimplifier extends ReactionsSimplifier {
 			if (swapsMap.containsKey(id)) {
 				for (String d : diff) {
 					gc.getReactionList().removeReaction(d);
-					System.out.println("\t\tNGC-REM: [" + d + "]");
+//					System.out.println("\t\tNGC-REM: [" + d + "]");
 				}
 			}
 			gc.getReactionList().addReaction(id, 0.0);
-			System.out.println("\t\tNGC-ADD: [" + id + "]");
+//			System.out.println("\t\tNGC-ADD: [" + id + "]");
 		}
 	}
 	

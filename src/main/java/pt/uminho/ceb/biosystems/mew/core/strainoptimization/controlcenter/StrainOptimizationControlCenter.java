@@ -63,6 +63,7 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		AbstractObjTerm.setMaxValue(Double.MAX_VALUE);
 		AbstractObjTerm.setMinValue(-Double.MAX_VALUE);
 		CplexParamConfiguration.setDoubleParam("EpRHS", 1e-9);
+		CplexParamConfiguration.setDoubleParam("TiLim", 3.0d);
 		CplexParamConfiguration.setIntegerParam("MIPEmphasis", 2);
 		CplexParamConfiguration.setBooleanParam("NumericalEmphasis", true);
 		CplexParamConfiguration.setBooleanParam("PreInd", true);

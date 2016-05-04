@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
@@ -76,8 +77,13 @@ public abstract class AbstractStrainOptimizationResultSet<T extends ISteadyState
 			Double[] objectiveFunctionValueArray = computeObjectiveFunctionValueArray(objectiveValueFunctionString);
 			String solutionString = (lineArray.length > 1) ? lineArray[1] : "";
 			IStrainOptimizationReader solutionReader = getSolutionReader();
-			if (solutionReader != null) {
-				GeneticConditions gc = solutionReader.readSolutionFromStream(new ByteArrayInputStream(solutionString.getBytes()));
+			if (solutionReader != null ) {
+				GeneticConditions gc = null;
+				if(!solutionString.isEmpty()){
+					gc = solutionReader.readSolutionFromStream(new ByteArrayInputStream(solutionString.getBytes()));					
+				}else{
+					gc = new GeneticConditions(new ReactionChangesList());
+				}
 				resultList.add(createSolution(gc, Arrays.asList(objectiveFunctionValueArray)));
 			}
 		}

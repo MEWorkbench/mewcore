@@ -41,7 +41,6 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 	public Map<Integer, Double>					rSum					= new HashMap<Integer, Double>();
 	public Map<Integer, Double>					turnovers				= new HashMap<Integer, Double>();
 																		
-//	public static Map<String, Double>			geneticModifications	= new HashMap<String, Double>();
 	public double								defaultBound			= 100000000;
 																		
 	protected IOverrideReactionBounds			overrideBounds			= null;

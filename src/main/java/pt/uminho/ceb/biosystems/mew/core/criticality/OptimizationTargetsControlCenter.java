@@ -1,7 +1,11 @@
 package pt.uminho.ceb.biosystems.mew.core.criticality;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
+import com.ctc.wstx.util.StringUtil;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
@@ -9,6 +13,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalCondition
 import pt.uminho.ceb.biosystems.mew.core.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 /**
  * The <code> OptimizationTargetsControlCenter </code>.
@@ -57,6 +62,9 @@ public class OptimizationTargetsControlCenter {
 				_optimizationTargetsStrategy = new GKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, pathways, cofactors, (carbonOffset == null ? DEFAULT_CARBON_OFFSET : carbonOffset));
 				break;
 			case RKOptimizationTargetsStrategy.RK_OPTIMIZATION_STRATEGY:
+				_optimizationTargetsStrategy = new RKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, pathways, cofactors, (carbonOffset == null ? DEFAULT_CARBON_OFFSET : carbonOffset));
+				break;
+			case "RKRS":
 				_optimizationTargetsStrategy = new RKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, pathways, cofactors, (carbonOffset == null ? DEFAULT_CARBON_OFFSET : carbonOffset));
 				break;
 			default:
@@ -138,4 +146,22 @@ public class OptimizationTargetsControlCenter {
 		_optimizationTargetsStrategy.saveNonTargetsToFile(file,nonTargets);
 	}
 	
+	public String getTagSting(){
+		List<String> tags = new ArrayList<String>();
+		for(TargetIDStrategy strat : _optimizationTargetsStrategy.getFlags().keySet()){
+			if(isEnabled(strat)){
+				if(TargetIDStrategy.IDENTIFY_DRAINS_TRANSPORTS.equals(strat)){
+					if(isOnlyDrains()){
+						tags.add("D");
+					}else{
+						tags.add("DT");
+					}
+				}else{
+					tags.add(strat.getTag());					
+				}
+			}
+		}
+		
+		return StringUtils.concat("-", tags);
+	}
 }

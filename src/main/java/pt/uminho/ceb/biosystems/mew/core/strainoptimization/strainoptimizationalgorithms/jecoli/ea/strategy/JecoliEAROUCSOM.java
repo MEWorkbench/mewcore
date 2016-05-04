@@ -1,5 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.strategy;
 
+import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.controller.IAlgorithmController;
+import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.controller.InitialStateController;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.container.ReproductionOperatorContainer;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproduction.hybridset.crossover.HybridSetUniformCrossover;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproduction.hybridset.mutation.HybridSetGaussianPertubationMutation;
@@ -7,6 +9,7 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproductio
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproduction.hybridset.mutation.HybridSetRandomIntegerMutation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproduction.hybridset.mutation.HybridSetRandomSetMutation;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproduction.hybridset.mutation.HybridSetShrinkMutation;
+import pt.uminho.ceb.biosystems.jecoli.algorithm.components.operator.reproduction.set.SetNewIndividualMutation;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.IJecoliOptimizationStrategyConverter;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.JecoliROUConverter;
@@ -49,4 +52,12 @@ public class JecoliEAROUCSOM extends JecoliEACSOM {
         return reproductionOperatorContainer;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public IAlgorithmController getAlgorithmController(ReproductionOperatorContainer reproductionOperatorContainer) throws Exception{
+    	ReproductionOperatorContainer controllerContainer = new ReproductionOperatorContainer<>();
+        controllerContainer.addOperator(1.0, new HybridSetRandomSetMutation());
+
+        InitialStateController controller = new InitialStateController(controllerContainer, reproductionOperatorContainer);
+        return controller;
+    }
 }
