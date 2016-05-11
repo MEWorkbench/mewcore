@@ -117,9 +117,18 @@ public class RKRSSolution extends AbstractSolution {
 			}
 		}
 		
-		for(Pair<String,String> pair : swapSet){
-			sb.append(delimiter+pair.getA()+"~"+pair.getB());
+		if(swapSet.size()>0){
+			sb.append(",");
 		}
+		
+		for(int i=0; i<swapSet.size();i++){
+			Pair<String,String> pair = swapSet.get(i);
+			sb.append(delimiter+pair.getA()+"~"+pair.getB());
+			if(i<swapSet.size()){
+				sb.append(delimiter);
+			}
+		}
+		
 		return sb.toString();
 	}
 	

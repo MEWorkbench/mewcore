@@ -46,7 +46,7 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
     public ISteadyStateDecoder createDecoder(T configuration) throws Exception {
         ISteadyStateModel model = configuration.getSteadyStateModel();
         List<String>  notAllowedIDs = configuration.getNonAllowedIds();
-        ISteadyStateDecoder decoder = new ROUDecoder(model);;
+        ISteadyStateDecoder decoder = new ROUDecoder(model);
         if(notAllowedIDs != null) {
         	decoder.addNotAllowedIds(notAllowedIDs);
         }

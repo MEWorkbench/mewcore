@@ -44,6 +44,7 @@ public class ObjectiveFunctionsFactory {
 		mapObjectiveFunctions.put(FVAObjectiveFunction.ID, FVAObjectiveFunction.class);
 		mapObjectiveFunctions.put(FVASenseObjectiveFunction.ID, FVASenseObjectiveFunction.class);
 		mapObjectiveFunctions.put(TurnoverObjectiveFunction.ID, TurnoverObjectiveFunction.class);
+		mapObjectiveFunctions.put(FVASenseMinPSYieldObjectiveFunction.ID, FVASenseMinPSYieldObjectiveFunction.class);
 	}
 	
 	public ObjectiveFunctionsFactory() {
