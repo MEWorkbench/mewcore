@@ -142,11 +142,13 @@ public class FVASenseMinPSYieldObjectiveFunction extends AbstractObjectiveFuncti
 		if (!Double.isNaN(result)) {
 			
 			Double biomassValue = simResult.getFluxValues().getValue(biomassID);
-			Double substrateValue = simResult.getFluxValues().getValue(substrateID);
+			Double substrateValue = Math.abs(simResult.getFluxValues().getValue(substrateID));
 			Double psYield = result / substrateValue;
 			
 			if (biomassValue >= minBiomass && psYield >= minPSYield) {
 				return result;
+			}else{
+				return result * 0.01;
 			}
 		}
 		
