@@ -24,4 +24,6 @@ public interface IStrainOptimizationResultsSimplifier<C extends IGenericConfigur
 	
 	ISimplifierGeneticConditions getSimplifierGeneticConditions();
 	
+	void setSimplifierOptions(Map<String,Object> simplifierOptions);
+	
 }

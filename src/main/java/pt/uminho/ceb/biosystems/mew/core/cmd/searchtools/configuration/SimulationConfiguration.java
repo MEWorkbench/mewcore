@@ -79,6 +79,19 @@ public class SimulationConfiguration extends ModelConfiguration {
 			return null;
 	}
 	
+	public EnvironmentalConditions getEnvironmentalConditionsOnly(){
+		String file = getProperty(SIM_ENV_COND, currentState, true);
+		if (file != null && !file.isEmpty()) {
+			try {
+				return EnvironmentalConditions.readFromFile(file, ENV_COND_DELIMITER);				
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else
+			return null;
+	}
+	
 	public EnvironmentalConditions getEnvironmentalConditionsVariation() {
 		String file = getProperty(SIM_INIT_GC, currentState, true);
 		if (file != null && !file.isEmpty()) {

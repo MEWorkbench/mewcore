@@ -141,7 +141,7 @@ public class FVASenseObjectiveFunction extends AbstractObjectiveFunction {
 	@Override
 	public String getBuilderString() {
 		return ID + "(" + getParameterValue(FVA_SENSE_PARAM_BIOMASS) + "," + getParameterValue(FVA_SENSE_PARAM_PRODUCT) + "," + getParameterValue(FVA_SENSE_PARAM_MAXIMIZATION) + "," + getParameterValue(FVA_SENSE_PARAM_SENSE) + ","
-				+ getParameterType(FVA_SENSE_PARAM_SOLVER) + ")";
+				+ getParameterValue(FVA_SENSE_PARAM_SOLVER) + ")";
 	}
 	
 	@Override

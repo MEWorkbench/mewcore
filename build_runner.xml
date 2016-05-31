@@ -5,7 +5,7 @@
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
     <property name="dir.workspace" value="${dir.buildfile}/.."/>
-    <property name="dir.jarfile" value="/home/pmaia/ownCloud/documents/INVISTA/INVISTA_20160122_landscape_tests_newset"/>
+    <property name="dir.jarfile" value="${dir.buildfile}/target"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/runner.jar" filesetmanifest="mergewithoutmain">
             <manifest>

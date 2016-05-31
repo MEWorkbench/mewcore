@@ -15,6 +15,7 @@ import org.junit.Test;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.CYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FVAObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FVASenseMinPSYieldObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FVASenseObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.NumKnockoutsObjectiveFunction;
@@ -175,7 +176,7 @@ public class ObjectiveFunctionsFactory {
 //	@Test
 	public void testParams() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		ObjectiveFunctionsFactory fact = new ObjectiveFunctionsFactory();
-		Map<String, ObjectiveFunctionParameterType> types = fact.getObjectiveFunctionParameterTypes("BPCY");
+		Map<String, ObjectiveFunctionParameterType> types = fact.getObjectiveFunctionParameterTypes("FVA_SENSE_MIN_PSYIELD");
 		MapUtils.prettyPrint(types);
 	}
 	

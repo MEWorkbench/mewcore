@@ -320,13 +320,13 @@ public class SmartProperties extends IndexedHashMap<String, String> {
 		return value;
 	}
 	
-	private String replaceAliasesMatches(String value) {
+	public String replaceAliasesMatches(String value) {
 		
 		if (aliasesMap != null && !aliasesMap.isEmpty() && aliasesMap.containsKey(value)) value = aliasesMap.get(value);
 		return value;
 	}
 	
-	private String replaceAliasesMatchesStatewise(String value, int state) throws Exception{
+	public String replaceAliasesMatchesStatewise(String value, int state) throws Exception{
 		if (aliasesMap != null && !aliasesMap.isEmpty() && aliasesMap.containsKey(value)){
 			value = aliasesMap.get(value);
 			

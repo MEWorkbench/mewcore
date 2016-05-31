@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
 
+import java.util.Map;
 import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
@@ -20,5 +21,6 @@ public interface ISimplifierGeneticConditions {
 	
 	double getExpressionLevel(GeneticConditions gc, String id);
 	
+	void setSimplifierOptions(Map<String,Object> simplifierOptions);
 
 }

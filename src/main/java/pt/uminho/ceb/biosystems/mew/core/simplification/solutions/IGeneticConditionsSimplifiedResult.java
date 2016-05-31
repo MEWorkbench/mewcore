@@ -11,7 +11,11 @@ public interface IGeneticConditionsSimplifiedResult {
 	
 	List<GeneticConditions> getSimplifiedGeneticConditions();
 	
-	List<Double> getSimplifiedFitnesses();
+	List<List<Double>> getSimplifiedFitnesses();
+	
+	void addSolution(GeneticConditions gc, SteadyStateMultiSimulationResult result, List<Double> fitnesses);
+	
+	void addAll(IGeneticConditionsSimplifiedResult result);
 	
 	int size();
 

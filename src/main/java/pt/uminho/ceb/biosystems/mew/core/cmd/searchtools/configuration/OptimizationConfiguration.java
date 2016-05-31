@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jmetal.util.offspring.Offspring;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.AlgorithmTypeEnum;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.ITerminationCriteria;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.IterationListenerHybridTerminationCriteria;
@@ -190,9 +191,24 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		return objFunctions;
 	}
 	
+	public Map<Map<String,Object>,String> getObjectiveFunctionConfigurations() throws Exception{
+		String[] ofList = getProperty(OPT_OBJ_FUNC, currentState, true).split(OF_DELIMITER);
+		if (ofList.length == 0){
+			throw new InvalidFieldException("ObjectiveFunction", "At least one Objective function must be provided!", new ArrayIndexOutOfBoundsException(-1));			
+		}
+		
+		Map<Map<String,Object>,String> ofConfs = new HashMap<Map<String,Object>,String>();
+		
+		for (String ofInfo : ofList) {
+			Pair<Map<String,Object>, String> of = processOFStringConf(ofInfo.trim());
+			ofConfs.put(of.getValue(), of.getPairValue());
+		}
+		
+		return ofConfs;
+	}
+	
 	private Pair<IObjectiveFunction, String> processOFString(String ofString) throws Exception {
 		Matcher matcher = LINK_PATTERN.matcher(ofString);
-		// System.out.println(">>>>>>>>>>OBJECTIVE FUNCTION="+ofString);
 		if (matcher.matches()) {
 			String simMethodTag = matcher.group(1);
 			String simMethod = getSimulationMethod(simMethodTag);
@@ -200,6 +216,20 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 			
 			IObjectiveFunction ofIN = processOFParams(objFuncTag);
 			return new Pair<IObjectiveFunction, String>(ofIN, simMethod);
+		} else
+			throw new InvalidObjectiveFunctionConfiguration(
+					"Objective functions incorrectly linked to simulation methods. " + "Must follow this syntax LINK([simMethod1], OF1(param,...); LINK([simMethod2], OF2(param,...))");
+	}
+	
+	private Pair<Map<String,Object>, String> processOFStringConf(String ofString) throws Exception {
+		Matcher matcher = LINK_PATTERN.matcher(ofString);
+		if (matcher.matches()) {
+			String simMethodTag = matcher.group(1);
+			String simMethod = getSimulationMethod(simMethodTag);
+			String objFuncTag = matcher.group(2);
+			
+			Map<String,Object> ofIN = processOFParamsConf(objFuncTag);
+			return new Pair<Map<String,Object>, String>(ofIN, simMethod);
 		} else
 			throw new InvalidObjectiveFunctionConfiguration(
 					"Objective functions incorrectly linked to simulation methods. " + "Must follow this syntax LINK([simMethod1], OF1(param,...); LINK([simMethod2], OF2(param,...))");
@@ -227,6 +257,29 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 		
 		IObjectiveFunction of = ofFactory.getObjectiveFunction(ofTag.trim(), args);
 		return of;
+	}
+	
+	private Map<String,Object> processOFParamsConf(String ofString) throws InvalidObjectiveFunctionConfiguration {
+		Matcher matcher = OF_PATTERN.matcher(ofString);
+		matcher.matches();
+		String ofTag = matcher.group(1);
+		String ofArgs = matcher.group(2);
+		String[] argsList = ofArgs.split(Delimiter.COMMA.toString());
+		Object[] args = new Object[argsList.length];
+		for (int i = 0; i < argsList.length; i++) {
+			String trimmedArg = argsList[i].trim();
+			Object processedParameter = processParam(trimmedArg);
+			if (processedParameter == null) {
+				throw new InvalidObjectiveFunctionConfiguration("Objective function argument [" + trimmedArg + "] is invalid. Either invoked method does not exist or it returned a null result!");
+			} else {
+				System.out.println("PARAM: " + processedParameter.toString());
+				args[i] = processedParameter;
+			}
+		}
+		
+		IObjectiveFunction of = ofFactory.getObjectiveFunction(ofTag.trim(), args);
+		Map<String,Object> ofConf = of.copyConfiguration();
+		return ofConf;
 	}
 	
 	private Object processParam(String trimmedArg) {
