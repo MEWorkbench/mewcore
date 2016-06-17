@@ -13,21 +13,24 @@ import java.util.logging.Logger;
  */
 public class GenericConfiguration implements IGenericConfiguration {
 	
-	private static final long	serialVersionUID	= 1L;
-	
-	private static Logger			logger	= Logger.getLogger(GenericConfiguration.class.getName());
+	private static final long		serialVersionUID	= 1L;
+														
+	private static Logger			logger				= Logger.getLogger(GenericConfiguration.class.getName());
 	protected Map<String, Class<?>>	mandatoryPropertyMap;
 	protected Map<String, Class<?>>	optionalPropertyMap;
 	protected Map<String, Object>	propertyMap;
-	
+									
 	public GenericConfiguration() {
-		this(new HashMap<String,Object>());
+		this(new HashMap<String, Object>());
 	}
 	
-	public GenericConfiguration(Map<String,Object> propertyMapToCopy){
+	public GenericConfiguration(Map<String, Object> propertyMapToCopy) {
 		mandatoryPropertyMap = new HashMap<>();
 		optionalPropertyMap = new HashMap<>();
-		propertyMap = propertyMapToCopy;
+		propertyMap = new HashMap<>();
+		for (String key : propertyMapToCopy.keySet()) {
+			propertyMap.put(key, propertyMapToCopy.get(key));
+		}
 	}
 	
 	@Override
@@ -54,7 +57,8 @@ public class GenericConfiguration implements IGenericConfiguration {
 				propertyObject.cast(value);
 			}
 		}
-		if (nonDefinedPropertyList.size() > 0) throw new InvalidConfigurationException(nonDefinedPropertyList);
+		if (nonDefinedPropertyList.size() > 0)
+			throw new InvalidConfigurationException(nonDefinedPropertyList);
 	}
 	
 	public <T> T getDefaultValue(String propertyId, T defaultValue) {

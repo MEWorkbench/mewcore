@@ -173,7 +173,7 @@ public abstract class AbstractStrainOptimizationResultSet<T extends ISteadyState
 		for (E res : resultSetToMerge.getResultList()) {
 			repeated += !addSolutionNoRepeat(res) ? 1 : 0;
 		}
-		System.out.println("Merge finished, found [" + repeated + "] repeated solutions.");
+//		System.out.println("Merge finished, found [" + repeated + "] repeated solutions.");
 		return this;
 	}
 
