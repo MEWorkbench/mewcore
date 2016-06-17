@@ -33,7 +33,6 @@ public class GKSolution extends AbstractSolution {
 	@Override
 	public void write(OutputStreamWriter outputStream) throws Exception {
 		GeneChangesList geneChangesList = solutionGeneticConditions.getGeneList();
-		List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
 		
 		if (attributes != null) {
 			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
@@ -41,9 +40,12 @@ public class GKSolution extends AbstractSolution {
 		}
 		
 		outputStream.write(INNER_DELIMITER);
-		
-		for (String geneKnockout : geneKnockoutList) {
-			outputStream.write(INNER_DELIMITER + geneKnockout);
+
+		if(geneChangesList!=null && geneChangesList.size()>0){
+			List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
+			for (String geneKnockout : geneKnockoutList) {
+				outputStream.write(INNER_DELIMITER + geneKnockout);
+			}			
 		}
 		
 	}
@@ -52,15 +54,18 @@ public class GKSolution extends AbstractSolution {
 	@Override
 	public String toStringHumanReadableGC(String delimiter) {
 		GeneChangesList geneChangesList = solutionGeneticConditions.getGeneList();
-		List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
-		
-		StringBuilder sb = new StringBuilder();
-		for(int i=0; i<geneKnockoutList.size(); i++){
-			sb.append(geneKnockoutList.get(i));
-			if(i<geneKnockoutList.size()){
-				sb.append(delimiter);
+		if(geneChangesList!=null && geneChangesList.size()>0){
+			List<String> geneKnockoutList = geneChangesList.getGeneKnockoutList();
+			
+			StringBuilder sb = new StringBuilder();
+			for(int i=0; i<geneKnockoutList.size(); i++){
+				sb.append(geneKnockoutList.get(i));
+				if(i<geneKnockoutList.size()){
+					sb.append(delimiter);
+				}
 			}
+			return sb.toString();			
 		}
-		return sb.toString();
+		return "";
 	}
 }

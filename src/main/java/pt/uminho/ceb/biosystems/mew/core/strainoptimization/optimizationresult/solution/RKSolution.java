@@ -38,7 +38,7 @@ public class RKSolution extends AbstractSolution {
 		if (attributes != null) {
 			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
 			outputStream.write(fitString);
-        }
+		}
 		outputStream.write(INNER_DELIMITER);
 		
 		for (String reactionKnockout : reactionKnockoutList) {
@@ -50,15 +50,18 @@ public class RKSolution extends AbstractSolution {
 	@Override
 	public String toStringHumanReadableGC(String delimiter) {
 		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
-		List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();		
-		
-		StringBuilder sb = new StringBuilder();
-		for(int i=0; i<reactionKnockoutList.size(); i++){
-			sb.append(reactionKnockoutList.get(i));
-			if(i<reactionKnockoutList.size()){
-				sb.append(delimiter);
+		if (reactionChangeList != null && reactionChangeList.size() > 0) {
+			List<String> reactionKnockoutList = reactionChangeList.getReactionKnockoutList();
+			
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < reactionKnockoutList.size(); i++) {
+				sb.append(reactionKnockoutList.get(i));
+				if (i < reactionKnockoutList.size()) {
+					sb.append(delimiter);
+				}
 			}
+			return sb.toString();
 		}
-		return sb.toString();
+		return "";
 	}
 }
