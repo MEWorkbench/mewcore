@@ -340,8 +340,9 @@ public class GeneChangesList extends MapStringNum implements Serializable
 		
 		for(int i =0; i < model.getNumberOfGenes(); i++)
 		{	
-			Gene gene = model.getGene(i);			
-			if(containsGene(gene.getId())){
+			Gene gene = model.getGene(i);	
+
+			if(containsGeneKnockout(gene.getId())){
 				environment.associate(gene.getId(),new BooleanValue(false));
 				ArrayList<String> reactions = model.getReactionsInfluencedByGene(gene.getId());
 					for(int k =0; k < reactions.size(); k++){
