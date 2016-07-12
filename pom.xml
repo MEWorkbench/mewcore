@@ -64,6 +64,12 @@
 			<version>1.9.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.googlecode.efficient-java-matrix-library</groupId>
+			<artifactId>ejml</artifactId>
+			<version>0.25</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
