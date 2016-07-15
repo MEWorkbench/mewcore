@@ -27,7 +27,7 @@ public enum ObjectiveFunctionParameterType implements Serializable {
 	REACTION_SUBSTRATE,	
 	METABOLITE, 
 	MODEL, 
-	CONTAINER, 
+	CONTAINER,
 	SOLVER,
 	
 	/**
