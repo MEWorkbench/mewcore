@@ -1,7 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.randomsearch;
 
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 
 /**
  * 
@@ -18,6 +18,6 @@ public class JecoliRANDOMCSOMConfig extends JecoliGenericConfiguration {
 	
 	public JecoliRANDOMCSOMConfig() {
 		super();
-		this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM, "Random");
+		this.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, "Random");
 	}
 }

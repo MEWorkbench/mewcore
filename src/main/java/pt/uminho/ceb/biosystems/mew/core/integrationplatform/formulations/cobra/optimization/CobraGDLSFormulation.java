@@ -9,10 +9,11 @@ import java.util.TreeSet;
 
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
-import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.OptimizationProperties;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.components.CobraStrainOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.converter.ConnectionFormulation;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.connection.matlab.MatlabConnection;
 import pt.uminho.ceb.biosystems.mew.core.integrationplatform.exceptions.CobraMatlabFormulationException;
+import pt.uminho.ceb.biosystems.mew.core.integrationplatform.formulations.cobra.CobraMethods;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
@@ -45,14 +46,14 @@ public class CobraGDLSFormulation extends ConnectionFormulation {
 		Map<String, Object> prop = new HashMap<String, Object>();
 		prop.put(SimulationProperties.ENVIRONMENTAL_CONDITIONS, properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
 		
-		prop.put(OptimizationProperties.SELECTED_RXNS, properties.get(OptimizationProperties.SELECTED_RXNS));
-		prop.put(OptimizationProperties.PRODUCT_FLUX, properties.get(OptimizationProperties.PRODUCT_FLUX));
-		prop.put(OptimizationProperties.MAX_KOS, properties.get(OptimizationProperties.MAX_KOS));
-		prop.put(OptimizationProperties.MIN_GROWTH, properties.get(OptimizationProperties.MIN_GROWTH));
-		prop.put(OptimizationProperties.TIME_LIMIT, properties.get(OptimizationProperties.TIME_LIMIT));
-		prop.put(OptimizationProperties.NEIGHBORHOOD_SIZE, properties.get(OptimizationProperties.NEIGHBORHOOD_SIZE));
-		prop.put(OptimizationProperties.NUM_SEARCH_PATHS, properties.get(OptimizationProperties.NUM_SEARCH_PATHS));
-		prop.put(OptimizationProperties.ITERATION_LIMIT, properties.get(OptimizationProperties.ITERATION_LIMIT));
+		prop.put(CobraStrainOptimizationProperties.SELECTED_RXNS, properties.get(CobraStrainOptimizationProperties.SELECTED_RXNS));
+		prop.put(CobraStrainOptimizationProperties.PRODUCT_FLUX, properties.get(CobraStrainOptimizationProperties.PRODUCT_FLUX));
+		prop.put(CobraStrainOptimizationProperties.MAX_MODIFICATIONS, properties.get(CobraStrainOptimizationProperties.MAX_MODIFICATIONS));
+		prop.put(CobraStrainOptimizationProperties.MIN_GROWTH, properties.get(CobraStrainOptimizationProperties.MIN_GROWTH));
+		prop.put(CobraStrainOptimizationProperties.TIME_LIMIT, properties.get(CobraStrainOptimizationProperties.TIME_LIMIT));
+		prop.put(CobraStrainOptimizationProperties.NEIGHBORHOOD_SIZE, properties.get(CobraStrainOptimizationProperties.NEIGHBORHOOD_SIZE));
+		prop.put(CobraStrainOptimizationProperties.NUM_SEARCH_PATHS, properties.get(CobraStrainOptimizationProperties.NUM_SEARCH_PATHS));
+		prop.put(CobraStrainOptimizationProperties.ITERATION_LIMIT, properties.get(CobraStrainOptimizationProperties.ITERATION_LIMIT));
 		
 		return prop;
 	}
@@ -68,40 +69,40 @@ public class CobraGDLSFormulation extends ConnectionFormulation {
 		try {
 			
 			int neighborhoodSize = 1;
-			if (properties.containsKey(OptimizationProperties.NEIGHBORHOOD_SIZE))
-				neighborhoodSize = (int) properties.get(OptimizationProperties.NEIGHBORHOOD_SIZE);
+			if (properties.containsKey(CobraStrainOptimizationProperties.NEIGHBORHOOD_SIZE))
+				neighborhoodSize = (int) properties.get(CobraStrainOptimizationProperties.NEIGHBORHOOD_SIZE);
 			converter.sendInteger("neighborhoodSize", neighborhoodSize);
 			
 			int numSearchPaths = 1;
-			if (properties.containsKey(OptimizationProperties.NUM_SEARCH_PATHS))
-				numSearchPaths = (int) properties.get(OptimizationProperties.NUM_SEARCH_PATHS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.NUM_SEARCH_PATHS))
+				numSearchPaths = (int) properties.get(CobraStrainOptimizationProperties.NUM_SEARCH_PATHS);
 			converter.sendInteger("numSearchPaths", numSearchPaths);
 			
 			int maxKOs = 3;
-			if (properties.containsKey(OptimizationProperties.MAX_KOS))
-				maxKOs = (int) properties.get(OptimizationProperties.MAX_KOS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.MAX_MODIFICATIONS))
+				maxKOs = (int) properties.get(CobraStrainOptimizationProperties.MAX_MODIFICATIONS);
 			converter.sendInteger("maxKO", maxKOs);
 			
 			Set<String> selectedRxns = new TreeSet<>();
-			if (properties.containsKey(OptimizationProperties.SELECTED_RXNS)) {
-				selectedRxns = (Set<String>) properties.get(OptimizationProperties.SELECTED_RXNS);
+			if (properties.containsKey(CobraStrainOptimizationProperties.SELECTED_RXNS)) {
+				selectedRxns = (Set<String>) properties.get(CobraStrainOptimizationProperties.SELECTED_RXNS);
 				converter.sendStringList("selectedRxns", selectedRxns.toArray(new String[selectedRxns.size()]));
 				converter.runCommand("selectedRxns = selectedRxns.';");
 			}
 			
 			int timeLimit = 3600;
-			if (properties.containsKey(OptimizationProperties.TIME_LIMIT))
-				timeLimit = (int) properties.get(OptimizationProperties.TIME_LIMIT);
+			if (properties.containsKey(CobraStrainOptimizationProperties.TIME_LIMIT))
+				timeLimit = (int) properties.get(CobraStrainOptimizationProperties.TIME_LIMIT);
 			converter.sendInteger("timeLimit", timeLimit);
 			
 			double minGrowth = 0.005;
-			if (properties.containsKey(OptimizationProperties.MIN_GROWTH))
-				minGrowth = (double) properties.get(OptimizationProperties.MIN_GROWTH);
+			if (properties.containsKey(CobraStrainOptimizationProperties.MIN_GROWTH))
+				minGrowth = (double) properties.get(CobraStrainOptimizationProperties.MIN_GROWTH);
 			converter.sendDouble("minGrowth", minGrowth);
 			
 			String targetRxn = model.getBiomassFlux();
-			if (properties.containsKey(OptimizationProperties.PRODUCT_FLUX))
-				targetRxn = (String) properties.get(OptimizationProperties.PRODUCT_FLUX);
+			if (properties.containsKey(CobraStrainOptimizationProperties.PRODUCT_FLUX))
+				targetRxn = (String) properties.get(CobraStrainOptimizationProperties.PRODUCT_FLUX);
 			converter.sendString("targetRxn", targetRxn);
 			
 		} catch (Exception e) {
@@ -172,8 +173,7 @@ public class CobraGDLSFormulation extends ConnectionFormulation {
 			result.setEnvironmentalConditions((EnvironmentalConditions) properties.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS));
 			result.setGeneticConditions(new GeneticConditions(new ReactionChangesList(Arrays.asList(koRxnsList))));
 			
-			//result.setMethod("Cobra GDLS");
-//			
+			result.setMethod(CobraMethods.COBRAFBA);
 			
 			return result;
 			
@@ -198,13 +198,13 @@ public class CobraGDLSFormulation extends ConnectionFormulation {
 					fluxValues.put(rxns[i], primal[i]);
 					
 			MapStringNum compRxnRedCostValues = new MapStringNum();
-			if (reducedCosts.length > 0)
+			if (reducedCosts.length > 0 && reducedCosts.length == rxns.length)
 				for (int i = 0; i < rxns.length; i++)
 					compRxnRedCostValues.put(rxns[i], reducedCosts[i]);
 			result.addComplementaryInfoMetabolites("ReducedCosts", compRxnRedCostValues);
 			
 			MapStringNum compMetShadPricesValues = new MapStringNum();
-			if (shadowPrices.length > 0)
+			if (shadowPrices.length > 0 && shadowPrices.length == mets.length)
 				for (int i = 0; i < mets.length; i++)
 					compMetShadPricesValues.put(mets[i], shadowPrices[i]);
 			result.addComplementaryInfoReactions("ShadowPrices", compMetShadPricesValues);
@@ -216,8 +216,7 @@ public class CobraGDLSFormulation extends ConnectionFormulation {
 			result.setSolverOutput(getConverter().getVariableString("cobraFBAsolution.solver"));
 			result.setOFString("Max: " + getConverter().getVariableString("targetRxn"));
 			result.setFluxValues(fluxValues);
-			result.setMethod("Cobra FBA");
-			//result.setOFString("Max: R_BiomassEcoli");
+			result.setMethod(CobraMethods.COBRAFBA);
 			
 		} catch (Exception e) {
 			throw new CobraMatlabFormulationException(e, "Problem in getResultFromFBA of CobraGDLSFormulation");

@@ -7,14 +7,12 @@ import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
-import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.InvalidConfigurationException;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FluxValueObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.ea.JecoliEACSOMConfig;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 /**
@@ -45,11 +43,11 @@ public class JecoliSCOMConfigTest {
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -64,11 +62,11 @@ public class JecoliSCOMConfigTest {
         JecoliEACSOMConfig config = new JecoliEACSOMConfig();
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -90,11 +88,11 @@ public class JecoliSCOMConfigTest {
         //config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -116,11 +114,11 @@ public class JecoliSCOMConfigTest {
         config.setOptimizationStrategy("RK");
         //config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -143,10 +141,10 @@ public class JecoliSCOMConfigTest {
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
         //config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -168,11 +166,11 @@ public class JecoliSCOMConfigTest {
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
         //config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -194,11 +192,11 @@ public class JecoliSCOMConfigTest {
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
         //config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setMapOF2Sim(objectiveMap);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -220,11 +218,11 @@ public class JecoliSCOMConfigTest {
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
         //config.setMapOF2Sim(objectiveMap);
-        config.setSimulationMethod(simulationMethodList);
+//        config.setSimulationMethod(simulationMethodList);
 
         config.validate();
     }
@@ -246,10 +244,10 @@ public class JecoliSCOMConfigTest {
         config.setOptimizationStrategy("RK");
         config.setIsVariableSizeGenome(true);
         config.setModel(model);
-        config.setEnvironmentalConditions(new EnvironmentalConditions());
-        config.setSolver(SolverType.CPLEX3);
-        config.setIsMaximization(true);
-        config.setMapOF2Sim(objectiveMap);
+//        config.setEnvironmentalConditions(new EnvironmentalConditions());
+//        config.setSolver(SolverType.CPLEX3);
+//        config.setIsMaximization(true);
+//        config.setMapOF2Sim(objectiveMap);
         //config.setSimulationMethod(simulationMethodList);
 
         config.validate();

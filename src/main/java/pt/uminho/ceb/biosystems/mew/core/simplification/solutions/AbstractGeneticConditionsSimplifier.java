@@ -131,7 +131,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	public IGeneticConditionsSimplifiedResult findSubSolutions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] originalFitnesses,
 			Double[] minPercents) throws Exception {
 			
-		List<GeneticConditions> gcsResults = new ArrayList<>();		
+		List<GeneticConditions> gcsResults = new ArrayList<>();
 		List<SteadyStateMultiSimulationResult> simResults = new ArrayList<>();
 		List<List<Double>> fitResults = new ArrayList<>();
 		
@@ -164,7 +164,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 				for (double d : finalFitnesses) {
 					fitList.add(d);
 				}
-				fitResults.add(fitList);				
+				fitResults.add(fitList);
 			} else {
 				nextGeneticCondition(finalSolution, id, expLvl);
 			}
@@ -180,9 +180,9 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		while (res && i < objectiveFunctions.size()) {
 			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
 			if (of.isMaximization()) {
-				if (simpFitnesses[i] <= (originalFitnesses[i]*minPercents[i]))
+				if (simpFitnesses[i] <= (originalFitnesses[i] * minPercents[i]))
 					res = false;
-			} else if (simpFitnesses[i] >= (originalFitnesses[i]*minPercents[i]))
+			} else if (simpFitnesses[i] >= (originalFitnesses[i] * minPercents[i]))
 				res = false;
 			i++;
 		}
@@ -221,8 +221,15 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		for (int i = 0; i < size; i++) {
 			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
 			String method = objectiveFunctions.get(of);
-			double resValue = of.evaluate(results.get(method));
-			resultList[i] = resValue;
+			
+			// This must be reviewed but sometimes the results map is null
+			// Maybe a validation should be performed before getting at this point
+			if (results != null && results.containsKey(method)) {
+				double resValue = of.evaluate(results.get(method));
+				resultList[i] = resValue;
+			} else {
+				resultList[i] = of.getWorstFitness();
+			}
 		}
 		return resultList;
 	}

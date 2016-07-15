@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.analysis.solutionanalysis.methods;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class GenericRobustnessAnalysis extends AbstractSolutionAnalysisMethod im
 		SteadyStateSimulationResult res = null;
 		try {
 			res = lmoma.simulate();
-		} catch (PropertyCastException | MandatoryPropertyException | WrongFormulationException | SolverException | IOException e1) {
+		} catch (PropertyCastException | MandatoryPropertyException | WrongFormulationException | SolverException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -86,7 +85,7 @@ public class GenericRobustnessAnalysis extends AbstractSolutionAnalysisMethod im
 		SteadyStateSimulationResult resOriginalMin = null;
 		try {
 			resOriginalMin = lpVariabilityOriginalMin.simulate();
-		} catch (PropertyCastException | MandatoryPropertyException | WrongFormulationException | SolverException | IOException e) {
+		} catch (PropertyCastException | MandatoryPropertyException | WrongFormulationException | SolverException e) {
 			e.printStackTrace();
 		}
 		
@@ -115,7 +114,7 @@ public class GenericRobustnessAnalysis extends AbstractSolutionAnalysisMethod im
 			SteadyStateSimulationResult resCurrent = null;
 			try {
 				resCurrent = lpVariabilityCurrent.simulate();
-			} catch (PropertyCastException | MandatoryPropertyException | WrongFormulationException | SolverException | IOException e) {
+			} catch (PropertyCastException | MandatoryPropertyException | WrongFormulationException | SolverException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

@@ -5,7 +5,7 @@ import java.util.List;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISwapsSteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.AbstractStrainOptimizationResultSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationReader;
@@ -15,7 +15,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 /**
  * Created by ptiago on 24-03-2015.
  */
-public class RKRSSolutionSet<T extends ISteadyStateConfiguration & ISwapsSteadyStateConfiguration> extends AbstractStrainOptimizationResultSet<T,RKRSSolution> {
+public class RKRSSolutionSet<T extends IGenericConfiguration & ISwapsSteadyStateConfiguration> extends AbstractStrainOptimizationResultSet<T,RKRSSolution> {
     
 	private static final long	serialVersionUID	= 1L;
 

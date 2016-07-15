@@ -49,7 +49,7 @@ public class DSPP_LMOMA extends AbstractSSReferenceSimulation<LPProblem>{
 			wtReference = internalPFBA.simulate().getFluxValues();
 //			MapUtils.prettyPrint(wtReference);
 			setReference(wtReference);
-		} catch (WrongFormulationException | SolverException | IOException e) {
+		} catch (WrongFormulationException | SolverException e) {
 			setReference(null);
 			e.printStackTrace();
 		}

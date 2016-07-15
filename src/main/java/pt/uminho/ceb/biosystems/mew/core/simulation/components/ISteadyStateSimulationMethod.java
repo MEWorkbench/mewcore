@@ -53,4 +53,5 @@ public interface ISteadyStateSimulationMethod {
 	<T> T getProperty(String k);
 	
 	Class<?> getFormulationClass();
+	
 }

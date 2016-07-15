@@ -52,6 +52,9 @@ public class SimulationMethodsFactory extends AbstractSimulationMethodsFactory{
 				       (ParameterizedType) klass.getGenericSuperclass();
 			ret = (Class<T>) parameterizedType.getActualTypeArguments()[0];
 		}catch (Exception e) {
+			// When the COBRA simulation methods are registered in the CC an exception is thrown
+			// java.lang.ClassCastException: java.lang.Class cannot be cast to java.lang.reflect.ParameterizedType
+			// The reason must be found in the future
 //			e.printStackTrace();
 		}
 		

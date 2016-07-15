@@ -72,13 +72,13 @@ public class CobraFBAFormulation extends ConnectionFormulation {
 					fluxValues.put(rxns[i], primal[i]);
 					
 			MapStringNum compRxnRedCostValues = new MapStringNum();
-			if (reducedCosts.length > 0)
+			if (reducedCosts.length > 0 && reducedCosts.length == rxns.length)
 				for (int i = 0; i < rxns.length; i++)
 					compRxnRedCostValues.put(rxns[i], reducedCosts[i]);
 			result.addComplementaryInfoMetabolites("ReducedCosts", compRxnRedCostValues);
 			
 			MapStringNum compMetShadPricesValues = new MapStringNum();
-			if (shadowPrices.length > 0)
+			if (shadowPrices.length > 0 && shadowPrices.length == mets.length)
 				for (int i = 0; i < mets.length; i++)
 					compMetShadPricesValues.put(mets[i], shadowPrices[i]);
 			result.addComplementaryInfoReactions("ShadowPrices", compMetShadPricesValues);
@@ -139,5 +139,5 @@ public class CobraFBAFormulation extends ConnectionFormulation {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 }

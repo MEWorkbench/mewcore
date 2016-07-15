@@ -5,23 +5,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
+
 
 /*
  * 
  */
-public abstract class AbstractStrainOptimizationResultSet<T extends ISteadyStateConfiguration, E extends IStrainOptimizationResult>
+public abstract class AbstractStrainOptimizationResultSet<T extends IGenericConfiguration, E extends IStrainOptimizationResult>
 		implements IStrainOptimizationResultSet<T, E> {
 
 	private static final long serialVersionUID = 1L;
@@ -98,14 +94,14 @@ public abstract class AbstractStrainOptimizationResultSet<T extends ISteadyState
 		return objectiveFunctionArray;
 	}
 
-	protected void constructSimulationResultMap(T baseConfiguration, E newSolution) throws Exception {
-		IndexedHashMap<IObjectiveFunction, String> mapOf2Sim = baseConfiguration.getObjectiveFunctionsMap();
-		List<IObjectiveFunction> objectiveFunctionList = mapOf2Sim.getIndexArray();
-		for (IObjectiveFunction objectiveFunction : objectiveFunctionList) {
-			String simulationMethod = mapOf2Sim.get(objectiveFunction);
-			newSolution.getSimulationResultForMethod(simulationMethod);
-		}
-	}
+//	protected void constructSimulationResultMap(T baseConfiguration, E newSolution) throws Exception {
+//		IndexedHashMap<IObjectiveFunction, String> mapOf2Sim = baseConfiguration.getObjectiveFunctionsMap();
+//		List<IObjectiveFunction> objectiveFunctionList = mapOf2Sim.getIndexArray();
+//		for (IObjectiveFunction objectiveFunction : objectiveFunctionList) {
+//			String simulationMethod = mapOf2Sim.get(objectiveFunction);
+//			newSolution.getSimulationResultForMethod(simulationMethod);
+//		}
+//	}
 
 	// public void recalculateFitness(IndexedHashMap<IObjectiveFunction, String>
 	// ofs) throws Exception {
@@ -130,18 +126,18 @@ public abstract class AbstractStrainOptimizationResultSet<T extends ISteadyState
 	// recalculateFitness(baseConfiguration.getObjectiveFunctionsMap());
 	// }
 
-	private Map<String, SimulationSteadyStateControlCenter> createAllCCs(Map<IObjectiveFunction, String> ofs) throws Exception {
-		Map<String, SimulationSteadyStateControlCenter> ccs = new HashMap<String, SimulationSteadyStateControlCenter>();
-
-		Map<String, Map<String, Object>> simConfiguration = baseConfiguration.getSimulationConfiguration();
-		for (String method : simConfiguration.keySet()) {
-			Map<String, Object> methodConf = simConfiguration.get(method);
-			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(methodConf);
-			ccs.put(method, cc);
-		}
-
-		return ccs;
-	}
+//	private Map<String, SimulationSteadyStateControlCenter> createAllCCs(Map<IObjectiveFunction, String> ofs) throws Exception {
+//		Map<String, SimulationSteadyStateControlCenter> ccs = new HashMap<String, SimulationSteadyStateControlCenter>();
+//
+//		Map<String, Map<String, Object>> simConfiguration = baseConfiguration.getSimulationConfiguration();
+//		for (String method : simConfiguration.keySet()) {
+//			Map<String, Object> methodConf = simConfiguration.get(method);
+//			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(methodConf);
+//			ccs.put(method, cc);
+//		}
+//
+//		return ccs;
+//	}
 
 	public IStrainOptimizationReader getSolutionReader() throws Exception {
 		if (solutionReader == null) {

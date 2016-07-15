@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.pbil;
 
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 
@@ -15,7 +16,7 @@ public class JecoliPBILCSOMConfig extends JecoliGenericConfiguration{
 
 	public JecoliPBILCSOMConfig() {
         super();
-        this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"PBIL");
+        this.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM,"PBIL");
     }
 
     public double getLearningRate() {

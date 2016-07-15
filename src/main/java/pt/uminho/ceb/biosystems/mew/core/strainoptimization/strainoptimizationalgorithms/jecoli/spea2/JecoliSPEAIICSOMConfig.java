@@ -1,7 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2;
 
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericOptimizationProperties;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
 
 /**
  * Created by ptiago on 09-03-2015.
@@ -17,7 +17,7 @@ public class JecoliSPEAIICSOMConfig extends JecoliGenericConfiguration{
 
     public JecoliSPEAIICSOMConfig() {
         super();
-        this.setProperty(JecoliOptimizationProperties.OPTIMIZATION_ALGORITHM,"SPEA2");
+        this.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM,"SPEA2");
     }
 
     public int getPopulationSize() {

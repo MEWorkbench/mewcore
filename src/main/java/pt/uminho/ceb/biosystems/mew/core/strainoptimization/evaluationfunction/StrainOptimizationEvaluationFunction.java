@@ -36,17 +36,17 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
  * @since Jan 10, 2014
  * @author pmaia updated in Oct 15, 2015
  */
-public class StrainOptimizationEvaluationFunction extends AbstractMultiobjectiveEvaluationFunction<IRepresentation> {
+public class StrainOptimizationEvaluationFunction extends AbstractMultiobjectiveEvaluationFunction<IRepresentation> implements IOptimizationEvaluationFunction {
 	
-	private static final long	serialVersionUID	= 1L;
-	protected final boolean		_debug				= false;
-	
+	private static final long									serialVersionUID			= 1L;
+	protected final boolean										_debug						= false;
+																							
 	protected ISteadyStateDecoder								_decoder					= null;
 	protected Map<String, SimulationSteadyStateControlCenter>	_controlCenters				= null;
 	protected Map<String, Map<String, Object>>					_simulationConfiguration	= null;
 	protected Map<IObjectiveFunction, String>					_mapOF2Sim					= null;
 	protected int												_numberOfObjectives			= 1;
-	
+																							
 	public StrainOptimizationEvaluationFunction(
 			ISteadyStateDecoder decoder,
 			Map<String, Map<String, Object>> simulationConfiguration,
@@ -60,7 +60,7 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		initializeControlCenters();
 	}
 	
-	protected void initializeControlCenters() throws Exception {
+	protected void initializeControlCenters() {
 		_controlCenters = new HashMap<String, SimulationSteadyStateControlCenter>();
 		
 		for (String method : _simulationConfiguration.keySet()) {
@@ -229,8 +229,11 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		GeneticConditions gc = null;
 		try {
 			gc = _decoder.decode(solution);
-//						System.out.println("Eval testing sol "+gc.toStringOptions(", ", true));
+			
+//		System.out.println("Eval testing sol "+gc.toStringOptions(", ", true));
+		
 		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 		
 		Map<String, SteadyStateSimulationResult> results = new HashMap<String, SteadyStateSimulationResult>();

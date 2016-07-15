@@ -66,7 +66,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		factory = new SimulationMethodsFactory(mapMethods);
 	}
 	
-	public SimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) throws Exception {
+	public SimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) {
 		super(simulationConfiguration);
 		SolverType solver = (SolverType) simulationConfiguration.get(SimulationProperties.SOLVER);
 		Boolean isMaximization = (Boolean) simulationConfiguration.get(SimulationProperties.IS_MAXIMIZATION);
@@ -81,6 +81,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		setUnderOverRef(ouReference);
 	}
 	
+	
 	public SimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
 		super(environmentalConditions, geneticConditions, model, methodType);
@@ -90,7 +91,6 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		if (isUnderOverSimulation() && getUnderOverRef() == null && !isUnderOver2StepApproach()) {
 			addUnderOverRef();
 		}
-		
 		if (lastMethod == null || forceRecreate) {
 			lastMethod = getFactory().getMethod(this.methodType, methodProperties, model);
 			if(lastMethod!=null && IConvexSteadyStateSimulationMethod.class.isAssignableFrom(lastMethod.getClass())){
@@ -100,7 +100,6 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		} else {
 			lastMethod.putAllProperties(methodProperties);
 		}
-		
 		return lastMethod.simulate();
 	}
 	
@@ -155,7 +154,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		addProperty(SimulationProperties.IS_OVERUNDER_SIMULATION, false);
 	}
 	
-	public void setGenesKnockoutConditions(Set<String> knockoutIds) throws Exception {
+	public void setGenesKnockoutConditions(Set<String> knockoutIds) {
 		GeneChangesList geneList = new GeneChangesList(knockoutIds);
 		GeneticConditions genConditions = new GeneticConditions(geneList, (ISteadyStateGeneReactionModel) model, false);
 		
@@ -169,6 +168,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 	}
 	
 	public void setOverUnder2StepApproach(Boolean ou2stepApproach) {
+
 		addProperty(SimulationProperties.OVERUNDER_2STEP_APPROACH, ou2stepApproach);
 	}
 	

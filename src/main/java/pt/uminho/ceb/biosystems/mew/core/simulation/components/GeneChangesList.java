@@ -279,7 +279,7 @@ public class GeneChangesList extends MapStringNum implements Serializable
 		return get(geneID);
 	}
 	
-	public ReactionChangesList getReactionUnderOverList(ISteadyStateGeneReactionModel model) throws Exception
+	public ReactionChangesList getReactionUnderOverList(ISteadyStateGeneReactionModel model)
 	{
 		ReactionChangesList result = new ReactionChangesList();
 		IEnvironment<IValue> environment = new Environment<IValue>();
@@ -331,7 +331,7 @@ public class GeneChangesList extends MapStringNum implements Serializable
 	}
 	
 /*	Nao sei se sera necessario .... */
-	public ReactionChangesList getReactionKnockoutList (ISteadyStateGeneReactionModel model) throws Exception
+	public ReactionChangesList getReactionKnockoutList (ISteadyStateGeneReactionModel model)
 	{
 		List<String> result = new ArrayList<String>();
 		

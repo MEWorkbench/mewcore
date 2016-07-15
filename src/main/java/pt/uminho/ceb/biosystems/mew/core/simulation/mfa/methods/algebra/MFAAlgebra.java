@@ -1,5 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra;
 
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -106,4 +107,5 @@ public abstract class MFAAlgebra implements ISteadyStateSimulationMethod, IMFASi
 	public void clearAllProperties(){
 		propreties.clear();
 	};
+
 }

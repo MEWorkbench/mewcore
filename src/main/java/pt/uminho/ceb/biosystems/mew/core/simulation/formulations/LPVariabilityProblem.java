@@ -212,10 +212,7 @@ public class LPVariabilityProblem <T extends AbstractSSBasicSimulation<?>> exten
 	}
 	
 	@Override
-	public SteadyStateSimulationResult simulate() throws PropertyCastException,
-			MandatoryPropertyException, WrongFormulationException,
-			SolverException, IOException {
-		
+	public SteadyStateSimulationResult simulate(){
 		
 		SteadyStateSimulationResult ret = super.simulate();
 		problem = null;

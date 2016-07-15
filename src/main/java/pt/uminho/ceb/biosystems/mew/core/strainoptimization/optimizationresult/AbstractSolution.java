@@ -21,6 +21,8 @@ public abstract class AbstractSolution implements IStrainOptimizationResult {
 	
 	protected Map<String, SteadyStateSimulationResult>	simulationResultMap;
 	protected GeneticConditions							solutionGeneticConditions;
+	
+//	FIXME: LIST???? change to Map
 	protected List<Double>								attributes;
 	
 	public AbstractSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap) {

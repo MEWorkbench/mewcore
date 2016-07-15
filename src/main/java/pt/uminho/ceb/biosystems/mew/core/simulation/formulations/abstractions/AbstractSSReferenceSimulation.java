@@ -42,21 +42,18 @@ public abstract class AbstractSSReferenceSimulation<T extends LPProblem> extends
 			} catch (PropertyCastException e) {
 				System.err.println("The property " + e.getProperty() + " was ignored!!\n Reason: " + e.getMessage());
 			} catch (MandatoryPropertyException e) {
-				
+				e.printStackTrace();
 			}
 			
 			if(wtReference == null){
 				SolverType solver = getSolverType();
 				EnvironmentalConditions envCond = getEnvironmentalConditions();
-				try {
-					if(debug) System.out.print("["+getClass().getSimpleName()+"] event [COMPUTING WT REFERENCE]...");
-					if(debug_times) initTime = System.currentTimeMillis();
-					wtReference = SimulationProperties.simulateWT(model, envCond, solver);
-					if(debug) System.out.println("done!");
-					if(debug_times) times.put("AbstractSSReferenceSimulation.getWTReference", System.currentTimeMillis() - initTime);
-				} catch (Exception e) {
-					throw new Error(e);
-				}
+				
+				if(debug) System.out.print("["+getClass().getSimpleName()+"] event [COMPUTING WT REFERENCE]...");
+				if(debug_times) initTime = System.currentTimeMillis();
+				wtReference = SimulationProperties.simulateWT(model, envCond, solver);
+				if(debug) System.out.println("done!");
+				if(debug_times) times.put("AbstractSSReferenceSimulation.getWTReference", System.currentTimeMillis() - initTime);
 				setProperty(SimulationProperties.WT_REFERENCE, wtReference);
 			}
 		}

@@ -106,7 +106,7 @@ public class MiMBl_NormalizeSolution extends PFBA<AbstractTurnoverFormulation<LP
 	}
 
 	
-	public double computeObjectiveValue() throws WrongFormulationException, SolverException, PropertyCastException, MandatoryPropertyException, IOException {
+	public double computeObjectiveValue() throws WrongFormulationException, SolverException, PropertyCastException, MandatoryPropertyException {
 		double value = Math.abs(super.computeObjectiveValue()) * (1 + (1 - getRelaxCoef()));
 		return value;
 	}

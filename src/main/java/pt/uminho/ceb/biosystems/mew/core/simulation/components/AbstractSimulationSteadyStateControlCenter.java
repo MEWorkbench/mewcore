@@ -40,12 +40,12 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 	
 	public AbstractSimulationSteadyStateControlCenter(EnvironmentalConditions environmentalConditions, GeneticConditions geneticConditions, ISteadyStateModel model, String methodType) {
 		
-		super();
 		this.model = model;
 		methodProperties = new ListenerHashMap<String, Object>();
 		methodProperties.addPropertyChangeListener(this);
 		if (environmentalConditions != null)
 			addProperty(SimulationProperties.ENVIRONMENTAL_CONDITIONS, environmentalConditions);
+
 		if (geneticConditions != null) {
 			addProperty(SimulationProperties.IS_OVERUNDER_SIMULATION, geneticConditions.isOverUnder());
 			addProperty(SimulationProperties.GENETIC_CONDITIONS, geneticConditions);
@@ -120,7 +120,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		return lastMethod.simulate();
 	}
 	
-	public void setUnderOverRef(FluxValueMap ref) throws Exception {
+	public void setUnderOverRef(FluxValueMap ref) {
 		if (ref == null) {
 			removeProperty(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
 		} else

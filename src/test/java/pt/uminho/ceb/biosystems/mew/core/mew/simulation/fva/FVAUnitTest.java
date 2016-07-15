@@ -45,7 +45,7 @@ public class FVAUnitTest {
 		
 		FBAFluxVariabilityAnalysis fva = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX3);
 		
-		fva.fluxVariation(model.getBiomassFlux(), new ArrayList<String>(){{add("R_EX_h_e");}}, 20);
+		fva.fluxVariation(model.getBiomassFlux(), new ArrayList<String>(){{add("R_EX_h_e");}}, 20, null, null);
 		
 
 //		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);

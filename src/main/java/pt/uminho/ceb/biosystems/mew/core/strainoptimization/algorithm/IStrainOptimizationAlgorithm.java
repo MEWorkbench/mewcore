@@ -10,20 +10,13 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.I
  *
  * @param <T>
  */
-public interface IStrainOptimizationAlgorithm<T extends IGenericConfiguration> {
-
-	public IStrainOptimizationResultSet executeAlgorithm(T configuration) throws Exception;
-
+public interface IStrainOptimizationAlgorithm<T extends IGenericConfiguration> extends IAlgorithm {
+	
 	public T getAlgorithmConfiguration();
 
 	public void setAlgorithmConfiguration(T algorithmConfiguration);
 
+	public IStrainOptimizationResultSet executeAlgorithm(T configuration) throws Exception;
+
 	public IStrainOptimizationResultSet execute() throws Exception;
-
-	public void putAllProperties(T configuration);
-
-	public void setProperty(String id, Object object);
-
-	public Object getProperty(String id);
-
 }

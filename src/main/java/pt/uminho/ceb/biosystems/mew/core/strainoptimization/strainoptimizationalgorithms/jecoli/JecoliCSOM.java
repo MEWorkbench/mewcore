@@ -135,6 +135,7 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 					SteadyStateSimulationResult res = controlCenters.get(method).simulate();
 					simulations.put(simMethod, res);
 				}				
+
 			}
 			
 			IStrainOptimizationResult strainOptimizationResult = createSolutionResult(configuration, simulations, gc, fitnesses);

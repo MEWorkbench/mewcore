@@ -172,7 +172,7 @@ public class MFARobustnessAnalysis<T extends MFAWithSolvers<?>> extends MFAWithS
 		try {
 			res = super.simulate();
 			value = res.getOFvalue();
-		} catch (WrongFormulationException | SolverException | IOException e) {
+		} catch (WrongFormulationException | SolverException e) {
 			e.printStackTrace();
 		}
 		

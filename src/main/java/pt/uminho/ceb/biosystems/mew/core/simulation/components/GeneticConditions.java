@@ -32,7 +32,7 @@ public class GeneticConditions implements Serializable{
 		this.reactionList = reactionList;
 	}
 
-	public GeneticConditions(GeneChangesList geneList, ISteadyStateGeneReactionModel model, boolean isOverUnder) throws Exception
+	public GeneticConditions(GeneChangesList geneList, ISteadyStateGeneReactionModel model, boolean isOverUnder) 
 	{
 		this.geneList = geneList;
 		this.isOverUnder = isOverUnder;
