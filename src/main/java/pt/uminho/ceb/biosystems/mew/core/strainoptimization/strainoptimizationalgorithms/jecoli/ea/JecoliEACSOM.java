@@ -20,7 +20,6 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.EvolutionaryAlgorithm;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.EvolutionaryConfiguration;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.RecombinationParameters;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.IStrainOptimizationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter.IJecoliOptimizationStrategyConverter;
@@ -83,7 +82,7 @@ public abstract class JecoliEACSOM<E extends IJecoliOptimizationStrategyConverte
         controllerContainer.addOperator(1.0, new SetNewIndividualMutation<>());
 
         InitialStateController controller = new InitialStateController(controllerContainer, reproductionOperatorContainer);
-        return controller;
+        return (IAlgorithmController) controller;
     }
 
 }

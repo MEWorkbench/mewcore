@@ -51,6 +51,10 @@ public class WeightedYIELDObjectiveFunction extends AbstractObjectiveFunction {
 		super(biomassId, desiredFluxId, alpha, lpSolver, minBiomassValue);
 	}
 	
+	public WeightedYIELDObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, String lpSolver, Double minBiomassValue) {
+		super(biomassId, desiredFluxId, alpha, lpSolver, minBiomassValue);
+	}
+	
 	@Override
 	protected void processParams(Object... params) {
 		setParameterValue(WYIELD_PARAM_BIOMASS, params[0]);
