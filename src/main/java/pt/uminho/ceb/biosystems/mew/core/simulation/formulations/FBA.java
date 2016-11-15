@@ -43,6 +43,7 @@ public class FBA extends AbstractSSBasicSimulation<LPProblem> {
 		} catch (Exception e) {
 			obj_coef = new HashMap<String, Double>();
 			obj_coef.put(model.getBiomassFlux(), 1.0);
+			setProperty(SimulationProperties.OBJECTIVE_FUNCTION, obj_coef);
 		}
 		return obj_coef;
 	}
