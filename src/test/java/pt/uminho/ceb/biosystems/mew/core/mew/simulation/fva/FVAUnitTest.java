@@ -1,6 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.mew.simulation.fva;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -17,7 +18,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
-import pt.uminho.ceb.biosystems.mew.core.simulation.fva.FBAFluxVariabilityAnalysis;
+import pt.uminho.ceb.biosystems.mew.core.simulation.fva.FBAFluxVariabilityAnalysisNew;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
@@ -42,10 +43,27 @@ public class FVAUnitTest {
 		cont.removeMetabolites(met);
 		SteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
 		
+		EnvironmentalConditions ec = new EnvironmentalConditions();
+//		ec.addReactionConstraint("R_EX_o2_e", new ReactionConstraint(-17.0, 1000.0));
+//		ec.addReactionConstraint("R_EX_glc_e", new ReactionConstraint(-18.5, 1000.0));
 		
-		FBAFluxVariabilityAnalysis fva = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX3);
+//		FBAFluxVariabilityAnalysis fva = new FBAFluxVariabilityAnalysis(model, null, null, SolverType.CPLEX3);
+//		
+//		fva.fluxVariation(model.getBiomassFlux(), new ArrayList<String>(){{add("R_EX_h_e");}}, 20, null, null);
 		
-		fva.fluxVariation(model.getBiomassFlux(), new ArrayList<String>(){{add("R_EX_h_e");}}, 20, null, null);
+		FBAFluxVariabilityAnalysisNew fva = new FBAFluxVariabilityAnalysisNew(model, ec, null, SolverType.CPLEX3);
+		
+		Map<String, Map<Double, SteadyStateSimulationResult[]>> results = fva.fluxVariation("R_EX_o2_e", Arrays.asList(model.getBiomassFlux()), 20, null, null);
+		for (String string : results.keySet()) {
+			System.out.println("------------------------");
+			Map<Double, SteadyStateSimulationResult[]> map = results.get(string);
+			for (Double v : map.keySet()) {
+				SteadyStateSimulationResult[] rs = map.get(v);
+				System.out.println(string + "\t" + v + "\t" + rs[0].getFluxValues().get("R_EX_o2_e") + "\t" + rs[1].getFluxValues().get("R_EX_o2_e") + "\t" + rs[0].getSolutionType());
+			}
+			
+			
+		}
 		
 
 //		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.PFBA);
