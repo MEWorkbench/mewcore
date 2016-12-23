@@ -113,9 +113,9 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 				for (String method : simConfiguration.keySet()) {
 					Map<String, Object> methodConf = simConfiguration.get(method);
 					String simMethod = (String) methodConf.get(SimulationProperties.METHOD_ID);
-					ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
+//					ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
 					EnvironmentalConditions envConditions = (EnvironmentalConditions) methodConf.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS);
-					SolverType solver = (SolverType) methodConf.get(SimulationProperties.SOLVER);
+//					SolverType solver = (SolverType) methodConf.get(SimulationProperties.SOLVER);
 					Boolean isMaximization = (Boolean) methodConf.get(SimulationProperties.IS_MAXIMIZATION);
 					Boolean overUnder2StepApproach = (Boolean) methodConf.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
 					FluxValueMap wtReference = (FluxValueMap) methodConf.get(SimulationProperties.WT_REFERENCE);

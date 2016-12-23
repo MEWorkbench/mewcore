@@ -106,6 +106,8 @@ public class TDPSTestClean {
 //		ER_LMOMA.geneticModifications = MORA.geneticModifications;
 //		ER_MIMBLE.geneticModifications = MORA.geneticModifications;
 		
+		ccTest.addProperty(SimulationProperties.DEBUG_SOLVER_MODEL, "/home/pmaia/ownCloud/documents/TDPS/export_models/TDPS_rui.mps");
+		
 		SteadyStateSimulationResult result = ccTest.simulate();
 		
 		System.out.println(result.getOFvalue());

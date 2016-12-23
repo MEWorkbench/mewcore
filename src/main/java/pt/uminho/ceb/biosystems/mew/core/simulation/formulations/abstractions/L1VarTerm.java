@@ -3,14 +3,18 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReactionBounds;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
 
 public class L1VarTerm extends AbstractObjTerm {
@@ -40,11 +44,10 @@ public class L1VarTerm extends AbstractObjTerm {
 		
 		String name = "l1norm_" + varIndex;
 		
-		
 		LPVariable normFoVar = new LPVariable(name, minValue, maxValue);
 		LPVariable normFoVarPos = new LPVariable(name + "_pos", 0, maxValue);
 		LPVariable normFoVarNeg = new LPVariable(name + "_neg", 0, maxValue);
-
+		
 		vars.put(name, numVars);
 		vars.put(name + "_pos", numVars + 1);
 		vars.put(name + "_neg", numVars + 2);
@@ -79,7 +82,7 @@ public class L1VarTerm extends AbstractObjTerm {
 	}
 	
 	@Override
-	public Map<String, Integer> addObjectiveTermToProblem(LPProblem problem, List<LPVariable> ofAssociatedVars,List<LPConstraint> ofAssociatedConstraints) throws WrongFormulationException {
+	public Map<String, Integer> addObjectiveTermToProblem(LPProblem problem, List<LPVariable> ofAssociatedVars, List<LPConstraint> ofAssociatedConstraints) throws WrongFormulationException {
 		Map<String, Integer> vars = new HashMap<String, Integer>();
 		LPObjectiveFunction objective = problem.getObjectiveFunction();
 		
@@ -148,9 +151,24 @@ public class L1VarTerm extends AbstractObjTerm {
 		return new ReactionConstraint(lowerLimit, upperLimit);
 	}
 	
+//	static public ReactionConstraint getConvertedLimits2(Double lower, Double upper, boolean isPositive) {
+//		double lowerLimit = 0.0;
+//		double upperLimit = maxValue;
+//		
+//		if (isPositive) {
+//			lowerLimit = 0.0;
+//			upperLimit = upper;
+//		} else {
+//			upperLimit = 0.0;
+//			lowerLimit = lower;
+//		}
+//		
+//		return new ReactionConstraint(lowerLimit, upperLimit);
+//	}
+	
 	static public Map<String, Integer> splitNegAndPosVariable(LPProblem problem, int idx, String posVarName, String negVarName, Double lower, Double upper) throws WrongFormulationException {
 		Map<String, Integer> variablePositions = new HashMap<String, Integer>();
-
+		
 		ReactionConstraint negative = getConvertedLimits(lower, upper, false);
 		ReactionConstraint positive = getConvertedLimits(lower, upper, true);
 		
@@ -159,7 +177,6 @@ public class L1VarTerm extends AbstractObjTerm {
 		
 		double lowerLimitPositive = positive.getLowerLimit();
 		double upperLimitPositive = positive.getUpperLimit();
-				
 		
 		//		System.out.println(idx + "\t[l]" + lower + "\t[u]" + upper+ "\t[ln]" + lowerLimitNegative + "\t[un]" + upperLimitNegative + "\t[lp]" + lowerLimitPossitive+ "\t[up]" + upperLimitPossitive );
 		int numVariables = problem.getNumberVariables();
@@ -188,6 +205,5 @@ public class L1VarTerm extends AbstractObjTerm {
 		problem.addConstraint(constPosNeg);
 		
 		return variablePositions;
-	}
-
+	}		
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -328,8 +329,7 @@ public class TDPS extends AbstractSSReferenceSimulation<MILPProblem> {
 			}
 			
 			try {
-				// create: Vn > -1000 * Bn ; If the boolean variable is 1, Vn is higher than -1000,if it is 0, Vn has to be zero
-				
+				// create: Vn > -1000 * Bn ; If the boolean variable is 1, Vn is higher than -1000,if it is 0, Vn has to be zero				
 				binaryN.addTerm(vnn, -1);
 				binaryN.addTerm(varn + 1, -1000);
 				
@@ -443,8 +443,7 @@ public class TDPS extends AbstractSSReferenceSimulation<MILPProblem> {
 		//Create Turnover variables and equations
 		createTOVariables();
 		
-		//modify regKs according to genetic modifications
-		
+		//modify regKs according to genetic modifications		
 		for (String rId : geneticModifications.keySet()) {
 			
 			int rIdx = model.getReactionIndex(rId);
@@ -628,6 +627,7 @@ public class TDPS extends AbstractSSReferenceSimulation<MILPProblem> {
 							int varn = problem.getNumberVariables();
 							problem.addIntVariable("y" + rId + met, 0, 1);
 							idToIndexVarMapings.put("y" + rId + met, varn);
+							indexToIdVarMapings.put(varn,"y" + rId + met);
 							genMod.addTerm(varn, 1000000);
 							boolRest.addTerm(varn, 1);
 							//over-expression constraint
@@ -716,6 +716,7 @@ public class TDPS extends AbstractSSReferenceSimulation<MILPProblem> {
 							int varn = problem.getNumberVariables();
 							problem.addIntVariable("w" + rId + met, 0, 1);
 							idToIndexVarMapings.put("w" + rId + met, varn);
+							indexToIdVarMapings.put(varn,"w" + rId + met);
 							genMod.addTerm(varn, 1000000);
 							boolRest.addTerm(varn, 1);
 							//over-expression constraint

@@ -19,6 +19,7 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.components;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.ROOM;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.NoConstructorMethodException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS2;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS3;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.turnover.MiMBl;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
@@ -62,12 +64,15 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		mapMethods.put(SimulationProperties.DSPP_LMOMA, DSPP_LMOMA.class); 	//dual stage phenotype prediction	
 		mapMethods.put(SimulationProperties.TDPS, TDPS.class);				//turnover dependent phenotype simulation - rui's method
 		mapMethods.put(SimulationProperties.TDPS2, TDPS2.class);			//turnover dependent phenotype simulation - rui's method
+		mapMethods.put(SimulationProperties.TDPS3, TDPS3.class);			//turnover dependent phenotype simulation - rui's method
 		
 		factory = new SimulationMethodsFactory(mapMethods);
 	}
 	
 	public SimulationSteadyStateControlCenter(Map<String, Object> simulationConfiguration) {
 		super(simulationConfiguration);
+		Set<String> dealtWithProperties = new HashSet<String>(simulationConfiguration.keySet());
+		
 		SolverType solver = (SolverType) simulationConfiguration.get(SimulationProperties.SOLVER);
 		Boolean isMaximization = (Boolean) simulationConfiguration.get(SimulationProperties.IS_MAXIMIZATION);
 		Boolean overUnder2StepApproach = (Boolean) simulationConfiguration.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
@@ -79,6 +84,12 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		setOverUnder2StepApproach(overUnder2StepApproach);
 		setWTReference(wtReference);
 		setUnderOverRef(ouReference);
+		
+		dealtWithProperties.removeAll(super.methodProperties.keySet());
+		dealtWithProperties.remove(SimulationProperties.METHOD_ID);
+		for(String key : dealtWithProperties){
+			addProperty(key, simulationConfiguration.get(key));
+		}
 	}
 	
 	

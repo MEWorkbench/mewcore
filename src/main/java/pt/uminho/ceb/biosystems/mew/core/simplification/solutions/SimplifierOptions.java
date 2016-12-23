@@ -6,7 +6,7 @@ package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
  * 
  * @author pmaia
  * @date May 24, 2016
- * @version 
+ * @version
  * @since
  */
 public class SimplifierOptions {
@@ -23,5 +23,11 @@ public class SimplifierOptions {
 	 * respectively.
 	 */
 	public static final String	MIN_PERCENT_PER_OBJFUNC	= "simplifier.options.minPercentPerObjectiveFunction";
+														
+	/**
+	 * If this flag is set to true the simplfier keeps only the smallest solution, otherwise, it
+	 * keeps all the intermediate solutions in a given solutions' simplification process
+	 */
+	public static final String	KEEP_ONLY_MIN_SOLUTION	= "simplifier.options.keepOnlyMinSolution";
 														
 }

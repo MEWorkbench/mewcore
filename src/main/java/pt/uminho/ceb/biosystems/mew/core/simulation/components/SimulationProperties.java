@@ -1,13 +1,24 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.components;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
+import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.L1VarTerm;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
 
 public class SimulationProperties {
 	
@@ -100,6 +111,8 @@ public class SimulationProperties {
 																	
 	/** TDPS2 - Maia */
 	public static final String	TDPS2								= "TDPS2";
+	public static final String	TDPS3								= "TDPS3";
+	public static final String	TDPS4								= "TDPS4";
 	public static final String	TDPS_PENALTY						= "TDPS_PENALTY";
 	public static final String	TDPS_REMOVE_METABOLITES				= "TDPS_REMOVE_METABOLITES";
 	public static final String	TDPS_UNBOUNDED_METABOLITES			= "TDPS_UNBOUNDED_METABOLITES";
@@ -124,17 +137,34 @@ public class SimulationProperties {
 			
 			String metId = model.getMetaboliteId(i);
 			double turnover = 0;
-			turnover = getTurnOverMetabolite(model, fluxes, metId);
+			turnover = getTurnOverMetabolite(model, fluxes, i);
 			ret.put(metId, turnover);
 		}
 		
 		return ret;
 	}
 	
-	private static Double getTurnOverMetabolite(ISteadyStateModel model, Map<String, Double> fluxes, String metabolite_id) {
-		double result = 0.0;
+	public static Map<Integer, Double> getTurnOverCalculationByIndex(ISteadyStateModel model, Map<String, Double> fluxes, Set<Integer> ignoreMetabolites) {
+		Map<Integer, Double> ret = new HashMap<Integer, Double>();
 		
-		int met_idx = model.getMetaboliteIndex(metabolite_id);
+		for (int i = 0; i < model.getNumberOfMetabolites(); i++) {
+			
+			double turnover = 0;
+			if (!ignoreMetabolites.contains(i)) {
+				turnover = getTurnOverMetabolite(model, fluxes, i);
+			}
+			ret.put(i, turnover);
+		}
+		
+		return ret;
+	}
+	
+	public static Map<Integer, Double> getTurnOverCalculationByIndex(ISteadyStateModel model, Map<String, Double> fluxes) {
+		return getTurnOverCalculationByIndex(model, fluxes, new HashSet<Integer>());
+	}
+	
+	private static Double getTurnOverMetabolite(ISteadyStateModel model, Map<String, Double> fluxes, Integer met_idx) {
+		double result = 0.0;
 		
 		for (int i = 0; i < fluxes.size(); i++) {
 			
@@ -150,6 +180,113 @@ public class SimulationProperties {
 				
 		}
 		return result;
+	}
+	
+	public static void computeConsumersProducersPerIndex(ISteadyStateModel model, Map<Integer, Collection<Integer>> producers, Map<Integer, Collection<Integer>> consumers, Set<Integer> metabolites2ignore) {
+		
+		for (int met = 0; met < model.getNumberOfMetabolites(); met++) {
+			
+			producers.put(met, new ArrayList<Integer>());
+			consumers.put(met, new ArrayList<Integer>());
+			
+			for (int reac = 0; reac < model.getNumberOfReactions(); reac++) {
+				
+				double stoich = model.getStoichiometricValue(met, reac);
+				
+				//dont include unbounded metabolites
+				if ((stoich > 0) && (!metabolites2ignore.contains(met))) {
+					producers.get(met).add(reac);
+				}
+				//dont include unbounded metabolites
+				if ((stoich < 0) && (!metabolites2ignore.contains(met))) {
+					consumers.get(met).add(reac);
+				}
+			}
+		}
+	}
+	
+	public static void computeProductsReactantsPerIndex(ISteadyStateModel model, Map<Integer, Collection<Integer>> products, Map<Integer, Collection<Integer>> reactants, Set<Integer> metabolites2ignore) {
+		
+		for (int reac = 0; reac < model.getNumberOfReactions(); reac++) {
+			
+			products.put(reac, new ArrayList<Integer>());
+			reactants.put(reac, new ArrayList<Integer>());
+			
+			for (int met = 0; met < model.getNumberOfMetabolites(); met++) {
+				
+				double stoich = model.getStoichiometricValue(met, reac);
+				
+				//dont include unbounded metabolites
+				if ((stoich > 0) && (!metabolites2ignore.contains(met))) {
+					products.get(reac).add(met);
+					
+				}
+				//dont include unbounded metabolites
+				if ((stoich < 0) && (!metabolites2ignore.contains(met))) {
+					reactants.get(reac).add(met);
+					
+				}
+			}
+		}
+	}
+	
+	static public Map<String, Integer> splitReactionsMILP(MILPProblem problem, ISteadyStateModel model, IOverrideReactionBounds overrideBounds, Set<Integer> reaction2ignore) throws LinearProgrammingTermAlreadyPresentException {
+		Map<String,Integer> newVariables = new HashMap<>();
+		
+		for(int i=0; i<model.getNumberOfReactions(); i++){
+			if(!reaction2ignore.contains(i)){
+				String reactionID = model.getReactionId(i);
+				ReactionConstraint constr = overrideBounds.getReactionConstraint(reactionID);
+				splitSingleReactionMILP(problem, newVariables, reactionID, i, constr.getLowerLimit(), constr.getUpperLimit());
+			}
+		}
+		
+		return newVariables;
+	}
+	
+	static public void splitSingleReactionMILP(MILPProblem problem, Map<String, Integer> newVariables, String reactionName, int reactionIdx, double lowerLimit, double upperLimit) throws LinearProgrammingTermAlreadyPresentException {
+		final String idPositive = "TORV_" + reactionName + "(" + reactionIdx + ")_PST";
+		final String idNegative = "TORV_" + reactionName + "(" + reactionIdx + ")_NGT";
+		
+		//split reversible reactions into a positive Vp and a negative Vn half reaction
+		Map<String, Integer> newVars = L1VarTerm.splitNegAndPosVariable(problem, reactionIdx, idPositive, idNegative, lowerLimit, upperLimit);
+		newVariables.putAll(newVars);
+		
+		//get the split variables' indexes	
+		int vpn = newVariables.get(idPositive);
+		int vnn = newVariables.get(idNegative);
+		
+		//get the number of variables
+		int bp = problem.getNumberVariables();
+		int bn = bp + 1;
+		
+		problem.addIntVariable("y" + reactionIdx, 0, 1);
+		problem.addIntVariable("w" + reactionIdx, 0, 1);
+		//add the boolean variables to the var mappings
+		newVariables.put("y" + reactionIdx, bp);
+		newVariables.put("w" + reactionIdx, bn);
+		
+		//create positive row
+		LPProblemRow binaryP = new LPProblemRow();
+		binaryP.addTerm(vpn, 1); // create: Vp< 1000 * Bp ; If the boolean variable is 1, Vn is lower than 1000,if it is 0, Vp has to be zero
+		binaryP.addTerm(bp, -1000);
+		LPConstraint MILPpos = new LPConstraint(LPConstraintType.LESS_THAN, binaryP, 0);
+		problem.addConstraint(MILPpos);
+		
+		//create negative row
+		LPProblemRow binaryN = new LPProblemRow();
+		binaryN.addTerm(vnn, 1); // create: Vn > -1000 * Bn ; If the boolean variable is 1, Vn is higher than -1000,if it is 0, Vn has to be zero
+		binaryN.addTerm(bn, -1000);
+		LPConstraint MILPneg = new LPConstraint(LPConstraintType.LESS_THAN, binaryN, 0);
+		problem.addConstraint(MILPneg);
+		
+		//create: Bp+Bn<1; With this constraint the sum of the boolean variables has to be lower or equal to 1
+		//which means they cannot both be equal to 1 and Vp and Vn will never be active at the same time
+		LPProblemRow binaryS = new LPProblemRow();
+		binaryS.addTerm(bp, 1);
+		binaryS.addTerm(bn, 1);		
+		LPConstraint MILPsum = new LPConstraint(LPConstraintType.LESS_THAN, binaryS, 1);
+		problem.addConstraint(MILPsum);
 		
 	}
 	

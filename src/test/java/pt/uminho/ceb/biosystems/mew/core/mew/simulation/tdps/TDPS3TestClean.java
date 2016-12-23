@@ -29,7 +29,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
-public class TDPS2TestClean {
+public class TDPS3TestClean {
 	
 	protected static double[] results = null;
 	protected static String[] netconv = new String[]{"M_ala_L_e","M_h2o_e","M_co2_e","M_ser_L_e","M_pi_e","R_biomass_SC5_notrace","M_glc_D_e","M_h_e","M_so4_e","M_pro_L_e","M_glyc_e","M_nh4_e","M_o2_e","M_ttdca_e","M_thym_e","M_3hp_c","M_ac_e","OF"};
@@ -52,7 +52,8 @@ public class TDPS2TestClean {
 		
 		String bimassReaction = "R_biomass_SC5_notrace";
 		
-		String fileTest = "/home/pmaia/ownCloud/documents/TDPS/iMM904_2.0_sc1000_3HP_new_pvilaca.xml";
+//		String fileTest = "/home/pmaia/ownCloud/documents/TDPS/iMM904_2.0_sc1000_3HP_new_pvilaca.xml";
+		String fileTest = "/home/pmaia/ownCloud/documents/TDPS/iMM904_2.0_sc1000_3HP.xml";
 		
 		JSBMLReader readerTest = new JSBMLReader(fileTest, "");
 		Container containerTest = new Container(readerTest);
@@ -66,7 +67,7 @@ public class TDPS2TestClean {
 				"M_coa_c M_coa_m M_h2o_x M_h2o_e M_h2o_c M_h2o_m M_h2o_v M_h2o_r M_h2o_n M_h_e M_h_c M_h_m M_h_r M_h_v M_h_n M_so4_e M_so4_c M_pi_e M_pi_c M_pi_m M_nh4_e M_nh4_c M_nh4_m M_o2_e M_o2_c M_o2_m M_o2_r",
 				" ");
 		
-		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS2);
+		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS3);
 		ccTest.setSolver(SolverType.CPLEX3);
 		ccTest.addProperty(SimulationProperties.TDPS_PENALTY, 50.0);
 		ccTest.addProperty(SimulationProperties.TDPS_REMOVE_METABOLITES, metabolites2remove);
@@ -74,31 +75,37 @@ public class TDPS2TestClean {
 
 		
 		Map<String,Double> exprs = new HashMap<String,Double>();
-		exprs.put("R_PYRDC", 2.0);
-		exprs.put("R_ACS", 2.0);
-		exprs.put("R_ALDD2x", 2.0);
-		exprs.put("R_PYRt2m", 0.5);
-		exprs.put("R_MCR", 2.0);
-		exprs.put("R_ACCOACr", 2.00);
+//		exprs.put("R_PYRDC", 2.0);
+//		exprs.put("R_ACS", 2.0);
+//		exprs.put("R_ALDD2x", 2.0);
+//		exprs.put("R_PYRt2m", 0.5);
+//		exprs.put("R_MCR", 2.0);
+//		exprs.put("R_ACCOACr", 2.00);
+		exprs.put("R_DHAD1m",2.0);
+		exprs.put("R_ACCOACr",2.0);
+		exprs.put("R_GHMT2rm",0.0);
+		exprs.put("R_CYTDK2",0.0);
+		exprs.put("R_NADPPPS",0.0);
+		exprs.put("R_GK1",0.5);
+		exprs.put("R_CTPtm",0.0);
+		exprs.put("R_PYDAMK",2.0);
+		exprs.put("R_ABUTt2r",0.0);
+		exprs.put("R_3C3HMPtm",0.0);
+		
 		GeneticConditions gc = new GeneticConditions(new ReactionChangesList(exprs));
 		ccTest.setGeneticConditions(gc);
 		
 		ccTest.addProperty(SimulationProperties.DEBUG_SOLVER_MODEL, "/home/pmaia/ownCloud/documents/TDPS/export_models/TDPS_mew.mps");
 		SteadyStateSimulationResult result = ccTest.simulate();
 		
+		
 		Map<String,Double> netconversionMap = result.getNetConversionMap(true);
 		netconversionMap.put("OF", result.getOFvalue());
 		System.out.println(result.getOFvalue());
 		MapUtils.prettyPrint(netconversionMap);
 				
+		System.out.println(result.getSolutionType());
 		
-//		double[] thisres = new double[results.length];
-//		for(int i=0; i<netconv.length;i++){
-//			String r = netconv[i];
-//			double val = netconversionMap.get(r);
-//			thisres[i] = val;
-//		}
-//		
 		double[] thisres = new double[results.length];
 		for(int i=0; i<netconv.length;i++){
 			String r = netconv[i];

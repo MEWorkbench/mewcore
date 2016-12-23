@@ -2,12 +2,16 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
@@ -30,6 +34,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.exceptions.AutomaticOverUnde
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.SolveContraint;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.ILPSolver;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
@@ -54,7 +59,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
  * Persistent implementation of an <code>AbstractSSBasicSimulation</code>.
  * 
  * 
- * @author pmaia
+ * @author pmaia, pvilaça
  * @date Jan 19, 2014
  * @version 1.0
  * @since metabolic3persistent
@@ -168,11 +173,18 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 	
 	public void putNewVariables(Map<String, Integer> vars) {
 		
-		idToIndexVarMapings.putAll(vars);
-		for (String id : vars.keySet()) {
-			int i = vars.get(id);
-			indexToIdVarMapings.put(i, id);
+		for (Entry<String,Integer> entry : vars.entrySet()) {
+			addNewVariable(entry.getKey(), entry.getValue());
 		}
+	}
+	
+	public void addNewVariable(String id, Integer index){
+		idToIndexVarMapings.put(id, index);
+		indexToIdVarMapings.put(index, id);
+	}
+	
+	public void addNewVariable(Integer index, String id){
+		addNewVariable(id, index);
 	}
 	
 	public void removeVariables(Map<String, Integer> vars) {
@@ -375,9 +387,50 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		return solution;
 	}
 	
+	private Map<LPConstraint,Boolean> detectViolations(T problem2, Map<Integer,Double> values){
+				
+		Map<LPConstraint,Boolean> violations = new HashMap<>();
+		
+		for(LPConstraint cons : problem2.getConstraints()){
+			boolean vio = SolveContraint.solveContraint(cons, values);
+			violations.put(cons, vio);
+		}
+		return violations;
+	}
+
 	public void forceSolverCleanup(){
 		if(_solver!=null)
 			_solver.resetSolver();
+	}
+	
+	public void printLPProblem(LPProblem problem, String file, Map<LPConstraint, Boolean> violations, Map<Integer, Double> values){
+		
+		StringBuilder sb = new StringBuilder(); 
+		sb.append("===[ VARIABLES ]===");
+		for(int i=0; i<problem.getNumberVariables(); i++){			
+			sb.append("\n");
+			sb.append("V_"+i+":\t"+problem.getVariables().get(i)).toString();
+		}
+		sb.append("\n");
+		sb.append("===[ CONSTRAINTS ]===");
+		for(int i=0;i<problem.getNumberConstraints();i++){
+			sb.append("\n");
+			String violationString = (violations!=null && !violations.isEmpty()) ? (violations.get(problem.getConstraint(i)) ? "\tVIOLATION!"+ (SolveContraint.constraintString(problem.getConstraint(i), values)) : "") : "" ;
+			sb.append("C_"+i+":\t"+problem.getConstraint(i).toStringWithNames(getIndexToIdVarMapings())+violationString);
+		}
+		sb.append("\n");
+		sb.append("===[ OBJ FUNC ]===\n");
+		sb.append(problem.getObjectiveFunction().toStringWithNames(getIndexToIdVarMapings())+"");
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			bw.write(sb.toString());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
@@ -386,10 +439,14 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		objTerms.clear();
 		LPProblem p = getProblem();
 		
-		if (isRecreateOF()) recreateObjectiveFunction();
+		
+		if (isRecreateOF()) {
+			recreateObjectiveFunction();
+		}
 		
 		IOverrideReactionBounds override = createModelOverride();
 		setVariables(override);
+//		printLPProblem(p, "/home/pmaia/ownCloud/documents/TDPS/export_models/LPProblem_rui.txt",null,null);
 		
 		if (_solver != null) _solver.resetSolver();
 		
@@ -414,11 +471,30 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			}
 		}
 		
-		
+//		printVariableMap("/home/pmaia/ownCloud/documents/TDPS/export_models/varMap_rui.txt", solution);
 		
 		return solution;
 	}
 	
+	private void printVariableMap(String file, LPSolution solution) {
+		StringBuffer sb = new StringBuffer();
+		
+		for(int i=0; i<solution.getValues().size(); i++){
+			sb.append(i+","+solution.getValues().get(i)+"\n");
+		}
+		
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			bw.write(sb.toString());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+	}
+
 	@SuppressWarnings("unchecked")
 	protected void recreateObjectiveFunction() {
 			objTerms.clear();

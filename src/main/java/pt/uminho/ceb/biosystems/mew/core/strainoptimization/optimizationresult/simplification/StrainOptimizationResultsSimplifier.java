@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.plaf.synth.SynthScrollPaneUI;
+
 import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.IGeneticConditionsSimplifiedResult;
 import pt.uminho.ceb.biosystems.mew.core.simplification.solutions.ISimplifierGeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
@@ -39,7 +41,7 @@ public abstract class StrainOptimizationResultsSimplifier<C extends ISteadyState
 		
 		List<T> toret = new ArrayList<T>();
 		for (int i = 0; i < simpResults.size(); i++) {
-			GeneticConditions gc = simpResults.getSimplifiedGeneticConditions().get(i);
+			GeneticConditions gc = simpResults.getSimplifiedGeneticConditions().get(i);			
 			SteadyStateMultiSimulationResult res = simpResults.getSimplifiedSimulationResults().get(i);
 			T simpSol = createSolution(gc, res.getSimulations(), simpResults.getSimplifiedFitnesses().get(i));
 			toret.add(simpSol);
@@ -92,9 +94,7 @@ public abstract class StrainOptimizationResultsSimplifier<C extends ISteadyState
 		IStrainOptimizationResultSet<C, T> emptySet = createResultSetInstance(new ArrayList<T>());
 		IStrainOptimizationResultSet<C, T> resSetRepeated = getSimplifiedResultSet(resultSet);
 		
-//		System.out.println("RESULT SET WITH REPEATITIONS = "+resSetRepeated.getResultList().size());
 		emptySet = emptySet.merge(resSetRepeated);
-//		System.out.println("RESULT SET WITHOUT REPEATITIONS = "+emptySet.getResultList().size());
 		return emptySet;
 	}
 	

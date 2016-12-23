@@ -19,6 +19,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.
 public abstract class AbstractGeneticConditionsSimplifier implements ISimplifierGeneticConditions {
 	
 	protected Double											delta					= null;
+	protected Boolean											keepOnlyMinSolution		= null;
 	protected Map<String, SimulationSteadyStateControlCenter>	ccs						= null;
 	protected Map<String, Map<String, Object>>					simulationConfiguration	= null;
 	protected ISteadyStateModel									model					= null;
@@ -33,6 +34,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	
 	private void loadDefaultOptions() {
 		this.simplifierOptions.put(SimplifierOptions.DELTA, 1e-6);
+		this.simplifierOptions.put(SimplifierOptions.KEEP_ONLY_MIN_SOLUTION, false);
 	}
 	
 	public Object getOption(String optionKey) {
@@ -56,6 +58,9 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		
 		IGeneticConditionsSimplifiedResult simpResult = simplifyGeneticConditions(geneticConditions, objectiveFunctions, initialFitnesses);
 		Double[] minPercents = (Double[]) getOption(SimplifierOptions.MIN_PERCENT_PER_OBJFUNC);
+		
+		keepOnlyMinSolution = (Boolean) simplifierOptions.get(SimplifierOptions.KEEP_ONLY_MIN_SOLUTION);
+		
 		if (minPercents != null) {
 			if (minPercents.length != objectiveFunctions.size()) {
 				throw new Exception("Simplifier option [" + SimplifierOptions.MIN_PERCENT_PER_OBJFUNC + "] has length (" + minPercents.length
@@ -66,7 +71,9 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 				for (int i = 0; i < simpFitnesses.length; i++) {
 					simpFitnesses[i] = simpResult.getSimplifiedFitnesses().get(0).get(i);
 				}
-				IGeneticConditionsSimplifiedResult subSolutions = findSubSolutions(gc, objectiveFunctions, simpFitnesses, minPercents);
+				IGeneticConditionsSimplifiedResult subSolutions = (keepOnlyMinSolution)
+						? simplifyGeneticConditions(gc, objectiveFunctions, simpFitnesses, minPercents)
+						: findSubSolutions(gc, objectiveFunctions, simpFitnesses, minPercents);
 				subSolutions.addAll(simpResult);
 				
 				return subSolutions;
@@ -87,10 +94,8 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		}
 	}
 	
-	@Override
-	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses)
-			throws Exception {
-			
+	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses,
+			Double[] minPercents) throws Exception {
 		TreeSet<String> ids = new TreeSet<String>(getGeneticConditionsIDs(conditions));
 		
 		List<String> iDsIterator = new ArrayList<String>(ids);
@@ -111,7 +116,8 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			
 			double[] simpfitnesses = evaluateSolution(results, objectiveFunctions);
 			
-			if (isBetter(finalFitnesses, simpfitnesses, objectiveFunctions)) {
+			boolean valid = (minPercents == null) ? isBetter(finalFitnesses, simpfitnesses, objectiveFunctions) : isInRange(initialFitnesses, simpfitnesses, minPercents, objectiveFunctions);
+			if (valid) {
 				finalFitnesses = simpfitnesses;
 				finalResults = results;
 			} else {
@@ -126,6 +132,12 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		}
 		
 		return new GeneticConditionSimplifiedResult(finalSolution, new SteadyStateMultiSimulationResult(finalSolution, finalResults), fitList);
+	}
+	
+	@Override
+	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] initialFitnesses)
+			throws Exception {
+		return simplifyGeneticConditions(conditions, objectiveFunctions, initialFitnesses, null);
 	}
 	
 	public IGeneticConditionsSimplifiedResult findSubSolutions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions, double[] originalFitnesses,
@@ -173,23 +185,6 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		return new GeneticConditionSimplifiedResult(gcsResults, simResults, fitResults);
 	}
 	
-	public boolean isInRange(double[] originalFitnesses, double[] simpFitnesses, Double[] minPercents, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) {
-		boolean res = true;
-		int i = 0;
-		
-		while (res && i < objectiveFunctions.size()) {
-			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
-			if (of.isMaximization()) {
-				if (simpFitnesses[i] <= (originalFitnesses[i] * minPercents[i]))
-					res = false;
-			} else if (simpFitnesses[i] >= (originalFitnesses[i] * minPercents[i]))
-				res = false;
-			i++;
-		}
-		
-		return res;
-	}
-	
 	public Map<String, SteadyStateSimulationResult> simulateGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) throws Exception {
 		buildControlCenters(objectiveFunctions);
 		Map<String, SteadyStateSimulationResult> res = new HashMap<>();
@@ -198,6 +193,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 			center.setGeneticConditions(conditions);
 			
 			try {
+				
 				SteadyStateSimulationResult mres = center.simulate();
 				res.put(method, mres);
 			} catch (Exception e) {
@@ -245,6 +241,25 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 					res = false;
 			} else if (simplifiedFitness[i] - fitnesses[i] > delta)
 				res = false;
+			i++;
+		}
+		
+		return res;
+	}
+	
+	public boolean isInRange(double[] originalFitnesses, double[] simpFitnesses, Double[] minPercents, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) {
+		boolean res = true;
+		int i = 0;
+		
+		while (res && i < objectiveFunctions.size()) {
+			IObjectiveFunction of = objectiveFunctions.getKeyAt(i);
+			if (of.isMaximization()) {
+				if (simpFitnesses[i] <= (originalFitnesses[i] * minPercents[i])) {
+					res = false;
+				}
+			} else if (simpFitnesses[i] >= (originalFitnesses[i] * minPercents[i])) {
+				res = false;
+			}
 			i++;
 		}
 		

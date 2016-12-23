@@ -53,7 +53,7 @@ public class GenericConfiguration implements IGenericConfiguration {
 			if (value == null) {
 				nonDefinedPropertyList.add(propertyId);
 			} else {
-//				System.out.println("property id = "+propertyId);
+//				System.out.println("property id = "+propertyId +" value = "+value+" class = "+value.getClass().toString()) ;
 				propertyObject.cast(value);
 			}
 		}

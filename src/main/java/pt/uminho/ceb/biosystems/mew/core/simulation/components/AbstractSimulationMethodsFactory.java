@@ -8,6 +8,7 @@ import java.util.Set;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.NoConstructorMethodException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.UnregistaredMethodException;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class AbstractSimulationMethodsFactory {
 

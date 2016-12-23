@@ -6,15 +6,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
-import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.components.enums.ReactionType;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReactionBounds;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractSSReferenceSimulation;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.L1VarTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.VarTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
@@ -22,36 +21,35 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.Mand
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
+import pt.uminho.ceb.biosystems.mew.utilities.math.MathUtils;
 
-public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
+public class TDPS3 extends AbstractSSReferenceSimulation<MILPProblem> {
 	
-	public static double						DEFAULT_PENALTY			= 10;
-																		
-	public Map<Integer, Collection<Double>>		regKmet					= new HashMap<Integer, Collection<Double>>();
-	public Map<String, Double>					regKs					= new HashMap<String, Double>();
-	public Map<Integer, Collection<Integer>>	producers				= new HashMap<Integer, Collection<Integer>>();
-	public Map<Integer, Collection<Integer>>	consumers				= new HashMap<Integer, Collection<Integer>>();
-	public Map<Integer, Collection<Integer>>	products				= new HashMap<Integer, Collection<Integer>>();
-	public Map<Integer, Collection<Integer>>	reactants				= new HashMap<Integer, Collection<Integer>>();
-	public Map<Integer, Double>					rSum					= new HashMap<Integer, Double>();
-	public Map<Integer, Double>					turnovers				= new HashMap<Integer, Double>();
-																		
-	public double								defaultBound			= 100000000;
-																		
-	protected IOverrideReactionBounds			overrideBounds			= null;
-																		
+	public static double						DEFAULT_PENALTY	= 10;
+																
+	public Map<Integer, Collection<Double>>		regKmet			= new HashMap<Integer, Collection<Double>>();
+	public Map<String, Double>					regKs			= new TreeMap<String, Double>();
+	public Map<Integer, Collection<Integer>>	producers		= new HashMap<Integer, Collection<Integer>>();
+	public Map<Integer, Collection<Integer>>	consumers		= new HashMap<Integer, Collection<Integer>>();
+	public Map<Integer, Collection<Integer>>	products		= new HashMap<Integer, Collection<Integer>>();
+	public Map<Integer, Collection<Integer>>	reactants		= new HashMap<Integer, Collection<Integer>>();
+	public Map<Integer, Double>					rSum			= new HashMap<Integer, Double>();
+	public Map<Integer, Double>					turnovers		= new HashMap<Integer, Double>();
+																
+	public double								defaultBound	= 100000000;
+																
+	protected IOverrideReactionBounds			overrideBounds	= null;
+																
 	/**
 	 * This method describes a simulation approach that minimizes the differences between the the
 	 * share of substrate consumed by a reaction in the wildtype and in the mutant
 	 * 
 	 * @param model
 	 */
-	public TDPS2(ISteadyStateModel model) {
+	public TDPS3(ISteadyStateModel model) {
 		super(model);
 		overrideBounds = createModelOverride();
 		initTDPSProperties();
@@ -62,6 +60,25 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 		optionalProperties.add(SimulationProperties.TDPS_DRAINS);
 		optionalProperties.add(SimulationProperties.TDPS_UNBOUNDED_METABOLITES);
 		mandatoryProperties.add(SimulationProperties.TDPS_REMOVE_METABOLITES);
+	}
+	
+	private void precomputations() throws LinearProgrammingTermAlreadyPresentException {
+		
+		//split reactions MILP
+		Map<String, Integer> newVars = SimulationProperties.splitReactionsMILP(problem, model, overrideBounds, getDrains());
+		putNewVariables(newVars);
+		
+		//compute consumers and producers of each metabolite (index based)
+		SimulationProperties.computeConsumersProducersPerIndex(model, producers, consumers, getUnboundedMetabolites());
+		
+		//compute products and reactants of each reaction (index based)
+		SimulationProperties.computeProductsReactantsPerIndex(model, products, reactants, getUnboundedMetabolites());
+		
+		//calculate production turnovers
+		turnovers = SimulationProperties.getTurnOverCalculationByIndex(getModel(), getWTReference(), getUnboundedMetabolites());
+		
+		//calculate turnover fractions ( F^{R}_{m,n} )- RS in the old code
+		calculateReferenceTurnoverFractions();
 	}
 	
 	public void setPenalty(Double penalty) {
@@ -109,6 +126,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 	
 	@SuppressWarnings("unchecked")
 	public Set<Integer> getDrains() {
+		
 		Set<Integer> drains = null;
 		try {
 			drains = ManagerExceptionUtils.testCast(properties, Set.class, SimulationProperties.TDPS_DRAINS, true);
@@ -141,19 +159,19 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 		return drains;
 	}
 	
-	public void setUnboundedMetabolites(Set<Integer> unboundedMetabolites){
+	public void setUnboundedMetabolites(Set<Integer> unboundedMetabolites) {
 		properties.put(SimulationProperties.TDPS_UNBOUNDED_METABOLITES, unboundedMetabolites);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<Integer> getUnboundedMetabolites(){
+	public Set<Integer> getUnboundedMetabolites() {
 		Set<Integer> unboundedMetab = null;
 		try {
 			unboundedMetab = ManagerExceptionUtils.testCast(properties, Set.class, SimulationProperties.TDPS_UNBOUNDED_METABOLITES, true);
 		} catch (PropertyCastException e) {
 			System.err.println("The property " + e.getProperty() + " was ignored!!\n Reason: " + e.getMessage());
 		} catch (MandatoryPropertyException e) {
-		
+			System.err.println("The property " + e.getProperty() + " is missing and it is mandatory!!\n Reason: " + e.getMessage());
 		}
 		
 		if (unboundedMetab == null) {
@@ -180,169 +198,32 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 	}
 	
 	@Override
-	public void createVariables(){
-		super.createVariables();			
+	public void createVariables() {
+		super.createVariables();
+		try {
+			precomputations();
+			createTOVariables();
+		} catch (LinearProgrammingTermAlreadyPresentException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	@Override
-	public void createConstraints(){
+	public void createConstraints() {
 		super.createConstraints();
+		updateFractionsAccordingToGeneticConditions();
 	}
 	
-	public void halfReactionsMILP() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException {
-		//Split all REVERSIBLE reactions in two positive variables
-		for (int i = 0; i < model.getNumberOfReactions(); i++) {
-			
-			//get reaction id
-			String id = model.getReactionId(i);
-			
-			String name = model.getReactionId(i);
-			final String idPositive = "TORV_" + name + "(" + i + ")_PST";
-			final String idNegative = "TORV_" + name + "(" + i + ")_NGT";
-			
-			//except drains
-			if (getDrains().contains(i)) {
-				continue;
-			}
-			
-//			get reaction constraint, either from override bounds or directly from the model
-			ReactionConstraint rc = overrideBounds.getReactionConstraint(i);
-			rc = (rc != null) ? rc : model.getReactionConstraint(i);
-			
-			//if the reaction is irreversible ignore the split routine and add its index to the var mappings according to the split nomenclature: "TORV_"+name+"("+i+")_PST"			
-			if (rc.getLowerLimit() >= 0 && rc.getUpperLimit() > 0) {
-				idToIndexVarMapings.put(idPositive, idToIndexVarMapings.get(id));
-				continue;
-			}
-			//if the reaction is irreversible ignore the split routine and add its index to the var mappings according to the split nomenclature: "TORV_"+name+"("+i+")_NGT";
-			if (rc.getUpperLimit() <= 0 && rc.getLowerLimit() < 0) {
-				idToIndexVarMapings.put(idNegative, idToIndexVarMapings.get(id));
-				continue;
-			}
-						
-			Map<String, Integer> newVars = null;
-			try {
-				
-				//split reversible reactions into a positive Vp and a negative Vn half reaction
-				newVars = splitNegAndPosVariable(problem, i, idPositive, idNegative, rc.getLowerLimit(), rc.getUpperLimit());
-//				newVars = L1VarTerm.splitNegAndPosVariable(problem, i, idPositive, idNegative, rc.getLowerLimit(), rc.getUpperLimit());
-				putNewVariables(newVars);
-			} catch (WrongFormulationException e) {
-				e.printStackTrace();
-			}
-			
-			//get the spilt variables' indexes	
-			int vpn = idToIndexVarMapings.get(idPositive);
-			int vnn = idToIndexVarMapings.get(idNegative);
-						
-			//get the number of variables
-			int num_vars = problem.getNumberVariables();
-			int bp = num_vars;
-			int bn = bp+1;
-			
-			problem.addIntVariable("y" + i, 0, 1);
-			problem.addIntVariable("w" + i, 0, 1);
-			//add the boolean variables to the var mappings
-			indexToIdVarMapings.put(bp, "y" + i);
-			indexToIdVarMapings.put(bn, "w" + i);
-			idToIndexVarMapings.put("y" + i, bp);
-			idToIndexVarMapings.put("w" + i, bn);
-			
-			//create two new rows
-			LPProblemRow binaryP = new LPProblemRow();
-			LPProblemRow binaryN = new LPProblemRow();
-			try {
-				// create: Vp< 1000 * Bp ; If the boolean variable is 1, Vn is lower than 1000,if it is 0, Vp has to be zero
-				binaryP.addTerm(vpn, 1);
-				binaryP.addTerm(bp, -1000);
-				LPConstraint MILPpos = new LPConstraint(LPConstraintType.LESS_THAN, binaryP, 0);
-				problem.addConstraint(MILPpos);
-				
-			} catch (LinearProgrammingTermAlreadyPresentException e) {
-				e.printStackTrace();
-				
-			}
-			
-			try {
-				// create: Vn > -1000 * Bn ; If the boolean variable is 1, Vn is higher than -1000,if it is 0, Vn has to be zero
-				
-				binaryN.addTerm(vnn, -1);
-//				binaryN.addTerm(vnn, 1);
-				binaryN.addTerm(bn, -1000);
-				
-				LPConstraint MILPneg = new LPConstraint(LPConstraintType.LESS_THAN, binaryN, 0);
-				problem.addConstraint(MILPneg);
-				
-			} catch (LinearProgrammingTermAlreadyPresentException e) {
-				e.printStackTrace();
-				
-			}
-			
-			try {
-				//create: Bp+Bn<1; With this constraint the sum of the boolean variables has to be lower or equal to 1
-				//which means they cannot both be equal to 1 and Vp and Vn will never be active at the same time
-				LPProblemRow binaryS = new LPProblemRow();
-				binaryS.addTerm(bp, 1);
-				binaryS.addTerm(bn, 1);
-				
-				LPConstraint MILPsum = new LPConstraint(LPConstraintType.LESS_THAN, binaryS, 1);
-				problem.addConstraint(MILPsum);
-				
-			} catch (LinearProgrammingTermAlreadyPresentException e) {
-				e.printStackTrace();
-				
-			}
-			
-		}
+	/**
+	 * Pre-compute the reference turnover fraction values for all metabolites.
+	 * F^{R}_{m,n}
+	 *  
+	 * @throws PropertyCastException
+	 * @throws MandatoryPropertyException
+	 */
+	public void calculateReferenceTurnoverFractions() throws PropertyCastException, MandatoryPropertyException {
 		
-	}
-	
-	public Map<String, Integer> splitNegAndPosVariable(LPProblem problem, int idx, String posVarName, String negVarName, Double lower, Double upper) throws WrongFormulationException {
-		Map<String, Integer> variablePositions = new HashMap<String, Integer>();
-		
-		int numVariables = problem.getNumberVariables();
-		LPVariable normFoVarNeg = new LPVariable(negVarName, lower, 0);
-		LPVariable normFoVarPos = new LPVariable(posVarName, 0, upper);
-//		
-//		System.out.println("LOWER = "+lower);
-//		System.out.println("UPPER= "+upper);
-		
-		System.out.println(idx+"\tNEG:["+(lower)+"\tPOS:["+0.0+","+upper);
-		
-		int varPos = numVariables;
-		int varNeg = numVariables + 1;	
-		problem.addVariable(normFoVarPos);
-		variablePositions.put(posVarName, varPos);
-		problem.addVariable(normFoVarNeg);
-		variablePositions.put(negVarName, varNeg);
-		
-		LPProblemRow rowFoPosNeg = new LPProblemRow();
-		try {
-			rowFoPosNeg.addTerm(varPos, -1);
-			rowFoPosNeg.addTerm(varNeg, -1);
-			rowFoPosNeg.addTerm(idx, 1);
-			
-		} catch (LinearProgrammingTermAlreadyPresentException e) {
-			e.printStackTrace();
-			throw new WrongFormulationException("Linear Programming Term Already Present");
-		}
-		
-		LPConstraint constPosNeg = new LPConstraint(LPConstraintType.EQUALITY, rowFoPosNeg, 0.0);
-		problem.addConstraint(constPosNeg);
-		
-		return variablePositions;
-	}
-	
-	public void calculateRs() throws PropertyCastException, MandatoryPropertyException {
-		
-		//create metabolite-reaction maps
-		reactionMapper();
-		
-		//calculate production turnovers
-		turnoverCalculator();
-		
-		//calculate the regK for each reaction's substrates
-		
+		//calculate the regK for each reaction's substrates		
 		for (int metabolite = 0; metabolite < model.getNumberOfMetabolites(); metabolite++) {
 			double TM = turnovers.get(metabolite);
 			Collection<Integer> pro = producers.get(metabolite);
@@ -350,29 +231,22 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 			regKmet.put(metabolite, new ArrayList<Double>());
 			
 			for (int p : pro) {
-				
 				//If a reaction can occur in the reverse direction create the R value
-				if (model.getReactionConstraint(p).getLowerLimit() < 0) {
-					
-					//if the reaction is occuring the the reverse direction calculate the R, otherwise assign zero
+				if (overrideBounds.getReactionConstraint(p).getLowerLimit() < 0) {
+					//if the reaction is occuring the the reverse direction calculate the R, otherwise assign zero					
 					if (wtReference.get(model.getReactionId(p)) < 0) {
 						double regK = -wtReference.get(model.getReactionId(p)) * model.getStoichiometricValue(metabolite, p) / TM;
 						regKs.put(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK", regK);
 						regKmet.get(metabolite).add(regK);
-						
 					} else {
-						regKs.put(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK", 0.000);
-						
+						regKs.put(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK", 0.000);	
 					}
 				}
-				
 			}
 			
 			for (int c : cons) {
-				
 				//If a reaction can occur in the forward direction create the R value
-				if (model.getReactionConstraint(c).getUpperLimit() > 0) {
-					
+				if (overrideBounds.getReactionConstraint(c).getUpperLimit() > 0) {
 					//if the reaction is occuring the the forward direction calculate the R, otherwise assign zero
 					if (wtReference.get(model.getReactionId(c)) > 0) {
 						double regK = wtReference.get(model.getReactionId(c)) * -model.getStoichiometricValue(metabolite, c) / TM;
@@ -380,103 +254,15 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 						regKmet.get(metabolite).add(regK);
 					} else {
 						regKs.put(model.getReactionId(c) + "_" + model.getMetaboliteId(metabolite) + "_regK", 0.000);
-						
 					}
-					
-				}
-			}
-			
-		}
-		
-		//	System.out.println(regKs);
-	}
-
-	public void reactionMapper() {		
-		
-		//create a map with all the producers and consumers of each metabolite
-		
-		for (int met = 0; met < model.getNumberOfMetabolites(); met++) {
-			
-			producers.put(met, new ArrayList<Integer>());
-			consumers.put(met, new ArrayList<Integer>());
-			
-			for (int reac = 0; reac < model.getNumberOfReactions(); reac++) {
-				
-				double stok = model.getStoichiometricValue(met, reac);
-				
-				//dont include unbounded metabolites
-				if ((stok > 0) && (!getUnboundedMetabolites().contains(met))) {
-					producers.get(met).add(reac);
-					
-				}
-				//dont include unbounded metabolites
-				if ((stok < 0) && (!getUnboundedMetabolites().contains(met))) {
-					consumers.get(met).add(reac);
-					
 				}
 			}
 		}
-		
-		//create a map with all the reactants and products of each reaction
-		
-		for (int reac = 0; reac < model.getNumberOfReactions(); reac++) {
-			
-			products.put(reac, new ArrayList<Integer>());
-			reactants.put(reac, new ArrayList<Integer>());
-			
-			for (int met = 0; met < model.getNumberOfMetabolites(); met++) {
-				
-				double stok = model.getStoichiometricValue(met, reac);
-				
-				//dont include unbounded metabolites
-				if ((stok > 0) && (!getUnboundedMetabolites().contains(met))) {
-					products.get(reac).add(met);
-					
-				}
-				//dont include unbounded metabolites
-				if ((stok < 0) && (!getUnboundedMetabolites().contains(met))) {
-					reactants.get(reac).add(met);
-					
-				}
-			}
-		}
-		
 	}
 	
-	public void turnoverCalculator() throws PropertyCastException, MandatoryPropertyException {
+	public void createTOVariables() throws PropertyCastException, MandatoryPropertyException, LinearProgrammingTermAlreadyPresentException {
 		
-		getWTReference();
-		
-		//according to reaction values calculate production turnovers 
-		
-		for (int metabolite = 0; metabolite < model.getNumberOfMetabolites(); metabolite++) {
-			Collection<Integer> pro = producers.get(metabolite);
-			Collection<Integer> cons = consumers.get(metabolite);
-			double sum = 0.00;
-			
-			for (int p : pro) {
-				if (wtReference.get(model.getReactionId(p)) > 0) {
-					sum += wtReference.get(model.getReactionId(p)) * model.getStoichiometricValue(metabolite, p);
-				}
-				
-			}
-			for (int c : cons) {
-				if (wtReference.get(model.getReactionId(c)) < 0) {
-					sum += wtReference.get(model.getReactionId(c)) * model.getStoichiometricValue(metabolite, c);
-					
-				}
-				
-			}
-			
-			turnovers.put(metabolite, sum);
-			//	System.out.println(model.getMetaboliteId(metabolite)+"\t"+sum);
-			
-		}
-	}
-		
-	public void createTOVariables() throws PropertyCastException, MandatoryPropertyException {
-		//Create Turnover variables and equations
-		
+		//Create Turnover variables and equations		
 		for (int metabolite = 0; metabolite < model.getNumberOfMetabolites(); metabolite++) {
 			
 			//if the metabolite is in the list to remove, dont create a turnover variable
@@ -484,43 +270,26 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 				continue;
 			}
 			
-			LPProblemRow TURN = new LPProblemRow();
-			
-			Collection<Integer> pro = producers.get(metabolite);
-			Collection<Integer> cons = consumers.get(metabolite);
+			LPProblemRow TURN = new LPProblemRow();			
 			
 			// for each reaction where the metabolite is in the right hand side of the equation
-			for (int p : pro) {
+			for (int p : producers.get(metabolite)) {
 				
 				// add Vp to the TO calculation if the reaction has a upper bound bigger than zero
-				if (model.getReactionConstraint(p).getUpperLimit() > 0) {
-					
+				if (overrideBounds.getReactionConstraint(p).getUpperLimit() > 0) {
 					int vpn = idToIndexVarMapings.get("TORV_" + model.getReactionId(p) + "(" + p + ")" + "_PST");
-					try {
-						TURN.addTerm(vpn, model.getStoichiometricValue(metabolite, p));
-					} catch (LinearProgrammingTermAlreadyPresentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					TURN.addTerm(vpn, model.getStoichiometricValue(metabolite, p));
 				}
 			}
 			
 			// for each reaction where the metabolite is in the left hand side of the equation
-			for (int c : cons) {
+			for (int c : consumers.get(metabolite)) {
 				
-				// add Vn to the TO calculation if the reaction has a lower bound smaller than zero
-				
-				if (model.getReactionConstraint(c).getLowerLimit() < 0) {
-					
+				// add Vn to the TO calculation if the reaction has a lower bound smaller than zero				
+				if (overrideBounds.getReactionConstraint(c).getLowerLimit() < 0) {					
 					int vnn = idToIndexVarMapings.get("TORV_" + model.getReactionId(c) + "(" + c + ")" + "_NGT");
-					try {
-						TURN.addTerm(vnn, model.getStoichiometricValue(metabolite, c));
-					} catch (LinearProgrammingTermAlreadyPresentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
+					TURN.addTerm(vnn, -model.getStoichiometricValue(metabolite, c));
+				}				
 			}
 			
 			//get the number of variables
@@ -531,38 +300,30 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 			idToIndexVarMapings.put("TO_" + metabolite, varn);
 			indexToIdVarMapings.put(varn, "TO_" + metabolite);
 			//add turnover variable to the equation
-			try {
-				TURN.addTerm(varn, -1.00000);
-			} catch (LinearProgrammingTermAlreadyPresentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			TURN.addTerm(varn, -1.00000);
 			
 			//add constraints to equation and add it to the problem
-			LPConstraint turnOver = new LPConstraint(LPConstraintType.EQUALITY, TURN, 0.0000);
-			problem.addConstraint(turnOver);
-			
+			LPConstraint turnOver = new LPConstraint(LPConstraintType.EQUALITY, TURN, 0.0000);			
+			problem.addConstraint(turnOver);			
 		}
-		
 	}
 	
-	@Override
-	protected void createObjectiveFunction() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException {
-		
-		halfReactionsMILP();		
-		calculateRs();
-		createTOVariables();
+	/**
+	 * Update the turnover fractions to accomodate the genetic modifications.
+	 * 
+	 * F_{m,n}
+	 */
+	private void updateFractionsAccordingToGeneticConditions() {
 		
 		ReactionChangesList geneticModifications = getGeneticConditions().getReactionList();
 		
-		//modify regKs according to genetic modifications
-		
+		//modify regKs according to genetic modifications		
 		for (String rId : geneticModifications.keySet()) {
 			
 			int rIdx = model.getReactionIndex(rId);
 			
 			//if the reactions is to be modified in the forward direction and the reaction can occur in that direction
-			if ((geneticModifications.get(rId) >= 0) && (model.getReactionConstraint(rId).getUpperLimit() > 0)) {
+			if ((geneticModifications.get(rId) >= 0) && (overrideBounds.getReactionConstraint(rId).getUpperLimit() > 0)) {
 				
 				//get its reactants
 				for (int met : reactants.get(rIdx)) {
@@ -571,27 +332,19 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 					//therefore a estimated one should be calculated based on the number of for reactions that use the same metabolite
 					//the regK of the newly activated reactions should be similar to the one of existing reactions
 					if ((regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") == 0)) {
-						double sum = 0.000;
-						int number = 1;
-						//calcular a media de regKs
-						for (double r : regKmet.get(met)) {
-							sum += r;
-							number = number + 1;
-						}
-						
-						//If that metabolite was not being produced in the original network, then assume that the activated reaction is the only consumer
-						if (sum == 0) {
-							sum = 1.0000;
-							number = 1;
-						}
-						
-						regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", sum / number);
+						double sum = MathUtils.sumNumberCollection(regKmet.get(met));						
+						double val = (sum==0) ? 1.0 : sum / (regKmet.get(met).size()+1);						
+						regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", val);
 					}
 					
-					// modify all the regks
-					double oldR = regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK");
+					
 					
 					//if its a under-expression
+					//NOTE: to simplify, simply uncomment next line and comment the rest - values will be different
+					//regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", oldR * geneticModifications.get(rId));
+
+					// modify all the regks
+					double oldR = regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK");
 					if (geneticModifications.get(rId) < 1) {
 						regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", oldR * geneticModifications.get(rId));
 					} else {
@@ -602,7 +355,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 			}
 			
 			//if the reactions is to be modified in the reverse direction and the reaction can occur in that direction
-			if ((geneticModifications.get(rId) <= 0) && (model.getReactionConstraint(rId).getLowerLimit() < 0)) {
+			if ((geneticModifications.get(rId) <= 0) && (overrideBounds.getReactionConstraint(rId).getLowerLimit() < 0)) {
 				
 				//get its products
 				for (int met : products.get(rIdx)) {
@@ -611,22 +364,14 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 					//therefore a estimated one should be calculated based on the number of for reactions that use the same metabolite
 					//the regK of the newly activated reactions should be similar to the one of existing reactions
 					if ((regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") == 0)) {
-						double sum = 0.000;
-						int number = 1;
-						//calcular a media de regKs
-						for (double r : regKmet.get(met)) {
-							sum += r;
-							number = number + 1;
-						}
-						
-						//If that metabolite was not being produced in the original network, then assume that the activated reaction is the only consumer
-						if (sum == 0) {
-							sum = 1.0000;
-							number = 1;
-						}
-						
-						regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", sum / number);
+						double sum = MathUtils.sumNumberCollection(regKmet.get(met));						
+						double val = (sum==0) ? 1.0 : sum / (regKmet.get(met).size()+1);						
+						regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", val);
 					}
+					
+					//if its a under-expression
+					//NOTE: to simplify, simply uncomment next line and comment the rest - values will be different
+					//regKs.put(rId + "_" + model.getMetaboliteId(met) + "_regK", -oldR * geneticModifications.get(rId));
 					
 					// modify all the regks
 					double oldR = regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK");
@@ -662,8 +407,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 			
 		}
 		
-		//create constraints for genetic modifications
-		
+		//create constraints for genetic modifications		
 		for (String rId : geneticModifications.keySet()) {
 			int rIdx = model.getReactionIndex(rId);
 			
@@ -689,7 +433,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 							int vpp = idToIndexVarMapings.get("TORV_" + rId + "(" + rIdx + ")" + "_PST");
 							genMod.addTerm(vpp, -model.getStoichiometricValue(met, rIdx));
 							genMod.addTerm(idToIndexVarMapings.get("TO_" + met), -regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") / rSum.get(met));
-							System.out.println("REG_POS_DOWN ("+rId+" , "+met+")= "+regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK")+"\tSUM="+rSum.get(met)+"\tSTOICH="+model.getStoichiometricValue(met, rIdx));
+//							System.out.println("REG_POS_DOWN (" + rId + " , " + met + ")= " + regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") + "\tSUM=" + rSum.get(met) + "\tSTOICH=" + model.getStoichiometricValue(met, rIdx));
 							LPConstraint under = new LPConstraint(LPConstraintType.LESS_THAN, genMod, 0.0000);
 							problem.addConstraint(under);
 							//when restraining the forward half of a reversible equation, make sure it is the only one active
@@ -732,7 +476,8 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 							int vpp = idToIndexVarMapings.get("TORV_" + rId + "(" + rIdx + ")" + "_PST");
 							genMod.addTerm(vpp, -model.getStoichiometricValue(met, rIdx));
 							genMod.addTerm(idToIndexVarMapings.get("TO_" + met), -regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") / rSum.get(met));
-							System.out.println("REG_POS_UP ("+rId+" , "+met+")= "+regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK")+"\tSUM="+rSum.get(met)+"\tSTOICH="+model.getStoichiometricValue(met, rIdx));
+//							System.out.println("REG_POS_UP (" + rId + " , " + met + ")= " + regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") + "\tSUM=" + rSum.get(met) + "\tSTOICH=" + model.getStoichiometricValue(met, rIdx));
+									
 							//Here the reaction will be forced to be greater than the higher restriction
 							//In reality if a metabolite is limiting than the reaction should only be greater than the lesser restriction
 							//therefore a boolean variable will be added to each restriction allowing only one of them to be active
@@ -741,7 +486,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 							int varn = problem.getNumberVariables();
 							problem.addIntVariable("y" + rId + met, 0, 1);
 							idToIndexVarMapings.put("y" + rId + met, varn);
-							indexToIdVarMapings.put(varn,"y" + rId + met);
+							indexToIdVarMapings.put(varn, "y" + rId + met);
 							genMod.addTerm(varn, 1000000);
 							boolRest.addTerm(varn, 1);
 							//over-expression constraint
@@ -778,9 +523,11 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 						try {
 							LPProblemRow genMod = new LPProblemRow();
 							int vnn = idToIndexVarMapings.get("TORV_" + rId + "(" + rIdx + ")" + "_NGT");
-							genMod.addTerm(vnn, -model.getStoichiometricValue(met, rIdx));
+							genMod.addTerm(vnn, model.getStoichiometricValue(met, rIdx));
 							genMod.addTerm(idToIndexVarMapings.get("TO_" + met), -regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") / rSum.get(met));
-							System.out.println("REG_NEG_DOWN ("+rId+" , "+met+")= "+regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK")+"\tSUM="+rSum.get(met)+"\tSTOICH="+model.getStoichiometricValue(met, rIdx));
+//							System.out.println("REG_NEG_DOWN (" + rId + " , " + met + ")= " + regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") + "\tSUM=" + rSum.get(met) + "\tSTOICH="
+//									+ model.getStoichiometricValue(met, rIdx));
+									
 							LPConstraint under = new LPConstraint(LPConstraintType.LESS_THAN, genMod, 0.0000);
 							problem.addConstraint(under);
 							//when restraining the reverse half of a reversible equation, make sure it is the only one active
@@ -820,9 +567,11 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 							LPProblemRow genMod = new LPProblemRow();
 							
 							int vnn = idToIndexVarMapings.get("TORV_" + rId + "(" + rIdx + ")" + "_NGT");
-							genMod.addTerm(vnn, -model.getStoichiometricValue(met, rIdx));
+							genMod.addTerm(vnn, model.getStoichiometricValue(met, rIdx));
 							genMod.addTerm(idToIndexVarMapings.get("TO_" + met), -regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") / rSum.get(met));
-							System.out.println("REG_NEG_UP ("+rId+" , "+met+")= "+regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK")+"\tSUM="+rSum.get(met)+"\tSTOICH="+model.getStoichiometricValue(met, rIdx));
+//							System.out.println("REG_NEG_UP (" + rId + " , " + met + ")= " + regKs.get(rId + "_" + model.getMetaboliteId(met) + "_regK") + "\tSUM=" + rSum.get(met) + "\tSTOICH="
+//									+ model.getStoichiometricValue(met, rIdx));
+									
 							//Here the reaction will be forced to be greater than the higher restriction
 							//In reality if a metabolite is limiting than the reaction should only be greater than the lesser restriction
 							//therefore a boolean variable will be added to each restriction allowing only one of them to be active~
@@ -831,7 +580,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 							int varn = problem.getNumberVariables();
 							problem.addIntVariable("w" + rId + met, 0, 1);
 							idToIndexVarMapings.put("w" + rId + met, varn);
-							indexToIdVarMapings.put(varn,"w" + rId + met);
+							indexToIdVarMapings.put(varn, "w" + rId + met);
 							genMod.addTerm(varn, 1000000);
 							boolRest.addTerm(varn, 1);
 							//over-expression constraint
@@ -853,6 +602,10 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 			}
 			
 		}
+	}
+	
+	@Override
+	protected void createObjectiveFunction() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException {
 		
 		//for every comsumed metabolite create a equation that describes its share of the turnover
 		//create objective function: minimize the differences between the wild-type shares and the mutant ones
@@ -882,11 +635,12 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 						LPProblemRow MORAS = new LPProblemRow();
 						try {
 							// Vn*S/R
-							MORAS.addTerm(vnn, -model.getStoichiometricValue(metabolite, p) * (1 / regKs.get(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK")));
-							
+							MORAS.addTerm(vnn, model.getStoichiometricValue(metabolite, p) * (1 / regKs.get(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK")));
 							//-2.TO/rSUM
 							MORAS.addTerm(idToIndexVarMapings.get("TO_" + metabolite), -2 / rSum.get(metabolite));
-							System.out.println("MORAS_NEG: stoich="+model.getStoichiometricValue(metabolite, p)+"\tREG= "+regKs.get(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK")+"\tRSUM="+rSum.get(metabolite));
+							
+//							System.out.println("MORAS_NEG: stoich=" + model.getStoichiometricValue(metabolite, p) + "\tREG= "
+//									+ regKs.get(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK") + "\tRSUM=" + rSum.get(metabolite));
 							//get the number of variables
 							int varn = problem.getNumberVariables();
 							//create Minimization variable
@@ -917,7 +671,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 					//for reactions that are inactive, prevent their appearance (min: Vi.Si.penalty)
 					//it is more relevant to keep inactive reactions inactive then keep the active ones in the right proportion
 					else {
-						objTerms.add(new VarTerm(vnn, -model.getStoichiometricValue(metabolite, p) * getPenalty(), 0));
+						objTerms.add(new VarTerm(vnn, model.getStoichiometricValue(metabolite, p) * getPenalty(), 0));
 					}
 				}
 			}
@@ -939,7 +693,8 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 							//-2.TO/rSUM
 							MORAS.addTerm(idToIndexVarMapings.get("TO_" + metabolite), -2 / rSum.get(metabolite));
 							
-							System.out.println("MORAS_POS: stoich="+model.getStoichiometricValue(metabolite, c)+"\tREG= "+regKs.get(model.getReactionId(c) + "_" + model.getMetaboliteId(metabolite) + "_regK")+"\tRSUM="+rSum.get(metabolite));
+//							System.out.println("MORAS_POS: stoich=" + model.getStoichiometricValue(metabolite, c) + "\tREG= "
+//									+ regKs.get(model.getReactionId(c) + "_" + model.getMetaboliteId(metabolite) + "_regK") + "\tRSUM=" + rSum.get(metabolite));
 							//get the number of variables
 							int varn = problem.getNumberVariables();
 							//create Minimization variable
@@ -980,7 +735,7 @@ public class TDPS2 extends AbstractSSReferenceSimulation<MILPProblem> {
 	
 	@Override
 	public String getObjectiveFunctionToString() {
-		return "Σ (1/|wt|) * |v-wt|";
+		return "This objective function string would not fit your screen!";
 	}
 	
 //	@Override
