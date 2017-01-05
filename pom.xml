@@ -4,7 +4,7 @@
 
 	<groupId>pt.uminho.ceb.biosystems.mew</groupId>
 	<artifactId>mew-core</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-TDPS_TEST</version>
 	<packaging>jar</packaging>
 
 	<name>mewcore</name>

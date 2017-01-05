@@ -214,6 +214,10 @@ public class TDPS3 extends AbstractSSReferenceSimulation<MILPProblem> {
 		updateFractionsAccordingToGeneticConditions();
 	}
 	
+	public void preSimulateActions() {
+		_recreateProblem = true;
+	};
+	
 	/**
 	 * Pre-compute the reference turnover fraction values for all metabolites.
 	 * F^{R}_{m,n}

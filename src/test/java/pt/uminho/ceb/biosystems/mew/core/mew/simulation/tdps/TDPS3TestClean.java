@@ -75,22 +75,23 @@ public class TDPS3TestClean {
 
 		
 		Map<String,Double> exprs = new HashMap<String,Double>();
-//		exprs.put("R_PYRDC", 2.0);
-//		exprs.put("R_ACS", 2.0);
-//		exprs.put("R_ALDD2x", 2.0);
-//		exprs.put("R_PYRt2m", 0.5);
-//		exprs.put("R_MCR", 2.0);
-//		exprs.put("R_ACCOACr", 2.00);
-		exprs.put("R_DHAD1m",2.0);
-		exprs.put("R_ACCOACr",2.0);
-		exprs.put("R_GHMT2rm",0.0);
-		exprs.put("R_CYTDK2",0.0);
-		exprs.put("R_NADPPPS",0.0);
-		exprs.put("R_GK1",0.5);
-		exprs.put("R_CTPtm",0.0);
-		exprs.put("R_PYDAMK",2.0);
-		exprs.put("R_ABUTt2r",0.0);
-		exprs.put("R_3C3HMPtm",0.0);
+		exprs.put("R_PYRDC", 2.0);
+		exprs.put("R_ACS", 2.0);
+		exprs.put("R_ALDD2x", 2.0);
+		exprs.put("R_PYRt2m", 0.5);
+		exprs.put("R_MCR", 2.0);
+		exprs.put("R_ACCOACr", 2.00);
+
+//		exprs.put("R_DHAD1m",2.0);
+//		exprs.put("R_ACCOACr",2.0);
+//		exprs.put("R_GHMT2rm",0.0);
+//		exprs.put("R_CYTDK2",0.0);
+//		exprs.put("R_NADPPPS",0.0);
+//		exprs.put("R_GK1",0.5);
+//		exprs.put("R_CTPtm",0.0);
+//		exprs.put("R_PYDAMK",2.0);
+//		exprs.put("R_ABUTt2r",0.0);
+//		exprs.put("R_3C3HMPtm",0.0);
 		
 		GeneticConditions gc = new GeneticConditions(new ReactionChangesList(exprs));
 		ccTest.setGeneticConditions(gc);

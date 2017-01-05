@@ -123,6 +123,7 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 					
 					if (controlCenters.get(method) == null) {
 						controlCenters.put(method, new SimulationSteadyStateControlCenter(methodConf));
+						controlCenters.get(method).setGeneticConditions(gc);
 					} else {
 						controlCenters.get(method).setMaximization(isMaximization);
 						controlCenters.get(method).setWTReference(wtReference);
@@ -132,8 +133,16 @@ public abstract class JecoliCSOM<T extends IJecoliConfiguration, E extends IJeco
 						controlCenters.get(method).setGeneticConditions(gc);
 					}
 					
-					SteadyStateSimulationResult res = controlCenters.get(method).simulate();
-					simulations.put(simMethod, res);
+					SteadyStateSimulationResult res;
+					try {
+						res = controlCenters.get(method).simulate();
+					} catch (Exception e) {
+						e.printStackTrace();
+						res = null;
+					}
+					if(res!=null){
+						simulations.put(simMethod, res);						
+					}
 				}				
 
 			}

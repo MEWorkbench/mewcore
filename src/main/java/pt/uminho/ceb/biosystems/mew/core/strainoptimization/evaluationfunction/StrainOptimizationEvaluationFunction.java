@@ -61,24 +61,8 @@ public class StrainOptimizationEvaluationFunction extends AbstractMultiobjective
 		
 		for (String method : _simulationConfiguration.keySet()) {
 			Map<String, Object> methodConf = _simulationConfiguration.get(method);
-//			String simMethod = (String) methodConf.get(SimulationProperties.METHOD_ID);
-//			ISteadyStateModel model = (ISteadyStateModel) methodConf.get(SimulationProperties.MODEL);
-//			EnvironmentalConditions envConditions = (EnvironmentalConditions) methodConf.get(SimulationProperties.ENVIRONMENTAL_CONDITIONS);
-//			GeneticConditions genCond = (GeneticConditions) methodConf.get(SimulationProperties.GENETIC_CONDITIONS);
-//			SolverType solver = (SolverType) methodConf.get(SimulationProperties.SOLVER);
-//			Boolean isMaximization = (Boolean) methodConf.get(SimulationProperties.IS_MAXIMIZATION);
-//			Boolean overUnder2StepApproach = (Boolean) methodConf.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
-//			FluxValueMap wtReference = (FluxValueMap) methodConf.get(SimulationProperties.WT_REFERENCE);
-//			FluxValueMap ouReference = (FluxValueMap) methodConf.get(SimulationProperties.OVERUNDER_REFERENCE_FLUXES);
 			
 			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(methodConf);
-//			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envConditions, genCond, model, simMethod);
-//			cc.setSolver(solver);
-//			cc.setMaximization(isMaximization);
-//			cc.setWTReference(wtReference);
-//			cc.setOverUnder2StepApproach(overUnder2StepApproach);
-//			cc.setUnderOverRef(ouReference);
-			
 			_controlCenters.put(method, cc);
 		}
 	}
