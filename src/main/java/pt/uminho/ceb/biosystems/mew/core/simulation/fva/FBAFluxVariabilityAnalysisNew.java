@@ -226,12 +226,13 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 			double actualStepValue = minPivotOF;
 			int actualStep = 0;
 			
+			// Define new EnvCond with actual step value
+			if(envCond == null) envCond = new EnvironmentalConditions();
+			EnvironmentalConditions restrictions = envCond.copy();
+			
 			// for each step perform min/max flux simulations
-			while(actualStep < pivotNumStep){
+			while(actualStep <= pivotNumStep){
 				
-				// Define new EnvCond with actual step value
-				if(envCond == null) envCond = new EnvironmentalConditions();
-				EnvironmentalConditions restrictions = envCond.copy();
 				ReactionConstraint rc = new ReactionConstraint(actualStepValue, model.getReactionConstraint(pivotFlux).getUpperLimit());
 				restrictions.addReactionConstraint(pivotFlux, rc);
 				defineRestrictions(restrictions);
@@ -369,10 +370,7 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 
 	@Override
 	public void defineRestrictions(EnvironmentalConditions restrictions) {
-		if(getSimulCenter().getEnvironmentalConditions() != null)
-			getSimulCenter().getEnvironmentalConditions().addAllReactionConstraints(restrictions);
-		else
-			getSimulCenter().setEnvironmentalConditions(restrictions);
+		getSimulCenter().setEnvironmentalConditions(restrictions);
 	}
 
 	@Override
