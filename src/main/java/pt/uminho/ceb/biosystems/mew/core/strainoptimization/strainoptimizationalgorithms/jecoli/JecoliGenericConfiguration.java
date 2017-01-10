@@ -58,6 +58,8 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		optionalPropertyMap.put(JecoliOptimizationProperties.STATISTICS_CONFIGURATION, StatisticsConfiguration.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.REACTION_SWAP_MAP, Map.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.OU_RANGE, Pair.class);
+		optionalPropertyMap.put(JecoliOptimizationProperties.OU_NEGATIVE_ALLOWED, Boolean.class);
+		optionalPropertyMap.put(JecoliOptimizationProperties.OU_EXPONENT_BASE, Integer.class);
 		optionalPropertyMap.put(JecoliOptimizationProperties.MAX_ALLOWED_SWAPS, Integer.class);
 		optionalPropertyMap.put(GenericOptimizationProperties.MAX_SET_SIZE, Integer.class);
 	}
@@ -115,7 +117,22 @@ public class JecoliGenericConfiguration extends GenericConfiguration implements 
 		propertyMap.put(JecoliOptimizationProperties.ARCHIVE_MANAGER, archiveManager);
 	}
 	
+	public Boolean getOUnegativeAllowed(){
+		Boolean negativeAllowed = (Boolean) propertyMap.get(JecoliOptimizationProperties.OU_NEGATIVE_ALLOWED);
+		return (negativeAllowed!=null) ? negativeAllowed : false; 
+	}
 	
+	public void setOUnegativeAllowed(Boolean negativeAllowed){
+		propertyMap.put(JecoliOptimizationProperties.OU_NEGATIVE_ALLOWED, negativeAllowed);
+	}
+	
+	public Integer getOUexponentBase(){
+		return (Integer) propertyMap.get(JecoliOptimizationProperties.OU_EXPONENT_BASE);
+	}
+	
+	public void setOUexponentBase(Integer exponentBase){
+		propertyMap.put(JecoliOptimizationProperties.OU_EXPONENT_BASE, exponentBase);
+	}
 	
 	// From IJecoliConfiguration
 	

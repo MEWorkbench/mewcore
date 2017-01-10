@@ -237,7 +237,8 @@ public class TDPS3 extends AbstractSSReferenceSimulation<MILPProblem> {
 			for (int p : pro) {
 				//If a reaction can occur in the reverse direction create the R value
 				if (overrideBounds.getReactionConstraint(p).getLowerLimit() < 0) {
-					//if the reaction is occuring the the reverse direction calculate the R, otherwise assign zero					
+					//if the reaction is occuring the the reverse direction calculate the R, otherwise assign zero
+						
 					if (wtReference.get(model.getReactionId(p)) < 0) {
 						double regK = -wtReference.get(model.getReactionId(p)) * model.getStoichiometricValue(metabolite, p) / TM;
 						regKs.put(model.getReactionId(p) + "_" + model.getMetaboliteId(metabolite) + "_regK", regK);

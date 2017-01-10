@@ -21,7 +21,9 @@ public class ROUDecoder implements ISteadyStateDecoder {
 	protected ISteadyStateModel		model;
 	protected List<Integer>			notAllowedRegulations	= null;
 	protected ArrayList<Integer>	internalDecodeTable		= null;
-	protected int					_specialIndex			= -6;
+	protected int					specialIndex			= -6;
+	protected int					exponentBase			= 2;
+	protected double[]				fixedRange				= null;
 	
 	public ROUDecoder(ISteadyStateModel model) {
 		this.model = model;
@@ -35,8 +37,8 @@ public class ROUDecoder implements ISteadyStateDecoder {
 		createInternalDecodeTable();
 	}
 	
-	public void setSpecialIndex(int specialIndex){
-		_specialIndex = specialIndex;
+	public void setSpecialIndex(int specialIndex) {
+		this.specialIndex = specialIndex;
 	}
 	
 	public int getNumberVariables() {
@@ -57,7 +59,8 @@ public class ROUDecoder implements ISteadyStateDecoder {
 		while (it.hasNext()) {
 			String nextId = it.next();
 			int index = model.getReactionIndex(nextId);
-			if (!notAllowedRegulations.contains(index)) notAllowedRegulations.add(index);
+			if (!notAllowedRegulations.contains(index))
+				notAllowedRegulations.add(index);
 		}
 		createInternalDecodeTable();
 	}
@@ -72,11 +75,15 @@ public class ROUDecoder implements ISteadyStateDecoder {
 		return res;
 	}
 	
-	protected double convertExpressionValue(Integer realValueAtIndex) {
-		if (realValueAtIndex == _specialIndex)
+	public double convertExpressionValue(Integer realValueAtIndex) {
+		if (realValueAtIndex == specialIndex)
 			return 0.0;
 		else
-			return Math.pow(2, realValueAtIndex);
+			return Math.pow(exponentBase, realValueAtIndex); //changed from "2" to "exponentBase" (configurable) by pmaia
+	}
+	
+	public double convertExpressionValueFixed(Integer realValueAtIndex) {
+		return fixedRange[realValueAtIndex];
 	}
 	
 	public List<Pair<Integer, Double>> decodeReactionRegulations(IRepresentation genome) throws Exception {
@@ -85,7 +92,9 @@ public class ROUDecoder implements ISteadyStateDecoder {
 		int genomeSize = ((HybridSetRepresentation) genome).getNumberOfElements();
 		for (int i = 0; i < genomeSize; i++) {
 			int reactionIndex = convertValue(((HybridSetRepresentation<Integer, Integer>) genome).getElementAt((i)));
-			double expressionValue = convertExpressionValue(((HybridSetRepresentation<Integer, Integer>) genome).getListValueAt(i));
+			double expressionValue = (fixedRange==null) ? 
+					convertExpressionValue(((HybridSetRepresentation<Integer, Integer>) genome).getListValueAt(i))
+					: convertExpressionValueFixed(((HybridSetRepresentation<Integer, Integer>) genome).getListValueAt(i));
 			
 			regulationList.add(new Pair<Integer, Double>(reactionIndex, expressionValue));
 		}
@@ -101,30 +110,7 @@ public class ROUDecoder implements ISteadyStateDecoder {
 		
 		return new GeneticConditions(rcl, true);
 	}
-	
-//		protected void createInternalDecodeTable() 
-//		{
-//			int numberEntries = getNumberVariables();
-//			
-//			internalDecodeTable = new ArrayList<Integer>(numberEntries);
-//	
-//			if (this.notAllowedRegulations!= null)
-//			{
-//				Collections.sort(this.notAllowedRegulations);
-//				int nextValue = 0;
-//				int indexList = 0;
-//				int indexTable = 0;
-//				
-//				for( ; nextValue< getInitialNumberVariables(); nextValue++ )
-//					if (indexList < notAllowedRegulations.size() && notAllowedRegulations.get(indexList)==nextValue)
-//						indexList++;
-//					else
-//					{
-//						internalDecodeTable.add(indexTable, nextValue);
-//						indexTable++;
-//					}
-//			}
-//		}
+
 	
 	protected void createInternalDecodeTable() {
 		this.internalDecodeTable = new ArrayList<Integer>();
@@ -132,7 +118,8 @@ public class ROUDecoder implements ISteadyStateDecoder {
 		if (this.notAllowedRegulations != null) {
 			Collections.sort(this.notAllowedRegulations);
 			for (int nextValue = 0; nextValue < getInitialNumberVariables(); nextValue++)
-				if (!notAllowedRegulations.contains(nextValue)) internalDecodeTable.add(nextValue);
+				if (!notAllowedRegulations.contains(nextValue))
+					internalDecodeTable.add(nextValue);
 		}
 	}
 	
@@ -143,54 +130,28 @@ public class ROUDecoder implements ISteadyStateDecoder {
 	public void setModel(ISteadyStateModel model) {
 		this.model = model;
 	}
-	
-	//	public void addDrainReactions(boolean includeTransports) throws NonExistentIdException{
-	//				
-	//		if(notAllowedRegulations==null)
-	//			notAllowedRegulations = new ArrayList<Integer>();
-	//		
-	//		for(Reaction r : model.getReactions().values()){
-	//			if(r.getType().equals(ReactionType.DRAIN)) {
-	//				Integer indexToAdd = model.getReactionIndex(r.getId());
-	//				if (!notAllowedRegulations.contains(indexToAdd))
-	//				{
-	//					notAllowedRegulations.add(indexToAdd);
-	//				}
-	//			}	
-	//			else if(includeTransports && r.getType().equals(ReactionType.TRANSPORT))
-	//			{
-	//					Integer indexToAdd = model.getReactionIndex(r.getId());
-	//					if (!notAllowedRegulations.contains(indexToAdd))
-	//					{
-	//						notAllowedRegulations.add(indexToAdd);
-	//					}
-	//			}
-	//		}
-	//		
-	//		createInternalDecodeTable();
-	//	}
+
 	
 	public void addDrainReactions(boolean includeTransports) throws NonExistentIdException {
-		//		int ndrains = 0;
-		//		int ntransports = 0;
 		
-		if (notAllowedRegulations == null) notAllowedRegulations = new ArrayList<Integer>();
+		if (notAllowedRegulations == null)
+			notAllowedRegulations = new ArrayList<Integer>();
 		
 		for (Reaction r : model.getReactions().values()) {
 			Integer indexToAdd = model.getReactionIndex(r.getId());
 			
 			if (r.getType().equals(ReactionType.DRAIN)) {
 				//				ndrains++;
-				if (!notAllowedRegulations.contains(indexToAdd)) notAllowedRegulations.add(indexToAdd);
+				if (!notAllowedRegulations.contains(indexToAdd))
+					notAllowedRegulations.add(indexToAdd);
 			} else if (includeTransports && r.getType().equals(ReactionType.TRANSPORT)) {
 				//				ntransports++;
-				if (!notAllowedRegulations.contains(indexToAdd)) notAllowedRegulations.add(indexToAdd);
+				if (!notAllowedRegulations.contains(indexToAdd))
+					notAllowedRegulations.add(indexToAdd);
 				
 			}
 		}
-		
-		//		System.out.println("Added critical DRAINs: "+ ndrains+"\t Added critical Tranports: "+ntransports);
-		
+				
 		createInternalDecodeTable();
 	}
 	
@@ -198,6 +159,18 @@ public class ROUDecoder implements ISteadyStateDecoder {
 	@Override
 	public Object deepCopy() throws Exception {
 		return null;
+	}
+	
+	public void setFixedRange(double[] fixedRange) {
+		this.fixedRange = fixedRange;
+	}
+	
+	public int getExponentBase() {
+		return exponentBase;
+	}
+	
+	public void setExponentBase(int _exponentBase) {
+		this.exponentBase = _exponentBase;
 	}
 	
 }

@@ -53,6 +53,8 @@ public class JecoliOptimizationProperties implements Serializable {
 	public static final String	REACTION_SWAP_MAP						= "jecoli.reactionswapmap";
 	public static final String	IS_REACTION_SWAP						= "jecoli.isreactionswap";
 	public static final String	OU_RANGE								= "jecoli.ourange";
+	public static final String	OU_NEGATIVE_ALLOWED						= "jecoli.ounegativeallowed";
+	public static final String	OU_EXPONENT_BASE						= "jecoli.ouexponentbase";
 	public static final String	MAX_ALLOWED_SWAPS						= "jecoli.maxallowedswaps";
 																		
 }
