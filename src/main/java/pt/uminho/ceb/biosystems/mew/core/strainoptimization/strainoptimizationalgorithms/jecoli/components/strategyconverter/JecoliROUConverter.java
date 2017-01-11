@@ -65,7 +65,7 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
         int maxSetValue = decoder.getNumberVariables();
         int maxSetSize = configuration.getMaxSetSize();
         int n = 5;
-        int nmin = -(n + 1);
+        int nmin = -n;
         int nmax = n;
         Pair<Integer,Integer> ouRange = configuration.getOURange();
         Boolean negativeAllowed = configuration.getOUnegativeAllowed();
@@ -78,7 +78,7 @@ public class JecoliROUConverter <T extends JecoliGenericConfiguration> implement
         if (ouRange != null) {
             nmin = ouRange.getA();
             nmax = ouRange.getB();
-            ((ROUDecoder) decoder).setSpecialIndex(nmin);
+            ((ROUDecoder) decoder).setSpecialIndex(0);
         }
         
         if(negativeAllowed){

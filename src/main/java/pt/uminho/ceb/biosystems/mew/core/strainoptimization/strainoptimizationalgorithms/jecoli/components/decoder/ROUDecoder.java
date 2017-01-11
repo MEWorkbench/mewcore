@@ -21,7 +21,7 @@ public class ROUDecoder implements ISteadyStateDecoder {
 	protected ISteadyStateModel		model;
 	protected List<Integer>			notAllowedRegulations	= null;
 	protected ArrayList<Integer>	internalDecodeTable		= null;
-	protected int					specialIndex			= -6;
+	protected int					specialIndex			= 0;
 	protected int					exponentBase			= 2;
 	protected double[]				fixedRange				= null;
 	
