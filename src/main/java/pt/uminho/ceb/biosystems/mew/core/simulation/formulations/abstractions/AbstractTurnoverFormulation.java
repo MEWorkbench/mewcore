@@ -88,13 +88,16 @@ public abstract class AbstractTurnoverFormulation<T extends LPProblem> extends A
 		
 		for (String r : override.getOverriddenReactions()) {
 			//original variables
-			int index = idToIndexVarMapings.get(r);
-			ReactionConstraint rc = override.getReactionConstraint(r);
-			double lower = rc.getLowerLimit();
-			double upper = rc.getUpperLimit();
-			problem.changeVariableBounds(index, lower, upper);
-			//turnovers
-			changeTurnoverBounds(r, lower, upper);
+//			System.out.println(r);
+			Integer index = idToIndexVarMapings.get(r);
+			if(index!=null){
+				ReactionConstraint rc = override.getReactionConstraint(r);
+				double lower = rc.getLowerLimit();
+				double upper = rc.getUpperLimit();
+				problem.changeVariableBounds(index, lower, upper);
+				//turnovers
+				changeTurnoverBounds(r, lower, upper);
+			}
 		}
 	}
 	
