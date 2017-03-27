@@ -5,7 +5,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 /**
  * Created by ptiago on 25-03-2015.
  */
-public class JecoliSAGOUCSOM extends JecoliSARKCSOM {
+public class JecoliSAGOUCSOM extends JecoliSAROUSCOM {
 
     
 	private static final long	serialVersionUID	= 1L;
