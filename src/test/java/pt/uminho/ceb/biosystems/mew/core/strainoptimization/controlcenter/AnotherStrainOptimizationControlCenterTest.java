@@ -1,7 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.controlcenter;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +31,10 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.I
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.IStrainOptimizationResultsSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.StrainOptimizationSimplificationFactory;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.GOUSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.RKSolution;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solution.ROUSolution;
+import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.GOUSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.RKSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.ROUSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
@@ -320,7 +320,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     	URL nyData = getClass().getClassLoader().getResource("models/ecoli_core_model.xml");
 
 		CplexParamConfiguration.setDoubleParam("EpRHS", 1e-6);
-//		CplexParamConfiguration.setDoubleParam("TiLim", 10.0);
+		CplexParamConfiguration.setDoubleParam("TiLim", 10.0);
 
 		JSBMLReader reader = new JSBMLReader(nyData.getFile(), "1", false);
 
@@ -330,12 +330,12 @@ public class AnotherStrainOptimizationControlCenterTest {
 		cont.removeMetabolites(met);
 		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
 		
-//		GeneticConditions geneticConditions = parseGeneticCondtionsFromString("R_TKT1=2.0,R_PGL=0.0,R_PFK=0.0", true);
-		GeneticConditions geneticConditions = parseGeneticCondtionsFromString("R_FBA=0.0,R_PPCK=0.03125,R_MALS=16.0,R_GLUDy=0.0,R_PPC=0.0625,R_G6PDH2r=0.0", true);
+		GeneticConditions geneticConditions = parseGeneticCondtionsFromString("R_TKT1=2.0,R_PGL=0.0,R_PFK=0.0", true);
+//		GeneticConditions geneticConditions = parseGeneticCondtionsFromString("R_FBA=0.0,R_PPCK=0.03125,R_MALS=16.0,R_GLUDy=0.0,R_PPC=0.0625,R_G6PDH2r=0.0", true);
 //		GeneticConditions geneticConditions = parseGeneticCondtionsFromString("R_FBA=0.0,R_PPCK=8.0,R_ADK1=0.5,R_ACALD=4.0,R_TKT2=0.0,R_PDH=0.5", true);
 //		GeneticConditions geneticConditions = parseGeneticCondtionsFromString("R_TPI=0.0,R_PPCK=4.0,R_TKT2=0.0,R_SUCDi=2.0,R_NADTRHD=2.0,R_FRD7=8.0", true);
     	
-    	SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, geneticConditions, model, SimulationProperties.LMOMA);
+    	SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, geneticConditions, model, SimulationProperties.MOMA);
     	
     	cc.setSolver(solverToUse);
     	cc.setMaximization(true);
@@ -480,7 +480,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
 	public void testRKSolutionsWithoutSimplification() throws Exception {
     	
-    	SolverType solverToUse = SolverType.CLP;
+    	SolverType solverToUse = SolverType.CPLEX3;
     	
     	String simMethod = SimulationProperties.FBA;
     	
@@ -499,7 +499,132 @@ public class AnotherStrainOptimizationControlCenterTest {
 
 		StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
 
-		ITerminationCriteria termination = new NumFunctionEvaluationsListenerHybridTerminationCriteria(500);
+		ITerminationCriteria termination = new NumFunctionEvaluationsListenerHybridTerminationCriteria(2000);
+		
+		CriticalReactions cr = new CriticalReactions(model, null, solverToUse);
+		cr.identifyCriticalReactions();
+
+		cr.setDrainReactionsAsCritical();
+		cr.setTransportReactionsAsCritical();
+		
+		IndexedHashMap<IObjectiveFunction, String> objFunctions = new IndexedHashMap<IObjectiveFunction, String>();
+	
+		BPCYObjectiveFunction objFunc1 = new BPCYObjectiveFunction(model.getBiomassFlux(), "R_EX_succ_e", "R_EX_glc_e");
+		objFunctions.put(objFunc1, simMethod + "T");
+
+		Map<String, Map<String, Object>> simulationConfiguration = new HashMap<>();
+		Map<String, Double> of = new HashMap<>();
+		of.put(model.getBiomassFlux(), 1.0);
+
+		// FBA
+		Map<String, Object> methodConf = new HashMap<>();
+		methodConf.put(SimulationProperties.METHOD_ID, simMethod);
+		methodConf.put(SimulationProperties.MODEL, model);
+		methodConf.put(SimulationProperties.IS_MAXIMIZATION, true);
+		methodConf.put(SimulationProperties.SOLVER, solverToUse);
+		methodConf.put(SimulationProperties.OVERUNDER_2STEP_APPROACH, false);
+		methodConf.put(SimulationProperties.IS_OVERUNDER_SIMULATION, false);
+		simulationConfiguration.put(simMethod + "T", methodConf);
+
+		
+		
+		JecoliGenericConfiguration jecoliConf = new JecoliGenericConfiguration();
+		jecoliConf.setProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY, "RK");
+		jecoliConf.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, "SPEA2");
+		jecoliConf.setProperty(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, true);
+		jecoliConf.setProperty(GenericOptimizationProperties.STEADY_STATE_MODEL, model);
+		jecoliConf.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA, termination);
+		jecoliConf.setProperty(GenericOptimizationProperties.MAP_OF2_SIM, objFunctions);
+		jecoliConf.setProperty(GenericOptimizationProperties.SIMULATION_CONFIGURATION, simulationConfiguration);
+		jecoliConf.setProperty(GenericOptimizationProperties.MAX_SET_SIZE, 6);
+		jecoliConf.setProperty(GenericOptimizationProperties.IS_OVER_UNDER_EXPRESSION, false);
+		jecoliConf.setProperty(GenericOptimizationProperties.NOT_ALLOWED_IDS, cr.getCriticalReactionIds());
+		
+		for (int j = 0; j < 10; j++) {
+			
+			boolean hasInfeasible = false;
+			
+			RKSolutionSet<JecoliGenericConfiguration> rkSolutionSet = (RKSolutionSet) cc.execute(jecoliConf);
+			
+//			StrainOptimizationSimplificationFactory simpFactory = new StrainOptimizationSimplificationFactory();
+//			IStrainOptimizationResultsSimplifier simplifier = simpFactory.getSimplifierInstance("ROU", jecoliConf);
+//			System.out.println("Number of Solutions before simplification: " + rouSolutionSet.getResultList().size());
+//			ROUSolutionSet<JecoliGenericConfiguration> newROUSolutionSet = (ROUSolutionSet<JecoliGenericConfiguration>) simplifier.getSimplifiedResultSetDiscardRepeated(rouSolutionSet);
+			
+			ArrayList<RKSolution> solutionList = (ArrayList<RKSolution>) rkSolutionSet.getResultList();
+			
+			System.out.println(solutionList.size());
+			
+			HashMap<String, List<Double>> fluxesFromOptimization = new HashMap<String, List<Double>>();
+			
+			Set<String> methods = new HashSet<String>();
+			for (String methodID : jecoliConf.getSimulationConfiguration().keySet()) {
+				methods.add((String)jecoliConf.getSimulationConfiguration().get(methodID).get(SimulationProperties.METHOD_ID));
+				methods.add(methodID);
+			}
+			
+			for (int i = 0; i < solutionList.size(); i++) {
+		//			GeneticConditions geneCond = solutionList.get(i).getGeneticConditions();
+		////			System.out.println(geneCond + "\t" + solutionList.get(i).getAttributes());
+		//			for (String reaction : geneCond.getReactionList().keySet()) {
+		//				
+		//				List<Double> values = new ArrayList<>();
+		//				if(fluxesFromOptimization.containsKey(reaction))
+		//					values = fluxesFromOptimization.get(reaction); 
+		//					
+		//				values.add(geneCond.getReactionList().get(reaction).doubleValue());
+		//				fluxesFromOptimization.put(reaction, values);
+		//			}
+		//			System.out.println(solutionList.get(i).getAttributes());
+				
+				RKSolution singularResult = solutionList.get(i);
+				
+//				List<IStrainOptimizationResult> results = (List<IStrainOptimizationResult>) solutionList.get(i).get.getResultList();
+//				for (IStrainOptimizationResult singularResult : res.get) {
+					for (String method : methods) {
+						if(singularResult.getSimulationResultForMethod(method) != null){
+							FluxValueMap fluxes = singularResult.getSimulationResultForMethod(method).getFluxValues();
+							if(fluxes.containsValue(Double.NaN)){
+								System.err.println(singularResult.getSimulationResultForMethod(method).getSolutionType());
+								System.err.println(singularResult.getGeneticConditions().toUniqueString());
+								hasInfeasible = true;
+		//						return false;
+							}
+						}
+					}
+//				}
+			
+			}
+			
+			Assert.assertTrue("Found infeasable!", hasInfeasible == false);
+			
+		}	
+	}
+    
+    
+    @Test
+	public void testGOUSolutionsWithoutSimplification() throws Exception {
+    	
+    	SolverType solverToUse = SolverType.CPLEX3;
+    	
+    	String simMethod = SimulationProperties.FBA;
+    	
+    	URL nyData = getClass().getClassLoader().getResource("models/ecoli_core_model.xml");
+
+		CplexParamConfiguration.setDoubleParam("EpRHS", 1e-9);
+		CplexParamConfiguration.setDoubleParam("TiLim", 10.0);
+
+		JSBMLReader reader = new JSBMLReader(nyData.getFile(), "1", false);
+
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+
+		cont.removeMetabolites(met);
+		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+
+		StrainOptimizationControlCenter cc = new StrainOptimizationControlCenter();
+
+		ITerminationCriteria termination = new NumFunctionEvaluationsListenerHybridTerminationCriteria(2000);
 		
 		CriticalReactions cr = new CriticalReactions(model, null, solverToUse);
 		cr.identifyCriticalReactions();
@@ -529,8 +654,8 @@ public class AnotherStrainOptimizationControlCenterTest {
 		
 		
 		JecoliGenericConfiguration jecoliConf = new JecoliGenericConfiguration();
-		jecoliConf.setProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY, "RK");
-		jecoliConf.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, "SPEA2");
+		jecoliConf.setProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY, "GOU");
+		jecoliConf.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, "SA");
 		jecoliConf.setProperty(JecoliOptimizationProperties.IS_VARIABLE_SIZE_GENOME, true);
 		jecoliConf.setProperty(GenericOptimizationProperties.STEADY_STATE_MODEL, model);
 		jecoliConf.setProperty(JecoliOptimizationProperties.TERMINATION_CRITERIA, termination);
@@ -540,32 +665,31 @@ public class AnotherStrainOptimizationControlCenterTest {
 		jecoliConf.setProperty(GenericOptimizationProperties.IS_OVER_UNDER_EXPRESSION, true);
 		jecoliConf.setProperty(GenericOptimizationProperties.NOT_ALLOWED_IDS, cr.getCriticalReactionIds());
 		
-		RKSolutionSet<JecoliGenericConfiguration> rkSolutionSet = (RKSolutionSet) cc.execute(jecoliConf);
-		
-//		StrainOptimizationSimplificationFactory simpFactory = new StrainOptimizationSimplificationFactory();
-//		IStrainOptimizationResultsSimplifier simplifier = simpFactory.getSimplifierInstance("ROU", jecoliConf);
-//		System.out.println("Number of Solutions before simplification: " + rouSolutionSet.getResultList().size());
-//		ROUSolutionSet<JecoliGenericConfiguration> newROUSolutionSet = (ROUSolutionSet<JecoliGenericConfiguration>) simplifier.getSimplifiedResultSetDiscardRepeated(rouSolutionSet);
-		
-		ArrayList<RKSolution> solutionList = (ArrayList<RKSolution>) rkSolutionSet.getResultList();
-		
-		HashMap<String, List<Double>> fluxesFromOptimization = new HashMap<String, List<Double>>();
-		
-//		for (int i = 0; i < solutionList.size(); i++) {
-//			GeneticConditions geneCond = solutionList.get(i).getGeneticConditions();
-////			System.out.println(geneCond + "\t" + solutionList.get(i).getAttributes());
-//			for (String reaction : geneCond.getReactionList().keySet()) {
-//				
-//				List<Double> values = new ArrayList<>();
-//				if(fluxesFromOptimization.containsKey(reaction))
-//					values = fluxesFromOptimization.get(reaction); 
-//					
-//				values.add(geneCond.getReactionList().get(reaction).doubleValue());
-//				fluxesFromOptimization.put(reaction, values);
+		for (int j = 0; j < 10; j++) {
+			
+			GOUSolutionSet<JecoliGenericConfiguration> rkSolutionSet = (GOUSolutionSet) cc.execute(jecoliConf);
+			
+//			StrainOptimizationSimplificationFactory simpFactory = new StrainOptimizationSimplificationFactory();
+//			IStrainOptimizationResultsSimplifier simplifier = simpFactory.getSimplifierInstance("ROU", jecoliConf);
+//			System.out.println("Number of Solutions before simplification: " + rouSolutionSet.getResultList().size());
+//			ROUSolutionSet<JecoliGenericConfiguration> newROUSolutionSet = (ROUSolutionSet<JecoliGenericConfiguration>) simplifier.getSimplifiedResultSetDiscardRepeated(rouSolutionSet);
+			
+			ArrayList<GOUSolution> solutionList = (ArrayList<GOUSolution>) rkSolutionSet.getResultList();
+			
+			System.out.println(solutionList.size());
+			
+			HashMap<String, List<Double>> fluxesFromOptimization = new HashMap<String, List<Double>>();
+			
+//			Set<String> methods = new HashSet<String>();
+//			for (String methodID : jecoliConf.getSimulationConfiguration().keySet()) {
+//				methods.add((String)jecoliConf.getSimulationConfiguration().get(methodID).get(SimulationProperties.METHOD_ID));
+//				methods.add(methodID);
 //			}
-//			System.out.println(solutionList.get(i).getAttributes());
-//		}
-		
+			
+			
+			Assert.assertTrue("No results!", !solutionList.isEmpty());
+			
+		}	
 	}
     
     
