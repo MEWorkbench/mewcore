@@ -1,14 +1,28 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.components;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.ErrorsException;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
+import pt.uminho.ceb.biosystems.mew.biocomponents.validation.io.JSBMLValidationException;
+import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
+import pt.uminho.ceb.biosystems.mew.core.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
@@ -19,6 +33,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class SimulationProperties {
 	
@@ -119,11 +134,13 @@ public class SimulationProperties {
 	public static final String	TDPS_DRAINS							= "TDPS_DRAINS";
 																	
 	public static FluxValueMap simulateWT(ISteadyStateModel model, EnvironmentalConditions envCond, SolverType solver) {
+
 		
 		PFBA<FBA> pfba = new PFBA<FBA>(model);
 		pfba.setEnvironmentalConditions(envCond);
 		pfba.setSolverType(solver);
-		pfba.setProperty(IS_MAXIMIZATION, true);
+		pfba.setProperty(SimulationProperties.IS_MAXIMIZATION, true);
+
 		SteadyStateSimulationResult res = pfba.simulate();
 		
 		return res.getFluxValues();

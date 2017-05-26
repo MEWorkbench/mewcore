@@ -75,7 +75,7 @@ public abstract class AbstractSimulationSteadyStateControlCenter implements Prop
 		setWTReference(null);
 	}
 	
-	protected Object removeProperty(String key) {
+	public Object removeProperty(String key) {
 		return methodProperties.remove(key);
 		
 	}

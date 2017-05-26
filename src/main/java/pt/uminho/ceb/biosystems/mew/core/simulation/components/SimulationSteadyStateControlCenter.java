@@ -58,11 +58,11 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		mapMethods.put(SimulationProperties.PFBA, PFBA.class);
 		mapMethods.put(SimulationProperties.MOMA, MOMA.class);
 		mapMethods.put(SimulationProperties.LMOMA, LMOMA.class);
-//		mapMethods.put(SimulationProperties.NORM_LMOMA, NormLMoma.class);
 		mapMethods.put(SimulationProperties.ROOM, ROOM.class);
 		mapMethods.put(SimulationProperties.MIMBL, MiMBl.class);
-//		mapMethods.put(SimulationProperties.DSPP_LMOMA, DSPP_LMOMA.class); 	//dual stage phenotype prediction	
 		mapMethods.put(SimulationProperties.TDPS, TDPS3.class);				//turnover dependent phenotype simulation - rui's method
+//		mapMethods.put(SimulationProperties.NORM_LMOMA, NormLMoma.class);
+//		mapMethods.put(SimulationProperties.DSPP_LMOMA, DSPP_LMOMA.class); 	//dual stage phenotype prediction	
 //		mapMethods.put(SimulationProperties.TDPS2, TDPS2.class);			//turnover dependent phenotype simulation - rui's method
 //		mapMethods.put(SimulationProperties.TDPS3, TDPS3.class);			//turnover dependent phenotype simulation - rui's method
 		

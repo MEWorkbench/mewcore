@@ -28,8 +28,8 @@ public class GOUSolution extends AbstractSolution {
 //	}
 	
 	public GOUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
-        super(solutionGeneticConditions, simulationResultMap,fitnesses);
-    }
+		super(solutionGeneticConditions, simulationResultMap, fitnesses);
+	}
 	
 	@Override
 	public void write(OutputStreamWriter outputStream) throws Exception {
@@ -39,7 +39,7 @@ public class GOUSolution extends AbstractSolution {
 		if (attributes != null) {
 			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
 			outputStream.write(fitString);
-        }
+		}
 		outputStream.write(INNER_DELIMITER);
 		
 		for (Pair<String, Double> geneExpression : geneExpressionList) {
@@ -50,16 +50,19 @@ public class GOUSolution extends AbstractSolution {
 	@Override
 	public String toStringHumanReadableGC(String delimiter) {
 		GeneChangesList geneChangeList = solutionGeneticConditions.getGeneList();
-		List<Pair<String, Double>> geneExpressionList = geneChangeList.getPairsList();
-		
-		StringBuilder sb = new StringBuilder();
-		for(int i=0; i<geneExpressionList.size(); i++){
-			Pair<String,Double> geneExpression = geneExpressionList.get(i);
-			sb.append(geneExpression.getA() + "=" + geneExpression.getB());
-			if(i<geneExpressionList.size()){
-				sb.append(delimiter);
+		if (geneChangeList != null && geneChangeList.size() > 0) {
+			List<Pair<String, Double>> geneExpressionList = geneChangeList.getPairsList();
+			
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < geneExpressionList.size(); i++) {
+				Pair<String, Double> geneExpression = geneExpressionList.get(i);
+				sb.append(geneExpression.getA() + "=" + geneExpression.getB());
+				if (i < geneExpressionList.size()) {
+					sb.append(delimiter);
+				}
 			}
+			return sb.toString();
 		}
-		return sb.toString();
+		return "";
 	}
 }

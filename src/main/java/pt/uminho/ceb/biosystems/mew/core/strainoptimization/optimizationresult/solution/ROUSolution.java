@@ -28,7 +28,7 @@ public class ROUSolution extends AbstractSolution {
 //	}
 	
 	public ROUSolution(GeneticConditions solutionGeneticConditions, Map<String, SteadyStateSimulationResult> simulationResultMap, List<Double> fitnesses) {
-		super(solutionGeneticConditions, simulationResultMap,fitnesses);
+		super(solutionGeneticConditions, simulationResultMap, fitnesses);
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class ROUSolution extends AbstractSolution {
 		if (attributes != null) {
 			String fitString = StringUtils.concat(INNER_DELIMITER, attributes);
 			outputStream.write(fitString);
-        }
+		}
 		
 		outputStream.write(INNER_DELIMITER);
 		
@@ -52,16 +52,19 @@ public class ROUSolution extends AbstractSolution {
 	@Override
 	public String toStringHumanReadableGC(String delimiter) {
 		ReactionChangesList reactionChangeList = solutionGeneticConditions.getReactionList();
-		List<Pair<String, Double>> reactionExpressionList = reactionChangeList.getPairsList();
-		
-		StringBuilder sb = new StringBuilder();
-		for(int i=0; i<reactionExpressionList.size(); i++){
-			Pair<String,Double> reactionExpression = reactionExpressionList.get(i);
-			sb.append(reactionExpression.getA() + "=" + reactionExpression.getB());
-			if(i<reactionExpressionList.size()){
-				sb.append(delimiter);
+		if (reactionChangeList != null && reactionChangeList.size() > 0) {
+			List<Pair<String, Double>> reactionExpressionList = reactionChangeList.getPairsList();
+			
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < reactionExpressionList.size(); i++) {
+				Pair<String, Double> reactionExpression = reactionExpressionList.get(i);
+				sb.append(reactionExpression.getA() + "=" + reactionExpression.getB());
+				if (i < reactionExpressionList.size()) {
+					sb.append(delimiter);
+				}
 			}
+			return sb.toString();
 		}
-		return sb.toString();
+		return  "";
 	}
 }

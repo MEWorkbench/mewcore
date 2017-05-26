@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import EDU.oswego.cs.dl.util.concurrent.SynchronousChannel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
@@ -14,6 +15,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyS
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public abstract class AbstractGeneticConditionsSimplifier implements ISimplifierGeneticConditions {
@@ -54,7 +56,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	@Override
 	public IGeneticConditionsSimplifiedResult simplifyGeneticConditions(GeneticConditions geneticConditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) throws Exception {
 		Map<String, SteadyStateSimulationResult> results = simulateGeneticConditions(geneticConditions, objectiveFunctions);
-		double[] initialFitnesses = evaluateSolution(results, objectiveFunctions);
+		double[] initialFitnesses = evaluateSolution(results, objectiveFunctions);		
 		
 		IGeneticConditionsSimplifiedResult simpResult = simplifyGeneticConditions(geneticConditions, objectiveFunctions, initialFitnesses);
 		Double[] minPercents = (Double[]) getOption(SimplifierOptions.MIN_PERCENT_PER_OBJFUNC);
@@ -187,14 +189,13 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 	
 	public Map<String, SteadyStateSimulationResult> simulateGeneticConditions(GeneticConditions conditions, IndexedHashMap<IObjectiveFunction, String> objectiveFunctions) throws Exception {
 		buildControlCenters(objectiveFunctions);
-		Map<String, SteadyStateSimulationResult> res = new HashMap<>();
+		Map<String, SteadyStateSimulationResult> res = new HashMap<>();		
 		for (String method : objectiveFunctions.values()) {
-			SimulationSteadyStateControlCenter center = getControlCenterForMethod(method);
-			center.setGeneticConditions(conditions);
-			
+			SimulationSteadyStateControlCenter center = getControlCenterForMethod(method);			
+			center.setGeneticConditions(conditions);			
 			try {
 				
-				SteadyStateSimulationResult mres = center.simulate();
+				SteadyStateSimulationResult mres = center.simulate();				
 				res.put(method, mres);
 			} catch (Exception e) {
 				e.printStackTrace();

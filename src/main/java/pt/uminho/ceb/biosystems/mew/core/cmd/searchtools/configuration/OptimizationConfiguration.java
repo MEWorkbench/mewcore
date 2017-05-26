@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jmetal.util.offspring.Offspring;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.AlgorithmTypeEnum;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.ITerminationCriteria;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.terminationcriteria.IterationListenerHybridTerminationCriteria;
@@ -57,6 +56,8 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 	private static final String			SWAPS_MAP_DELIMITER					= Delimiter.COMMA.toString();
 																			
 	private static final int			ARCHIVE_DEFAULT_SIZE				= 100;
+	
+	private static final int			DEFAULT_EXPONENT_BASE				= 2;
 																			
 	private static final int			DEFAULT_MAX_THREADS					= 1;
 																			
@@ -67,6 +68,8 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 	public static final String			OPT_STRATEGY_OU_RANGE				= "optimization.strategy.ou.range";
 																			
 	public static final String			OPT_STRATEGY_OU_2STEP				= "optimization.strategy.ou.2step";
+	
+	public static final String			OPT_STRATEGY_OU_EXP_BASE			= "optimization.strategy.ou.expBase";
 																			
 	public static final String			OPT_STRATEGY_SWAP_MAP				= "optimization.strategy.swap.map";
 																			
@@ -587,6 +590,13 @@ public class OptimizationConfiguration extends SimulationConfiguration {
 				throw new Exception("Invalid over/under range property " + tag + ". Format must be [ (-) min,max]");
 		} else
 			return null;
+	}
+	
+	public Integer getOUExponentBase() throws Exception {
+		if (containsKey(OPT_STRATEGY_OU_EXP_BASE))
+			return Integer.parseInt(getProperty(OPT_STRATEGY_OU_EXP_BASE, currentState, true));
+		else
+			return DEFAULT_EXPONENT_BASE;
 	}
 	
 	public boolean isRedirectOutput() {

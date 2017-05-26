@@ -12,6 +12,9 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 public class GOUDecoder extends ROUDecoder{
 
+	
+	private static final long serialVersionUID = 1L;
+
 	public GOUDecoder(ISteadyStateGeneReactionModel model){
 		super(model);
 	}

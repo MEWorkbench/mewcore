@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.login.Configuration;
+
 import pt.uminho.ceb.biosystems.jecoli.algorithm.AlgorithmTypeEnum;
 import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.OptimizationConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
@@ -113,6 +115,8 @@ public class ClusterRunner {
 		}
 		
 		genericConfiguration.setProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM, _configuration.getAlgorithm().toString());
+		genericConfiguration.setProperty(JecoliOptimizationProperties.OU_RANGE, _configuration.getOURange());
+		genericConfiguration.setProperty(JecoliOptimizationProperties.OU_EXPONENT_BASE, _configuration.getOUExponentBase());
 		
 		// redirect java output
 		if (_configuration.isRedirectOutput()) {

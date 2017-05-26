@@ -24,6 +24,7 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
+import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.math.MathUtils;
 
 public class TDPS3 extends AbstractSSReferenceSimulation<MILPProblem> {
@@ -282,6 +283,8 @@ public class TDPS3 extends AbstractSSReferenceSimulation<MILPProblem> {
 				
 				// add Vp to the TO calculation if the reaction has a upper bound bigger than zero
 				if (overrideBounds.getReactionConstraint(p).getUpperLimit() > 0) {
+//					System.out.println(">>>> TDPS: ("+p +"):"+model.getReactionId(p)+ "\t BOUNDS=["+overrideBounds.getReactionConstraint(p).getLowerLimit()+","+overrideBounds.getReactionConstraint(p).getUpperLimit()+"]");
+//					MapUtils.prettyPrint(idToIndexVarMapings);
 					int vpn = idToIndexVarMapings.get("TORV_" + model.getReactionId(p) + "(" + p + ")" + "_PST");
 					TURN.addTerm(vpn, model.getStoichiometricValue(metabolite, p));
 				}
