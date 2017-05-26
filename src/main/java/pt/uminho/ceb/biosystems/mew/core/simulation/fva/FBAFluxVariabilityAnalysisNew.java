@@ -35,7 +35,10 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractSSBasicSimulation;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 
 public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 
@@ -49,20 +52,35 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 	protected FluxValueMap referenceFD = null;
 
 	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType) throws Exception {
-		this.model = model;
-		this.envConditions = envConditions;
-		this.geneticConditions = geneticConditions;
-		this.solverType = solverType;
+			SolverType solverType) throws Exception{
+		this(model, envConditions, geneticConditions, solverType, false);
+	}
+	
+	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
+			SolverType solverType, boolean isPFBAReference) throws Exception {
+		
+		this(model, envConditions, geneticConditions, solverType, calculateReference(model, envConditions, geneticConditions, solverType, isPFBAReference));
+	}
 
-		FBA fba = new FBA(model);
+	
+	static FluxValueMap calculateReference(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
+			SolverType solverType, boolean isPFBAReference){
+		
+		AbstractSSBasicSimulation<LPProblem> fba = new FBA(model);
 		fba.setEnvironmentalConditions(envConditions);
 		fba.setGeneticConditions(geneticConditions);
 		fba.setSolverType(solverType);
-		fba.setIsMaximization(true);
-		referenceFD = fba.simulate().getFluxValues();
+		fba.setProperty(SimulationProperties.IS_MAXIMIZATION, true);
+		
+		if(isPFBAReference){
+			PFBA<AbstractSSBasicSimulation<LPProblem>> pfba = new PFBA<>(model);
+			pfba.setInitProblem(fba);
+			pfba.setSolverType(solverType);
+			fba = pfba;
+		}
+		return fba.simulate().getFluxValues();
 	}
-
+	
 	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
 			SolverType solverType, FluxValueMap reference) throws Exception {
 		this.model = model;
@@ -233,7 +251,7 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 			// for each step perform min/max flux simulations
 			while(actualStep <= pivotNumStep){
 				
-				ReactionConstraint rc = new ReactionConstraint(actualStepValue, model.getReactionConstraint(pivotFlux).getUpperLimit());
+				ReactionConstraint rc = new ReactionConstraint(actualStepValue, actualStepValue);
 				restrictions.addReactionConstraint(pivotFlux, rc);
 				defineRestrictions(restrictions);
 

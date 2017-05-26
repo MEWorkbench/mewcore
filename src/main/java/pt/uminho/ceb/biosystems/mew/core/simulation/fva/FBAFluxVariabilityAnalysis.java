@@ -35,9 +35,11 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
+import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
 import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
+@Deprecated
 public class FBAFluxVariabilityAnalysis {
 
 	protected ISteadyStateModel 		model;
@@ -57,10 +59,12 @@ public class FBAFluxVariabilityAnalysis {
 		this.solverType = solverType;
 
 		FBA fba = new FBA(model);
+		
 		fba.setEnvironmentalConditions(envConditions);
 		fba.setGeneticConditions(geneticConditions);
 		fba.setSolverType(solverType);
 		fba.setIsMaximization(true);
+		
 		referenceFD = fba.simulate().getFluxValues();
 	}
 
