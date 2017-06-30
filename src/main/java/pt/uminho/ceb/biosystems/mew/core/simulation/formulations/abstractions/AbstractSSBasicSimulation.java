@@ -35,7 +35,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.Mana
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.SolveContraint;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverFactory;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.ILPSolver;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
@@ -352,16 +352,16 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 	protected LPSolution simulateProblem() throws PropertyCastException, MandatoryPropertyException, WrongFormulationException, SolverException {
 		
 		if (debug) System.out.println("\n[" + getClass().getSimpleName() + "]:\n" + MapUtils.prettyToString(properties, "=", "\n\t"));
-		SolverType solverType = getSolverType();
-		return (solverType.supportsPersistentModel()) ? simulatePersistent(solverType) : simulateVolatile(solverType);
+		String solverType = getSolverType();
+		return (SolverFactory.getInstance().supportsPersistentModel(solverType)) ? simulatePersistent(solverType) : simulateVolatile(solverType);
 	}
 	
-	private LPSolution simulatePersistent(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
+	private LPSolution simulatePersistent(String solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		LPProblem p = getProblem();
 		
 		if (_solver == null || _recreateProblem) {
 			if (_solver != null) _solver.resetSolver();
-			_solver = solverType.lpSolver(p);
+			_solver = SolverFactory.getInstance().lpSolver(solverType, p);
 		}
 		
 		if (isRecreateOF()) recreateObjectiveFunction();
@@ -433,7 +433,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		
 	}
 
-	private LPSolution simulateVolatile(SolverType solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
+	private LPSolution simulateVolatile(String solverType) throws WrongFormulationException, MandatoryPropertyException, PropertyCastException {
 		
 		problem = null;
 		objTerms.clear();
@@ -452,7 +452,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		
 		LPSolution solution = null;
 		if (QPProblem.class.isAssignableFrom(problem.getClass())) {
-			IQPSolver solver = solverType.qpSolver((QPProblem) p);
+			IQPSolver solver = SolverFactory.getInstance().qpSolver(solverType, (QPProblem) p);
 			try {
 				solution = solver.solve();
 			} finally {
@@ -461,7 +461,7 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 				setRecreateOF(false);
 			}
 		} else {
-			_solver = solverType.lpSolver(p);
+			_solver = SolverFactory.getInstance().lpSolver(solverType, p);
 			try {
 				solution = _solver.solve();
 			} finally{
@@ -697,9 +697,9 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 				if (debug) System.out.println("[" + getClass().getSimpleName() + "]: got event [UPDATE]: " + event.getKey() + " from " + evt.getOldValue() + " to " + evt.getNewValue());
 				
 				if (event.getKey().equals(SimulationProperties.IS_MAXIMIZATION)) {
-					SolverType solver = getSolverType();
+					String solver = getSolverType();
 					
-					if(solver!=null && solver.supportsPersistentModel()){
+					if(solver!=null && SolverFactory.getInstance().supportsPersistentModel(solver)){
 						problem.changeObjectiveSense((boolean) evt.getNewValue());						
 					} else{
 						setRecreateOF(true);						
@@ -774,12 +774,12 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 		setProperty(SimulationProperties.GENETIC_CONDITIONS, geneticConditions);
 	}
 	
-	public void setSolverType(SolverType solver) {
+	public void setSolverType(String solver) {
 		setProperty(SimulationProperties.SOLVER, solver);
 	}
 	
-	public SolverType getSolverType() throws PropertyCastException, MandatoryPropertyException {
-		SolverType solverType = (SolverType) ManagerExceptionUtils.testCast(properties, SolverType.class, SimulationProperties.SOLVER, false);
+	public String getSolverType() throws PropertyCastException, MandatoryPropertyException {
+		String solverType = (String) ManagerExceptionUtils.testCast(properties, String.class, SimulationProperties.SOLVER, false);
 		return solverType;
 	}
 	

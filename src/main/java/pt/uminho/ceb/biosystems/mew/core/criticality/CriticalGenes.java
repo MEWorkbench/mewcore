@@ -36,7 +36,6 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyState
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class CriticalGenes extends CriticalReactions {
 	
@@ -46,7 +45,7 @@ public class CriticalGenes extends CriticalReactions {
 
 	public CriticalGenes(ISteadyStateModel model, 
 			EnvironmentalConditions env, 
-			SolverType solver)
+			String solver)
 	{
 		super(model, env, solver);
 	}
@@ -145,7 +144,7 @@ public class CriticalGenes extends CriticalReactions {
 	
 	@Override
 	public CriticalGenes clone(){
-		CriticalGenes cg = new CriticalGenes(this.model,this.getEnvConditions(),(SolverType) this.getCenter().getProperty(SimulationProperties.SOLVER));
+		CriticalGenes cg = new CriticalGenes(this.model,this.getEnvConditions(),(String) this.getCenter().getProperty(SimulationProperties.SOLVER));
 		
 		List<String> cgIDS = new ArrayList<String>();
 		for(String id : this.getCriticalGenesIds())

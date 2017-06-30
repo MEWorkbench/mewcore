@@ -22,7 +22,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.Ab
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS_FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS_LMOMA;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEXSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
@@ -64,7 +64,7 @@ public class TDPSTestClean {
 		SimulationSteadyStateControlCenter ccRef = new SimulationSteadyStateControlCenter(null, null, modelRef, SimulationProperties.PFBA);
 		ccRef.setMaximization(true);
 		ccRef.setFBAObjSingleFlux(bimassReaction, 1.0);
-		ccRef.setSolver(SolverType.CPLEX);
+		ccRef.setSolver(CPLEXSolverBuilder.ID);
 		
 		SteadyStateSimulationResult reference = ccRef.simulate();
 		BufferedWriter bw = new BufferedWriter(new FileWriter("/home/pmaia/ownCloud/documents/TDPS/reference_mine.txt"));
@@ -77,7 +77,7 @@ public class TDPSTestClean {
 		bw.close();
 		
 		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS);
-		ccTest.setSolver(SolverType.CPLEX);
+		ccTest.setSolver(CPLEXSolverBuilder.ID);
 //		ccTest.setWTReference(reference.getFluxValues()); 
 		
 		ccTest.setWTReference(getReference("/home/pmaia/ownCloud/documents/TDPS/results.txt"));

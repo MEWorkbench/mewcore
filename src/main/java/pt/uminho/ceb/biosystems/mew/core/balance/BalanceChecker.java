@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.SolverFactory;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.ILPSolver;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
@@ -26,12 +26,21 @@ public class BalanceChecker<T> {
 	Map<String,String> mapLPmet;
 	Map<String,String> mapLPcomp;
 	
-	SolverType solverType = SolverType.CPLEX;
+//	SolverType solverType = SolverType.CPLEX;
+	protected String solverId;
 	
-	public BalanceChecker (AbstractIndexedMatrix<T> s, AbstractIndexedMatrix<T> m){
+	public BalanceChecker (AbstractIndexedMatrix<T> s, AbstractIndexedMatrix<T> m, String solverId){
 		this.matrixS = s;
 		this.matrixM = m;
 		this.matrixR = buildMatrixR();
+	}
+	
+	public String getSolverId() {
+		return solverId;
+	}
+
+	public void setSolverId(String solverId) {
+		this.solverId = solverId;
 	}
 	
 	public AbstractIndexedMatrix<T> buildMatrixR() { // matriz R 
@@ -123,7 +132,7 @@ public class BalanceChecker<T> {
 	public Map<String, String> lp(){
 		try {
 			LPProblem p = createLP();
-			ILPSolver solver = solverType.lpSolver(p);
+			ILPSolver solver = SolverFactory.getInstance().lpSolver(getSolverId(), p);
 			LPSolution sol = solver.solve();
 			
 			Map<String, String> metsFormulas = new HashMap<>();

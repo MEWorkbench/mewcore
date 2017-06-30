@@ -3,18 +3,14 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReactionBounds;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraint;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPConstraintType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblemRow;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPVariable;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.MILPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.LinearProgrammingTermAlreadyPresentException;
 
 public class L1VarTerm extends AbstractObjTerm {

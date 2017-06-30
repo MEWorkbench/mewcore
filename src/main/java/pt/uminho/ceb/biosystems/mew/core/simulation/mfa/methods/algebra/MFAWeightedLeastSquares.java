@@ -2,6 +2,11 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra;
 
 import java.util.Map;
 
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
+import cern.colt.matrix.linalg.Blas;
+import cern.colt.matrix.linalg.SeqBlas;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
@@ -9,11 +14,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.Prop
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFAProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.utils.AlgebraUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
-import cern.colt.matrix.linalg.Blas;
-import cern.colt.matrix.linalg.SeqBlas;
 
 /** This class is used to solve MFA problems when the system is overdevermined */
 public class MFAWeightedLeastSquares extends MFAClassicAlgebra{

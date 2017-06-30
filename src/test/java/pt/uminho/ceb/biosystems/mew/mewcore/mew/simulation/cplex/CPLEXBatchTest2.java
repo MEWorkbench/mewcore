@@ -13,7 +13,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
 public class CPLEXBatchTest2 {
@@ -78,7 +78,7 @@ public class CPLEXBatchTest2 {
 		fba.setIsMaximization(true);
 		fba.setEnvironmentalConditions(env);
 		fba.setObjectiveFunction(of);
-		fba.setSolverType(SolverType.CPLEX3);
+		fba.setSolverType(CPLEX3SolverBuilder.ID);
 		double d = fba.simulate().getOFvalue();
 		fba.forceSolverCleanup();
 		return d;

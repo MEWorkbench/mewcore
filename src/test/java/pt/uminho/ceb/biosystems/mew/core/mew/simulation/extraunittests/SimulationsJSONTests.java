@@ -19,7 +19,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class SimulationsJSONTests {
@@ -91,7 +91,7 @@ public class SimulationsJSONTests {
 		SimulationSteadyStateControlCenter ccJSON = new SimulationSteadyStateControlCenter(getEC(modelName), null, modelJSON, SimulationProperties.FBA);
 		ccJSON.setMethodType(SimulationProperties.FBA);
 		ccJSON.setMaximization(true);
-		ccJSON.setSolver(SolverType.CPLEX3);
+		ccJSON.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSim = ccJSON.simulate();
 		
@@ -105,7 +105,7 @@ public class SimulationsJSONTests {
 		SimulationSteadyStateControlCenter ccJSONOriginal = new SimulationSteadyStateControlCenter(getEC(modelName), null, modelJSONOriginal, SimulationProperties.FBA);
 		ccJSONOriginal.setMethodType(SimulationProperties.FBA);
 		ccJSONOriginal.setMaximization(true);
-		ccJSONOriginal.setSolver(SolverType.CPLEX3);
+		ccJSONOriginal.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSimOrig = ccJSONOriginal.simulate();
 		

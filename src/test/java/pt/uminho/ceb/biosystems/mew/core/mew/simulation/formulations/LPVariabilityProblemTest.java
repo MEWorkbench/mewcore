@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
@@ -21,7 +26,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.Ab
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
 
@@ -50,9 +55,14 @@ public class LPVariabilityProblemTest {
 		/**
 		 * MODEL
 		 */
-		ModelConfiguration modelConf = new ModelConfiguration(_modelConfFile);
-		_model = modelConf.getModel();
-		_biomassID = modelConf.getModelBiomass();
+//		ModelConfiguration modelConf = new ModelConfiguration(_modelConfFile);
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/ecoli_core_model.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+		_model = model;
+		_biomassID = model.getBiomassFlux();
 		
 		/**
 		 * ENVIRONMENTAL CONDITIONS
@@ -76,7 +86,7 @@ public class LPVariabilityProblemTest {
 		LMOMA lmoma = new LMOMA(_model);
 		lmoma.setEnvironmentalConditions(_envConditions);
 		lmoma.setGeneticConditions(_genConditions);
-		lmoma.setSolverType(SolverType.CPLEX3);
+		lmoma.setSolverType(CPLEX3SolverBuilder.ID);
 				
 		SteadyStateSimulationResult res = lmoma.simulate();
 		double objectiveLMOMA = res.getOFvalue();
@@ -93,7 +103,7 @@ public class LPVariabilityProblemTest {
 		lpVariability.setObjectiveValue(objectiveLMOMA);
 		lpVariability.setEnvironmentalConditions(_envConditions);
 		lpVariability.setGeneticConditions(_genConditions);
-		lpVariability.setSolverType(SolverType.CPLEX3);
+		lpVariability.setSolverType(CPLEX3SolverBuilder.ID);
 		lpVariability.setProperty(SimulationProperties.RELAX_COEF, 0.9999);
 		
 		SteadyStateSimulationResult res2 = lpVariability.simulate();
@@ -109,7 +119,7 @@ public class LPVariabilityProblemTest {
 		LMOMA lmoma = new LMOMA(_model);
 		lmoma.setEnvironmentalConditions(_envConditions);
 		lmoma.setGeneticConditions(_genConditions);
-		lmoma.setSolverType(SolverType.CPLEX3);
+		lmoma.setSolverType(CPLEX3SolverBuilder.ID);
 				
 		SteadyStateSimulationResult res = lmoma.simulate();
 		double objectiveLMOMA = res.getOFvalue();
@@ -134,7 +144,7 @@ public class LPVariabilityProblemTest {
 		lpVariabilityOriginal.setObjectiveValue(objectiveLMOMA);
 		lpVariabilityOriginal.setEnvironmentalConditions(_envConditions);
 		lpVariabilityOriginal.setGeneticConditions(_genConditions);
-		lpVariabilityOriginal.setSolverType(SolverType.CPLEX3);
+		lpVariabilityOriginal.setSolverType(CPLEX3SolverBuilder.ID);
 		lpVariabilityOriginal.setProperty(SimulationProperties.RELAX_COEF, 0.99999999);
 		SteadyStateSimulationResult resOriginal = lpVariabilityOriginal.simulate();
 		double original = resOriginal.getFluxValues().get(_targetID);
@@ -151,7 +161,7 @@ public class LPVariabilityProblemTest {
 			lpVariabilityCurrent.setObjectiveValue(objectiveLMOMA);
 			lpVariabilityCurrent.setEnvironmentalConditions(_envConditions);
 			lpVariabilityCurrent.setGeneticConditions(_genConditions);
-			lpVariabilityCurrent.setSolverType(SolverType.CPLEX3);
+			lpVariabilityCurrent.setSolverType(CPLEX3SolverBuilder.ID);
 			lpVariabilityCurrent.setProperty(SimulationProperties.RELAX_COEF, nextTestPoint);
 			SteadyStateSimulationResult resCurrent = lpVariabilityCurrent.simulate();
 			current = resCurrent.getFluxValues().get(_targetID);
@@ -176,7 +186,7 @@ public class LPVariabilityProblemTest {
 		LMOMA lmoma = new LMOMA(_model);
 		lmoma.setEnvironmentalConditions(_envConditions);
 		lmoma.setGeneticConditions(_genConditions);
-		lmoma.setSolverType(SolverType.CPLEX3);
+		lmoma.setSolverType(CPLEX3SolverBuilder.ID);
 				
 		SteadyStateSimulationResult res = lmoma.simulate();
 		double objectiveLMOMA = res.getOFvalue();
@@ -201,7 +211,7 @@ public class LPVariabilityProblemTest {
 		lpVariabilityOriginalMin.setObjectiveValue(objectiveLMOMA);
 		lpVariabilityOriginalMin.setEnvironmentalConditions(_envConditions);
 		lpVariabilityOriginalMin.setGeneticConditions(_genConditions);
-		lpVariabilityOriginalMin.setSolverType(SolverType.CPLEX3);
+		lpVariabilityOriginalMin.setSolverType(CPLEX3SolverBuilder.ID);
 		lpVariabilityOriginalMin.setProperty(SimulationProperties.RELAX_COEF, 0.99999999);
 		SteadyStateSimulationResult resOriginalMin = lpVariabilityOriginalMin.simulate();
 		double originalFVAMin = resOriginalMin.getFluxValues().get(_targetID);
@@ -214,7 +224,7 @@ public class LPVariabilityProblemTest {
 		lpVariabilityOriginalMax.setObjectiveValue(objectiveLMOMA);
 		lpVariabilityOriginalMax.setEnvironmentalConditions(_envConditions);
 		lpVariabilityOriginalMax.setGeneticConditions(_genConditions);
-		lpVariabilityOriginalMax.setSolverType(SolverType.CPLEX3);
+		lpVariabilityOriginalMax.setSolverType(CPLEX3SolverBuilder.ID);
 		lpVariabilityOriginalMax.setProperty(SimulationProperties.RELAX_COEF, 0.99999999);
 		SteadyStateSimulationResult resOriginalMax = lpVariabilityOriginalMax.simulate();		
 		double originalFVAMax = resOriginalMax.getFluxValues().get(_targetID);
@@ -244,7 +254,7 @@ public class LPVariabilityProblemTest {
 			lpVariabilityCurrent.setObjectiveValue(objectiveLMOMA);
 			lpVariabilityCurrent.setEnvironmentalConditions(_envConditions);
 			lpVariabilityCurrent.setGeneticConditions(_genConditions);
-			lpVariabilityCurrent.setSolverType(SolverType.CPLEX3);
+			lpVariabilityCurrent.setSolverType(CPLEX3SolverBuilder.ID);
 			lpVariabilityCurrent.setProperty(SimulationProperties.RELAX_COEF, nextTestRelax);
 			SteadyStateSimulationResult resCurrent = lpVariabilityCurrent.simulate();
 			current = resCurrent.getOFvalue();

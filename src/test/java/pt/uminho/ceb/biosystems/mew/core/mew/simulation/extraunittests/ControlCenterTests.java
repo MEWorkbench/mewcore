@@ -20,7 +20,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesLi
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ControlCenterTests {
@@ -53,7 +53,7 @@ public class ControlCenterTests {
 
 		cc.setMethodType(SimulationProperties.FBA);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CLP);
+		cc.setSolver(CLPSolverBuilder.ID);
 		
 		EnvironmentalConditions envCond = new EnvironmentalConditions();
 		envCond.put("R_EX_o2_e", new ReactionConstraint(0, 1000));
@@ -86,7 +86,7 @@ public class ControlCenterTests {
 	public void MOMA() throws Exception {
 		cc.setMethodType(SimulationProperties.MOMA);
 //		cc.setMaximization(true);
-		cc.setSolver(SolverType.CLP);
+		cc.setSolver(CLPSolverBuilder.ID);
 		
 		
 		EnvironmentalConditions envCond = new EnvironmentalConditions();
@@ -125,7 +125,7 @@ public class ControlCenterTests {
 	public void LMOMA() throws Exception {
 		cc.setMethodType(SimulationProperties.LMOMA);
 //		cc.setMaximization(true);
-		cc.setSolver(SolverType.CLP);
+		cc.setSolver(CLPSolverBuilder.ID);
 		
 		
 		EnvironmentalConditions envCond = new EnvironmentalConditions();
@@ -156,7 +156,7 @@ public class ControlCenterTests {
 	public void ROOM() throws Exception {
 		cc.setMethodType(SimulationProperties.ROOM);
 //		cc.setMaximization(true);
-		cc.setSolver(SolverType.CLP);
+		cc.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult result = cc.simulate();
 		
@@ -177,7 +177,7 @@ public class ControlCenterTests {
 	public void PFBA() throws Exception {
 		cc.setMethodType(SimulationProperties.PFBA);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CLP);
+		cc.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult result = cc.simulate();
 		
@@ -203,7 +203,7 @@ public class ControlCenterTests {
 	private void simulate(String method) throws Exception {
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, method);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(CLPSolverBuilder.ID);
 		cc.simulate();
 	}
 }

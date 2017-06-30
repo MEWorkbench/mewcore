@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.IAlgorithmResult;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.IAlgorithmStatistics;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.algorithm.writer.IAlgorithmResultWriter;
@@ -36,8 +38,6 @@ import pt.uminho.ceb.biosystems.jecoli.algorithm.singleobjective.evolutionary.Re
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ExpMeasuredFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra.MFAClassicAlgebra;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraint;
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
 
 public class EstimateVMs {
 

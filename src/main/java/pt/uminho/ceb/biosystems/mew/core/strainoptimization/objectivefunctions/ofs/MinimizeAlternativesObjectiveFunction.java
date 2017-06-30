@@ -19,7 +19,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimula
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.AbstractObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
 
 /**
@@ -75,7 +74,7 @@ public class MinimizeAlternativesObjectiveFunction extends AbstractObjectiveFunc
 		super(configuration);
 	}
 	
-	public MinimizeAlternativesObjectiveFunction(Set<String> alternatives, String biomass, String target, String substrate, Container container, SolverType solver, Boolean useCountsInsteadOfCarbons) throws Exception {
+	public MinimizeAlternativesObjectiveFunction(Set<String> alternatives, String biomass, String target, String substrate, Container container, String solver, Boolean useCountsInsteadOfCarbons) throws Exception {
 		super(alternatives, biomass, target, substrate, container, solver, useCountsInsteadOfCarbons);
 		if (!((Container) getParameterValue(MIN_ALTERN_PARAM_CONTAINER)).metabolitesHasFormula()) throw new Exception(getClass().getCanonicalName() + ": provided container ["
 				+ ((Container) getParameterValue(MIN_ALTERN_PARAM_CONTAINER)).getModelName() + "] does not contain metabolite formulas. Metabolite formulas are required to calculate the carbon content of the metabolites.");
@@ -238,7 +237,7 @@ public class MinimizeAlternativesObjectiveFunction extends AbstractObjectiveFunc
 	}
 	
 	private void initControlCenter(SteadyStateSimulationResult simResult) {
-		SolverType solver = (SolverType) getParameterValue(MIN_ALTERN_PARAM_SOLVER);
+		String solver = (String) getParameterValue(MIN_ALTERN_PARAM_SOLVER);
 		String biomassID = (String) getParameterValue(MIN_ALTERN_PARAM_BIOMASS);
 		if (_debug) System.out.println("[" + getClass().getSimpleName() + "]: initializing control center");
 		_cc = new SimulationSteadyStateControlCenter(simResult.getEnvironmentalConditions(), simResult.getGeneticConditions(), simResult.getModel(), SimulationProperties.FBA);

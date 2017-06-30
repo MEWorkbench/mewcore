@@ -14,7 +14,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimula
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.AbstractObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 /**
  * This objective function allows the user to maximize of minimize the FVAMax or
@@ -56,7 +55,7 @@ public class FVASenseObjectiveFunction extends AbstractObjectiveFunction {
 		super(configuration);
 	}
 	
-	public FVASenseObjectiveFunction(String biomassID, String targetID, Boolean maximize, Boolean fvaMax, SolverType solver) {
+	public FVASenseObjectiveFunction(String biomassID, String targetID, Boolean maximize, Boolean fvaMax, String solver) {
 		super(biomassID, targetID, maximize, fvaMax, solver);
 	}
 	
@@ -71,7 +70,7 @@ public class FVASenseObjectiveFunction extends AbstractObjectiveFunction {
 	
 	private SimulationSteadyStateControlCenter getControlCenter(ISteadyStateModel model) {
 		if (_cc == null) {
-			SolverType solver = (SolverType) getParameterValue(FVA_SENSE_PARAM_SOLVER);
+			String solver = (String) getParameterValue(FVA_SENSE_PARAM_SOLVER);
 			String productID = (String) getParameterValue(FVA_SENSE_PARAM_PRODUCT);
 			Boolean sense = (Boolean) getParameterValue(FVA_SENSE_PARAM_SENSE);
 			_cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);

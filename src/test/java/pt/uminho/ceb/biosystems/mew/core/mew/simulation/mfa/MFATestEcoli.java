@@ -9,7 +9,8 @@ import org.junit.runners.MethodSorters;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.MFAApproaches;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.GLPKBinSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -22,10 +23,10 @@ public class MFATestEcoli extends GenericMFATest {
 	
 	static {
 		
-		_solvers = new IndexedHashMap<String, SolverType>();
-		_solvers.put("GLPK", SolverType.GLPK);
-		_solvers.put("CLP", SolverType.CLP);
-		_solvers.put("CPLEX", SolverType.CPLEX3);
+		_solvers = new IndexedHashMap<String, String>();
+		_solvers.put("GLPK", GLPKBinSolverBuilder.ID);
+		_solvers.put("CLP", CLPSolverBuilder.ID);
+//		_solvers.put("CPLEX", SolverType.CPLEX3);
 		
 		_methods = new IndexedHashMap<String, MFAApproaches>();
 		_methods.put(MFAApproaches.linearProgramming.getPropertyDescriptor(), MFAApproaches.linearProgramming);

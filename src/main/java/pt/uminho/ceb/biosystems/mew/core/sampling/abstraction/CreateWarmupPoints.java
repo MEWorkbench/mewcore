@@ -13,7 +13,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
 
 
@@ -23,13 +22,23 @@ public class CreateWarmupPoints {
 	private Integer nPoints;
 	private Bias bias; //method, index and parameters
 	private SimpleMatrix warmupPts;
+	private String solverId;
 	
-	public CreateWarmupPoints(ISteadyStateModel model,Integer nPoints, Bias bias){
+	public CreateWarmupPoints(ISteadyStateModel model,Integer nPoints, Bias bias, String solverId){
 		this.model = model;
 		this.nPoints = nPoints;
 		this.bias = bias;
 		Integer n = model.getNumberOfReactions();
 		this.warmupPts = new SimpleMatrix(n, nPoints);
+		this.solverId = solverId;
+	}
+	
+	public String getSolverId() {
+		return solverId;
+	}
+
+	public void setSolverId(String solverId) {
+		this.solverId = solverId;
 	}
 	
 	public ISteadyStateModel getModel(){
@@ -130,7 +139,7 @@ public class CreateWarmupPoints {
 	public void run() throws Exception{
 		Integer nRxns = model.getNumberOfReactions();
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(getSolverId());
 		verifyPoints(nRxns);
 		ArrayList<Double> biasFluxMin = new ArrayList<Double>();
 		ArrayList<Double> biasFluxMax = new ArrayList<Double>();

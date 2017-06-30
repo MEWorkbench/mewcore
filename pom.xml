@@ -14,6 +14,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<project.tests.ld.library.path>../dependencies/unix64/static/:/opt/ibm/ILOG/CPLEX_Studio125/cplex/bin/x86-64_sles10_4.1/</project.tests.ld.library.path>
+		<project.tests.path>../dependencies/unix64/bin/</project.tests.path>
 	</properties>
 
 	<dependencies>
@@ -49,22 +51,15 @@
 			<version>4.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.code</groupId>
-			<artifactId>matlabcontrol</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>uk.com.robust-it</groupId>
 			<artifactId>cloning</artifactId>
 			<version>1.9.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.googlecode.efficient-java-matrix-library</groupId>
 			<artifactId>ejml</artifactId>
 			<version>0.25</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -78,8 +73,8 @@
 
 
 					<environmentVariables>
-						<LD_LIBRARY_PATH>/home/hgiesteira/Desktop/EclipseProjects/OptFlux/dependencies/unix64/static/:/opt/ibm/ILOG/CPLEX_Studio125/cplex/bin/x86-64_sles10_4.1/</LD_LIBRARY_PATH>
-						<PATH>/home/hgiesteira/Desktop/EclipseProjects/OptFlux/dependencies/unix64/bin/</PATH>
+						<LD_LIBRARY_PATH>${project.tests.ld.library.path}</LD_LIBRARY_PATH>
+						<PATH>${project.tests.path}</PATH>
 					</environmentVariables>
 				</configuration>
 			</plugin>
@@ -95,45 +90,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-javadoc-plugin</artifactId> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <id>attach-javadocs</id> -->
-			<!-- <goals> -->
-			<!-- <goal>jar</goal> -->
-			<!-- </goals> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>thirdparty</id>
-			<url>http://193.137.11.210/nexus/content/repositories/thirdparty</url>
-		</repository>
-		<repository>
-			<id>biosystems-releases</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
-		</repository>
-		<repository>
-			<id>biosystems-snapshots</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>biosystems-snapshots</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>biosystems-releases</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
-		</repository>
-	</distributionManagement>
 
 </project>

@@ -4,12 +4,17 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
@@ -19,7 +24,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.MFAApproaches;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.variability.MFATightBoundsResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFASystemType;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraintList;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.GLPKBinSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
 import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
@@ -48,9 +53,12 @@ public class TestPersistence {
 		/**
 		 * MODEL
 		 */
-		ModelConfiguration modelConf = new ModelConfiguration(_modelConfFile);
-		ISteadyStateModel _model = modelConf.getModel();
-		String _biomassID = modelConf.getModelBiomass();
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/ecoli_core_model.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		ISteadyStateModel _model = (SteadyStateModel) ContainerConverter.convert(cont);
+		String _biomassID = _model.getBiomassFlux();
 		
 		/**
 		 * ENVIRONMENTAL CONDITIONS
@@ -94,7 +102,7 @@ public class TestPersistence {
 		MFAControlCenter cc = new MFAControlCenter(null, null, _model, null, null, MFAApproaches.tightBounds, MFASystemType.underdetermined);
 		cc.setMaximization(true);
 		cc.setFBAObjSingleFlux(_biomassID, 1.0);
-		cc.setSolver(SolverType.GLPK);
+		cc.setSolver(GLPKBinSolverBuilder.ID);
 		cc.setRobustObjectiveFlux(_biomassID);
 //		cc.setPercentageInterval(_robustnessPercentageInterval);
 		cc.setSelectedFluxes(Arrays.asList(_fluxesToAnalyze));

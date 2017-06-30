@@ -5,7 +5,6 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.LMOMA;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class LMOMASimulationTest extends AbstractSimulationTest{
 	
@@ -137,7 +136,7 @@ public class LMOMASimulationTest extends AbstractSimulationTest{
 	}
 
 	@Override
-	public SolverType getSolver() {
+	public String getSolver() {
 		// TODO Auto-generated method stub
 		return null;
 	}

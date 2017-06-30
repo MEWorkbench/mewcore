@@ -15,7 +15,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.A
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
 import pt.uminho.ceb.biosystems.mew.core.utils.Debugger;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class WeightedBiomassYIELDObjectiveFunction extends AbstractObjectiveFunction {
@@ -52,7 +51,7 @@ public class WeightedBiomassYIELDObjectiveFunction extends AbstractObjectiveFunc
 		super(configuration);
 	}
 	
-	public WeightedBiomassYIELDObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, SolverType lpSolver, Double minBiomassPercentage) {
+	public WeightedBiomassYIELDObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, String lpSolver, Double minBiomassPercentage) {
 		super(biomassId, desiredFluxId, alpha, lpSolver, minBiomassPercentage);
 	}
 	
@@ -71,7 +70,7 @@ public class WeightedBiomassYIELDObjectiveFunction extends AbstractObjectiveFunc
 		String biomassId = (String) getParameterValue(WYIELD_PARAM_BIOMASS);
 		String desiredFluxId = (String) getParameterValue(WYIELD_PARAM_PRODUCT);
 		double alpha = (double) getParameterValue(WYIELD_PARAM_ALPHA);
-		SolverType lpSolver = (SolverType) getParameterValue(WYIELD_PARAM_SOLVER);
+		String lpSolver = (String) getParameterValue(WYIELD_PARAM_SOLVER);
 		double minBiomassPercentage = (double) getParameterValue(WYIELD_PARAM_MIN_BIOMASS_PERCENTAGE);
 		
 		double fvaMaxProd = 0;

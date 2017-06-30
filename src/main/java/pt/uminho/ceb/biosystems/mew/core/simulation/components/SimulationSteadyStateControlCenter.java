@@ -27,19 +27,14 @@ import java.util.Set;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.DSPP_LMOMA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.LMOMA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.MOMA;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.NormLMoma;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.ROOM;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.NoConstructorMethodException;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS2;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.tdps.TDPS3;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.turnover.MiMBl;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 
 public class SimulationSteadyStateControlCenter extends AbstractSimulationSteadyStateControlCenter {
@@ -73,7 +68,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		super(simulationConfiguration);
 		Set<String> dealtWithProperties = new HashSet<String>(simulationConfiguration.keySet());
 		
-		SolverType solver = (SolverType) simulationConfiguration.get(SimulationProperties.SOLVER);
+		String solver = (String) simulationConfiguration.get(SimulationProperties.SOLVER);
 		Boolean isMaximization = (Boolean) simulationConfiguration.get(SimulationProperties.IS_MAXIMIZATION);
 		Boolean overUnder2StepApproach = (Boolean) simulationConfiguration.get(SimulationProperties.OVERUNDER_2STEP_APPROACH);
 		FluxValueMap wtReference = (FluxValueMap) simulationConfiguration.get(SimulationProperties.WT_REFERENCE);
@@ -138,7 +133,7 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		addProperty(SimulationProperties.PRODUCT_FLUX, productFlux);
 	}
 	
-	public void setSolver(SolverType solverType) {
+	public void setSolver(String solverType) {
 		addProperty(SimulationProperties.SOLVER, solverType);
 	}
 	
@@ -147,8 +142,8 @@ public class SimulationSteadyStateControlCenter extends AbstractSimulationSteady
 		setUnderOverRef(ref);
 	}
 	
-	private SolverType getSolverType() {
-		return (SolverType) getProperty(SimulationProperties.SOLVER);
+	private String getSolverType() {
+		return (String) getProperty(SimulationProperties.SOLVER);
 	}
 	
 	public void addWTReference() throws Exception {

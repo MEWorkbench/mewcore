@@ -5,6 +5,7 @@ import static org.junit.Assert.assertArrayEquals;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,10 +15,13 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
@@ -30,7 +34,8 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.variability.MFAT
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFAProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFASystemType;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraintList;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.GLPKBinSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
@@ -50,7 +55,7 @@ public class GenericMFATest {
 	
 	public static final MultiKeyMap<String, Map<String, double[]>>	_results		= new MultiKeyMap<String, Map<String, double[]>>();
 	
-	public static Map<String, SolverType>							_solvers;
+	public static Map<String, String>								_solvers;
 	
 	public static Map<String, MFAApproaches>						_methods;
 	
@@ -107,9 +112,13 @@ public class GenericMFATest {
 		/**
 		 * MODEL
 		 */
-		ModelConfiguration modelConf = new ModelConfiguration(_modelConfFile);
-		_model = modelConf.getModel();
-		_biomassID = modelConf.getModelBiomass();
+		
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/ecoli_core_model.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		_model = (SteadyStateModel) ContainerConverter.convert(cont);
+		_biomassID = _model.getBiomassFlux();
 		
 		/**
 		 * ENVIRONMENTAL CONDITIONS
@@ -152,7 +161,7 @@ public class GenericMFATest {
 		_cc = new MFAControlCenter(_envConditions1, null, _model, _measuredFluxes1, _fluxRatios1, MFAApproaches.linearProgramming, MFASystemType.underdetermined);
 		_cc.setMaximization(true);
 		_cc.setFBAObjSingleFlux(_biomassID, 1.0);
-		_cc.setSolver(SolverType.GLPK);
+		_cc.setSolver(GLPKBinSolverBuilder.ID);
 		SteadyStateSimulationResult result = _cc.simulate();
 		
 		double[] actuals = new double[2];
@@ -891,7 +900,7 @@ public class GenericMFATest {
 		Assume.assumeTrue(_methods.containsKey(MFAProperties.MFA_LP));
 		_cc.setApproach(MFAApproaches.linearProgramming);
 		_cc.setFluxRatios(_fluxRatios1);
-		_cc.setSolver(SolverType.CLP);
+		_cc.setSolver(CLPSolverBuilder.ID);
 		_cc.setSelectedFluxes(Arrays.asList(_fluxesToAnalyze));
 		
 		SteadyStateSimulationResult result = _cc.simulate();
@@ -1790,7 +1799,7 @@ public class GenericMFATest {
 		Assume.assumeTrue(_solvers.containsKey("CPLEX"));
 		Assume.assumeTrue(_methods.containsKey(MFAProperties.MFA_LP));
 		_cc.setApproach(MFAApproaches.linearProgramming);
-		_cc.setSolver(SolverType.CPLEX3);
+		_cc.setSolver(CLPSolverBuilder.ID);
 		_cc.setFluxRatios(_fluxRatios1);
 		_cc.setSelectedFluxes(Arrays.asList(_fluxesToAnalyze));
 		SteadyStateSimulationResult result = _cc.simulate();

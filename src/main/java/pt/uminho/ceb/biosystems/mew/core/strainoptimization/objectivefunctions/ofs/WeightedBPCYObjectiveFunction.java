@@ -7,7 +7,6 @@ import java.util.Map;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
@@ -16,8 +15,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.A
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
 import pt.uminho.ceb.biosystems.mew.core.utils.Debugger;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
 
 public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 	
@@ -50,7 +47,7 @@ public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 		super(configuration);
 	}
 	
-	public WeightedBPCYObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, SolverType lpSolver) {
+	public WeightedBPCYObjectiveFunction(String biomassId, String desiredFluxId, Double alpha, String lpSolver) {
 		super(biomassId, desiredFluxId, alpha, lpSolver);
 	}
 	
@@ -69,7 +66,7 @@ public class WeightedBPCYObjectiveFunction extends AbstractObjectiveFunction {
 		String biomassId = (String) getParameterValue(WBPCY_PARAM_BIOMASS);
 		String desiredFluxId = (String) getParameterValue(WBPCY_PARAM_PRODUCT);
 		double alpha = (double) getParameterValue(WBPCY_PARAM_ALPHA);
-		SolverType lpSolver = (SolverType) getParameterValue(WBPCY_PARAM_SOLVER);
+		String lpSolver = (String) getParameterValue(WBPCY_PARAM_SOLVER);
 		
 		double fvaMaxProd = 0;
 		double fvaMinProd = 0;

@@ -2,15 +2,20 @@ package pt.uminho.ceb.biosystems.mew.core.mew.simulation.extraunittests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
@@ -19,7 +24,8 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEXSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -34,9 +40,12 @@ public class ROOMConstraintReplacementTest {
 		CplexParamConfiguration.setBooleanParam("NumericalEmphasis",true);
 		CplexParamConfiguration.setBooleanParam("PreInd",true);
 		CplexParamConfiguration.setIntegerParam("HeurFreq",-1);
-		ModelConfiguration modelConf = new ModelConfiguration("files/iAF1260_full/iAF1260.conf");
-		ISteadyStateModel model = modelConf.getModel();
-		String biomassID = modelConf.getModelBiomass();
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/Ec_iAF1260_flux1.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+		String biomassID = model.getBiomassFlux();
 		String targetID = "R_EX_succ_e_";
 		
 		
@@ -72,7 +81,7 @@ public class ROOMConstraintReplacementTest {
 		
 	
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envCondAerobiose, null, model, SimulationProperties.ROOM);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		cc.setFBAObjSingleFlux(biomassID, 1.0);
 		cc.addProperty(SimulationProperties.ROOM_DELTA, 0.0);
@@ -144,9 +153,12 @@ public class ROOMConstraintReplacementTest {
 		CplexParamConfiguration.setBooleanParam("NumericalEmphasis",true);
 		CplexParamConfiguration.setBooleanParam("PreInd",true);
 		CplexParamConfiguration.setIntegerParam("HeurFreq",-1);
-		ModelConfiguration modelConf = new ModelConfiguration("files/iAF1260_full/iAF1260.conf");
-		ISteadyStateModel model = modelConf.getModel();
-		String biomassID = modelConf.getModelBiomass();
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/Ec_iAF1260_flux1.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+		String biomassID = model.getBiomassFlux();
 		String targetID = "R_EX_succ_e_";
 		
 		
@@ -181,7 +193,7 @@ public class ROOMConstraintReplacementTest {
 		genCondGK.updateReactionsList((ISteadyStateGeneReactionModel) model);
 	
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envCondAerobiose, null, model, SimulationProperties.ROOM);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(CPLEXSolverBuilder.ID);
 		cc.setMaximization(true);
 		cc.setFBAObjSingleFlux(biomassID, 1.0);
 		cc.addProperty(SimulationProperties.ROOM_DELTA, 0.0);

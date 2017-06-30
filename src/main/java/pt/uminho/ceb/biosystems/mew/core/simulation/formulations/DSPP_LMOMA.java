@@ -1,7 +1,6 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.formulations;
 
 import java.beans.PropertyChangeEvent;
-import java.io.IOException;
 
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.enums.ReactionType;

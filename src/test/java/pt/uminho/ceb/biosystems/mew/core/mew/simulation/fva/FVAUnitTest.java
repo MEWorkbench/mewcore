@@ -19,7 +19,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyS
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.fva.FBAFluxVariabilityAnalysisNew;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
 public class FVAUnitTest {
@@ -51,7 +51,7 @@ public class FVAUnitTest {
 //		
 //		fva.fluxVariation(model.getBiomassFlux(), new ArrayList<String>(){{add("R_EX_h_e");}}, 20, null, null);
 		
-		FBAFluxVariabilityAnalysisNew fva = new FBAFluxVariabilityAnalysisNew(model, ec, null, SolverType.CPLEX3);
+		FBAFluxVariabilityAnalysisNew fva = new FBAFluxVariabilityAnalysisNew(model, ec, null, CPLEX3SolverBuilder.ID);
 		
 		Map<String, Map<Double, SteadyStateSimulationResult[]>> results = fva.fluxVariation("R_EX_o2_e", Arrays.asList(model.getBiomassFlux()), 20, null, null);
 		for (String string : results.keySet()) {
@@ -143,7 +143,7 @@ public class FVAUnitTest {
 
 	}
 	
-	private static SteadyStateSimulationResult simulate(ISteadyStateModel model, boolean isMaximization, String fluxID, SolverType solverType, EnvironmentalConditions envCond, GeneticConditions geneCond){
+	private static SteadyStateSimulationResult simulate(ISteadyStateModel model, boolean isMaximization, String fluxID, String solverType, EnvironmentalConditions envCond, GeneticConditions geneCond){
 		SteadyStateSimulationResult result = null;
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envCond, geneCond, model, SimulationProperties.FBA);
 		cc.setMaximization(isMaximization);

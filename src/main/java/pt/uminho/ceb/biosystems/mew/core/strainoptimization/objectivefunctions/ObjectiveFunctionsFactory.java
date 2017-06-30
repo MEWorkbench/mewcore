@@ -2,15 +2,12 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.CYIELDObjectiveFunction;
@@ -24,7 +21,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.o
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBiomassYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ObjectiveFunctionsFactory {
@@ -180,15 +176,15 @@ public class ObjectiveFunctionsFactory {
 		MapUtils.prettyPrint(types);
 	}
 	
-	@Test
-	public void testEnum(){
-		SolverType clp = SolverType.CLP;
-		
-		SolverType cplex3 = SolverType.CPLEX3;
-		
-		Object[] initArgs = new Object[]{clp, cplex3};
-		Class<?>[] argumentClasses = getArgumentsClasses(initArgs);
-		
-		System.out.println(Arrays.toString(argumentClasses));
-	}
+//	@Test
+//	public void testEnum(){
+//		SolverType clp = SolverType.CLP;
+//		
+//		SolverType cplex3 = SolverType.CPLEX3;
+//		
+//		Object[] initArgs = new Object[]{clp, cplex3};
+//		Class<?>[] argumentClasses = getArgumentsClasses(initArgs);
+//		
+//		System.out.println(Arrays.toString(argumentClasses));
+//	}
 }

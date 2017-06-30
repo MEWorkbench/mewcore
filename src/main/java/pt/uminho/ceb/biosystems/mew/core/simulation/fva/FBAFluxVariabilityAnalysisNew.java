@@ -37,7 +37,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimula
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractSSBasicSimulation;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 
 public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
@@ -45,26 +44,26 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 	protected ISteadyStateModel 		model;
 	protected EnvironmentalConditions 	envConditions;
 	protected GeneticConditions 		geneticConditions;
-	protected SolverType 				solverType;
+	protected String	 				solverType;
 
 	protected SimulationSteadyStateControlCenter simulCenter;
 
 	protected FluxValueMap referenceFD = null;
 
 	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType) throws Exception{
+			String solverType) throws Exception{
 		this(model, envConditions, geneticConditions, solverType, false);
 	}
 	
 	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType, boolean isPFBAReference) throws Exception {
+			String solverType, boolean isPFBAReference) throws Exception {
 		
 		this(model, envConditions, geneticConditions, solverType, calculateReference(model, envConditions, geneticConditions, solverType, isPFBAReference));
 	}
 
 	
 	static FluxValueMap calculateReference(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType, boolean isPFBAReference){
+			String solverType, boolean isPFBAReference){
 		
 		AbstractSSBasicSimulation<LPProblem> fba = new FBA(model);
 		fba.setEnvironmentalConditions(envConditions);
@@ -82,7 +81,7 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 	}
 	
 	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType, FluxValueMap reference) throws Exception {
+			String solverType, FluxValueMap reference) throws Exception {
 		this.model = model;
 		this.envConditions = envConditions;
 		this.geneticConditions = geneticConditions;
@@ -91,7 +90,7 @@ public class FBAFluxVariabilityAnalysisNew implements IFluxVariabilityAnalysis {
 		this.referenceFD = reference;
 	}
 
-	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, SolverType solverType) throws Exception {
+	public FBAFluxVariabilityAnalysisNew(ISteadyStateModel model, String solverType) throws Exception {
 		this(model, null, null, solverType);
 	}
 

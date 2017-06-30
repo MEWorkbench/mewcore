@@ -1,6 +1,5 @@
 package pt.uminho.ceb.biosystems.mew.core.balance;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,6 +16,7 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.Stoichiom
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEXSolverBuilder;
 
 public class BalanceTest {
 	
@@ -117,7 +117,7 @@ public class BalanceTest {
 		
 		//matriz R
 		System.out.println("Matrix R: "); //95x6
-		BalanceChecker balance = new BalanceChecker(s, m);
+		BalanceChecker balance = new BalanceChecker(s, m, CPLEXSolverBuilder.ID);
 		balance.matrixR.printMatrix();	
 		System.out.println("Indices dos compostos (colunas):");
 		System.out.println(balance.matrixR.getColIndex());
@@ -336,7 +336,7 @@ public class BalanceTest {
 				
 		//Matriz R usando classe BalanceChecker
 		System.out.println("Matrix R usando classe BalanceChecker: "); //95x6
-		BalanceChecker balance = new BalanceChecker(s, m);
+		BalanceChecker balance = new BalanceChecker(s, m, CPLEXSolverBuilder.ID);
 		balance.matrixR.printMatrix();	
 		System.out.println("Indices dos compostos (colunas):");
 		System.out.println(balance.matrixR.getColIndex());

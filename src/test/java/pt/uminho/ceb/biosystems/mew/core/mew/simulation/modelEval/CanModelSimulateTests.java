@@ -19,17 +19,17 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.io.Delimiter;
 import pt.uminho.ceb.biosystems.mew.utilities.io.FileUtils;
 
 public class CanModelSimulateTests {
 	
-	String sbmlFolder = "/home/hgiesteira/Desktop/Models/ToConvert/SBML/";
+	String sbmlFolder = "/Models/ToConvert/SBML/";
 	
-	String modelsFolder = "/home/hgiesteira/Desktop/Models/ToConvert/";
-	String convertedFolder = "/home/hgiesteira/Desktop/Models/ToConvert/SBML/";
+	String modelsFolder = "/Models/ToConvert/";
+	String convertedFolder = "/Models/ToConvert/SBML/";
 	String originalFolder = modelsFolder + "Originals/";
 	
 //	Models present in sourceforge
@@ -54,7 +54,7 @@ public class CanModelSimulateTests {
 		SteadyStateModel model = readModel(sbmlFolder+modelID);
 		
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		
 		SteadyStateSimulationResult res = cc.simulate();
@@ -67,10 +67,10 @@ public class CanModelSimulateTests {
 		SteadyStateModel model = readModel(sbmlFolder+modelID);
 		
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		
-		String file = "/home/hgiesteira/Desktop/Models/ToConvert/iAN818m_EnvCond";
+		String file = "/Models/ToConvert/iAN818m_EnvCond";
 		
 		cc.setEnvironmentalConditions(readEnvCond(file));
 		
@@ -126,10 +126,10 @@ public class CanModelSimulateTests {
 //		SteadyStateModel model = readModel(sbmlFolder+modelID);
 		
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		
-//		String file = "/home/hgiesteira/Desktop/Models/ToConvert/iAN818m_EnvCond";
+//		String file = "./Models/ToConvert/iAN818m_EnvCond";
 		
 //		cc.setEnvironmentalConditions(readEnvCond(file));
 		
@@ -151,7 +151,7 @@ public class CanModelSimulateTests {
 		SteadyStateModel model = readModel(sbmlFolder+modelID);
 		
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		
 		SteadyStateSimulationResult res = cc.simulate();
@@ -230,7 +230,7 @@ public class CanModelSimulateTests {
 		}
 		
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 
 		SteadyStateSimulationResult res = cc.simulate();

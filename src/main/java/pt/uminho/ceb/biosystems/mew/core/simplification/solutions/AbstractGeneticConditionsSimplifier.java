@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import EDU.oswego.cs.dl.util.concurrent.SynchronousChannel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
@@ -15,7 +14,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyS
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateMultiSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
 public abstract class AbstractGeneticConditionsSimplifier implements ISimplifierGeneticConditions {

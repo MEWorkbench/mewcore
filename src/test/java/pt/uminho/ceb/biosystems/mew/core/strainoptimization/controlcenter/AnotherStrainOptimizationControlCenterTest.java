@@ -39,7 +39,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.ROUSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
@@ -54,7 +54,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
 	public void testUOZeroFluxesException() throws Exception {
     	
-    	SolverType solverToUse = SolverType.CPLEX3;
+    	String solverToUse = CPLEX3SolverBuilder.ID;
     	
     	URL nyData = getClass().getClassLoader().getResource("models/ecoli_core_model.xml");
 
@@ -173,7 +173,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
    	public void testUOMultipleReferencesException() throws Exception {
        	
-       	SolverType solverToUse = SolverType.CPLEX3;
+       	String solverToUse = CPLEX3SolverBuilder.ID;
        	
        	URL nyData = getClass().getClassLoader().getResource("models/ecoli_core_model.xml");
 
@@ -315,7 +315,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
     public void simulationTest() throws Exception {
     	
-    	SolverType solverToUse = SolverType.CPLEX3;
+    	String solverToUse = CPLEX3SolverBuilder.ID;
     	
     	URL nyData = getClass().getClassLoader().getResource("models/ecoli_core_model.xml");
 
@@ -359,7 +359,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
 	public void testUO2StepApproachException() throws Exception {
     	
-    	SolverType solverToUse = SolverType.CPLEX3;
+    	String solverToUse = CPLEX3SolverBuilder.ID;
     	
     	String simMethod = SimulationProperties.MOMA;
     	
@@ -480,7 +480,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
 	public void testRKSolutionsWithoutSimplification() throws Exception {
     	
-    	SolverType solverToUse = SolverType.CPLEX3;
+    	String solverToUse = CPLEX3SolverBuilder.ID;
     	
     	String simMethod = SimulationProperties.FBA;
     	
@@ -605,7 +605,7 @@ public class AnotherStrainOptimizationControlCenterTest {
     @Test
 	public void testGOUSolutionsWithoutSimplification() throws Exception {
     	
-    	SolverType solverToUse = SolverType.CPLEX3;
+    	String solverToUse = CPLEX3SolverBuilder.ID;
     	
     	String simMethod = SimulationProperties.FBA;
     	

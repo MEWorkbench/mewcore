@@ -15,7 +15,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 
 public class JSbmlV3Tests {
 	
@@ -26,7 +26,7 @@ public class JSbmlV3Tests {
 	
 	@Test
 	public void fbaTest01() throws Exception{
-		JSBMLLevel3Reader reader = new JSBMLLevel3Reader("/home/hgiesteira/Desktop/Models/iAF1260.xml", "NoName", false);
+		JSBMLLevel3Reader reader = new JSBMLLevel3Reader("./src/test/resources/models/iAF1260.xml", "NoName", false);
 		
 		// Container
 		Container cont = new Container(reader);
@@ -35,7 +35,7 @@ public class JSbmlV3Tests {
 		SteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
 
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CLPSolverBuilder.ID);
 		cc.setMaximization(true);
 		
 		SteadyStateSimulationResult result = cc.simulate();
@@ -44,7 +44,7 @@ public class JSbmlV3Tests {
 	
 	@Test
 	public void fbaTest02() throws Exception{
-		JSBMLLevel3Reader reader = new JSBMLLevel3Reader("/home/hgiesteira/Desktop/Models/Recon2_v04.xml", "NoName", false);
+		JSBMLLevel3Reader reader = new JSBMLLevel3Reader("./src/test/resources/models/Recon2_v04.xml", "NoName", false);
 		
 		// Container
 		Container cont = new Container(reader);
@@ -53,7 +53,7 @@ public class JSbmlV3Tests {
 		SteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
 
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CLPSolverBuilder.ID);
 		cc.setMaximization(true);
 		
 		SteadyStateSimulationResult result = cc.simulate();
@@ -63,9 +63,9 @@ public class JSbmlV3Tests {
 	@Test
 	public void fbaTestTutti() throws Exception{
 		ArrayList<String> models = new ArrayList<String>();
-		models.add("/home/hgiesteira/Desktop/Models/Recon2_v04.xml");
-		models.add("/home/hgiesteira/Desktop/Models/iAF1260.xml");
-		models.add("/home/hgiesteira/Desktop/Models/iMM904.xml");
+		models.add("./src/test/resources/models/Recon2_v04.xml");
+		models.add("./src/test/resources/models/iAF1260.xml");
+		models.add("./src/test/resources/models/iMM904.xml");
 		
 		
 		for (String modelPath : models) {
@@ -81,7 +81,7 @@ public class JSbmlV3Tests {
 				SteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
 		
 				SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-				cc.setSolver(SolverType.CPLEX3);
+				cc.setSolver(CLPSolverBuilder.ID);
 				cc.setMaximization(true);
 				
 				SteadyStateSimulationResult result = cc.simulate();

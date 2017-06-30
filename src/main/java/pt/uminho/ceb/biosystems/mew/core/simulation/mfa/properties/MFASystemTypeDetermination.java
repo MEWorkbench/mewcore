@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ExpMeasuredFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra.MFAAlgebraStoichConversions;
@@ -12,9 +15,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra.MFAClass
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraintList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.utils.ThreeTuple;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
 
 public class MFASystemTypeDetermination {
 	

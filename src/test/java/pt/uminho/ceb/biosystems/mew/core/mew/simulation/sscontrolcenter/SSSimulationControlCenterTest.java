@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
 import org.junit.Assume;
@@ -14,10 +16,14 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
+import cern.colt.Arrays;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.gpr.ISteadyStateGeneReactionModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneChangesList;
@@ -27,11 +33,12 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.GLPKBinSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
-import cern.colt.Arrays;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SSSimulationControlCenterTest {
@@ -48,7 +55,7 @@ public class SSSimulationControlCenterTest {
 	
 	public static final MultiKeyMap<String, Map<String, double[]>>	_results						= new MultiKeyMap<String, Map<String, double[]>>();
 																									
-	public static final Map<String, SolverType>						_solvers;
+	public static final Map<String, String>						_solvers;
 																	
 	public static final Map<String, String>							_methods;
 																	
@@ -84,9 +91,13 @@ public class SSSimulationControlCenterTest {
 		CplexParamConfiguration.setBooleanParam("PreInd", true);
 		CplexParamConfiguration.setIntegerParam("HeurFreq", -1);
 		
-		ModelConfiguration modelConf = new ModelConfiguration(SSSimulationControlCenterTest.class.getClassLoader().getResource("simulation/iAF1260.conf").getFile());
-		model = modelConf.getModel();
-		biomassID = modelConf.getModelBiomass();
+//		ModelConfiguration modelConf = new ModelConfiguration(SSSimulationControlCenterTest.class.getClassLoader().getResource("simulation/iAF1260.conf").getFile());
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/Ec_iAF1260_flux1.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+		biomassID = model.getBiomassFlux();
 		targetID = "R_EX_succ_e_";
 		
 		cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
@@ -166,7 +177,7 @@ public class SSSimulationControlCenterTest {
 		if (_debug)
 			System.out.println("\n==================================[ test_1_1_1_GLPK_FBA_WT_AEROBIC ]==================================\n");
 			
-		cc.setSolver(SolverType.GLPK);
+		cc.setSolver(GLPKBinSolverBuilder.ID);
 		cc.setEnvironmentalConditions(envCondAerobiose);
 		SteadyStateSimulationResult res = cc.simulate();
 		double[] actuals = new double[3];
@@ -1366,7 +1377,7 @@ public class SSSimulationControlCenterTest {
 		cc.setUnderOverRef(null);
 		
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CLP);
+		cc.setSolver(CLPSolverBuilder.ID);
 		cc.setMethodType(SimulationProperties.FBA);
 		cc.setEnvironmentalConditions(envCondAerobiose);
 		SteadyStateSimulationResult res = cc.simulate();
@@ -2156,7 +2167,7 @@ public class SSSimulationControlCenterTest {
 		
 		cc.setMaximization(true);
 		cc.setMethodType(SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setEnvironmentalConditions(envCondAerobiose);
 		SteadyStateSimulationResult res = cc.simulate();
 		double[] actuals = new double[3];
@@ -2366,7 +2377,7 @@ public class SSSimulationControlCenterTest {
 		if (_debug)
 			System.out.println("\n==================================[ test_3_2_1_CPLEX_PFBA_WT_AEROBIC ]==================================\n");
 			
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setFBAObjSingleFlux(biomassID, 1.0);
 		cc.setMethodType(SimulationProperties.PFBA);
 		cc.setEnvironmentalConditions(envCondAerobiose);
@@ -3821,10 +3832,10 @@ public class SSSimulationControlCenterTest {
 	
 	static {
 		
-		_solvers = new IndexedHashMap<String, SolverType>();
-//		_solvers.put("GLPK", SolverType.GLPK);
-//		_solvers.put("CLP", SolverType.CLP);
-		_solvers.put("CPLEX", SolverType.CPLEX3);
+		_solvers = new IndexedHashMap<String, String>();
+//		_solvers.put("GLPK", GLPKBinSolverBuilder.ID);
+//		_solvers.put("CLP", CLPSolverBuilder.ID);
+		_solvers.put("CPLEX", CPLEX3SolverBuilder.ID);
 		
 		_methods = new IndexedHashMap<String, String>();
 		_methods.put("FBA", SimulationProperties.FBA);

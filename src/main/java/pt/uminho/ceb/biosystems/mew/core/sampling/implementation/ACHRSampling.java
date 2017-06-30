@@ -23,7 +23,6 @@ import pt.uminho.ceb.biosystems.mew.core.sampling.abstraction.SamplingResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 
 public class ACHRSampling extends Sampling{
@@ -37,12 +36,21 @@ public class ACHRSampling extends Sampling{
 		private SimpleMatrix prevPoint = new SimpleMatrix(model.getNumberOfReactions(),1);
 		private SimpleMatrix curPoint = new SimpleMatrix(prevPoint.numRows(), 1);
 		private SamplingResult pointsMatrix = new SamplingResult();
+		private String solverId;
 		
-		public ACHRSampling(ISteadyStateModel model, SimpleMatrix warmupM, Integer nFiles,Integer pointsPerFile, Integer stepsPerPoint){
+		public ACHRSampling(ISteadyStateModel model, SimpleMatrix warmupM, Integer nFiles,Integer pointsPerFile, Integer stepsPerPoint, String solverId){
 			super(model, warmupM, nFiles, pointsPerFile, stepsPerPoint);
-			
+			this.solverId = solverId;
 		}
 		
+		public String getSolverId() {
+			return solverId;
+		}
+
+		public void setSolverId(String solverId) {
+			this.solverId = solverId;
+		}
+
 		public void setSamplerModel(ISteadyStateModel m){
 			this.model = m;
 		}
@@ -263,7 +271,7 @@ public class ACHRSampling extends Sampling{
 			
 			SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(envcond, null, model, SimulationProperties.FBA);
 			cc.setMaximization(true);
-			cc.setSolver(SolverType.CPLEX3);
+			cc.setSolver("CPLEX3");
 			
 			SteadyStateSimulationResult result = cc.simulate();
 				
@@ -276,12 +284,12 @@ public class ACHRSampling extends Sampling{
 			//EnvironmentalConditions ec = null;
 			Bias bias = null;
 			//OverrideSteadyStateModel override = new OverrideSteadyStateModel(model, envcond);
-			CreateWarmupPoints point = new CreateWarmupPoints(model, num, bias);
+			CreateWarmupPoints point = new CreateWarmupPoints(model, num, bias, "CPLEX3");
 			point.run();
 			SimpleMatrix warmupM = point.getWarmup();
 			warmupM.print(15, 9);
 			
-			ACHRSampling s = new ACHRSampling(model, warmupM, 10, 50, 5);
+			ACHRSampling s = new ACHRSampling(model, warmupM, 10, 50, 5, "CPLEX3");
 			SamplingResult res = s.run();
 			for (Map<String,Double> resl : res.getPoints()){
 				System.out.println(resl);

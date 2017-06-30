@@ -35,8 +35,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.FBA;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.PFBA;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 @Deprecated
@@ -45,14 +43,14 @@ public class FBAFluxVariabilityAnalysis {
 	protected ISteadyStateModel 		model;
 	protected EnvironmentalConditions 	envConditions;
 	protected GeneticConditions 		geneticConditions;
-	protected SolverType 				solverType;
+	protected String	 				solverType;
 
 	protected SimulationSteadyStateControlCenter simulCenter;
 
 	protected FluxValueMap referenceFD = null;
 
 	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType) throws Exception {
+			String solverType) throws Exception {
 		this.model = model;
 		this.envConditions = envConditions;
 		this.geneticConditions = geneticConditions;
@@ -69,7 +67,7 @@ public class FBAFluxVariabilityAnalysis {
 	}
 
 	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, EnvironmentalConditions envConditions, GeneticConditions geneticConditions,
-			SolverType solverType, FluxValueMap reference) throws Exception {
+			String solverType, FluxValueMap reference) throws Exception {
 		this.model = model;
 		this.envConditions = envConditions;
 		this.geneticConditions = geneticConditions;
@@ -78,7 +76,7 @@ public class FBAFluxVariabilityAnalysis {
 		this.referenceFD = reference;
 	}
 
-	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, SolverType solverType) throws Exception {
+	public FBAFluxVariabilityAnalysis(ISteadyStateModel model, String solverType) throws Exception {
 		this(model, null, null, solverType);
 	}
 
