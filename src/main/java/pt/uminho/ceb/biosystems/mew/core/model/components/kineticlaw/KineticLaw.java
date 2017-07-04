@@ -74,7 +74,7 @@ public class KineticLaw implements Serializable{
     	if(reactionKineticLaw != null){
     		IEnvironment<IValue> kineticLawEnvironment = new Environment<IValue>((Environment<IValue>) environment);
         	setEnvironmentLocalParameters(kineticLawEnvironment);
-    		return reactionKineticLaw.evaluate(kineticLawEnvironment).getNumericValue();
+    		return (Double) reactionKineticLaw.evaluate(kineticLawEnvironment).getValue();
     	}
     	return null;
     }

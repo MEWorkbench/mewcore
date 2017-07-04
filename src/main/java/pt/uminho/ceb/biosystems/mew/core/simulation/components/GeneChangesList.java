@@ -361,7 +361,7 @@ public class GeneChangesList extends MapStringNum implements Serializable
 			if(model.containsGeneReactionRule(reactionId))
 				geneRule = model.getGeneReactionRule(reactionId).getRule();
 			
-			if(geneRule!= null && !geneRule.evaluate(environment).getBooleanValue()){
+			if(geneRule!= null && !((Boolean) geneRule.evaluate(environment).getValue())){
 				result.add(reactionId);
 			}	
 		}
@@ -373,7 +373,7 @@ public class GeneChangesList extends MapStringNum implements Serializable
 	
 	public double evaluateEnvironment(IEnvironment<IValue> environment, AbstractSyntaxTree<DataTypeEnum, IValue> geneTree){
 		AbstractSyntaxTree<DataTypeEnum,IValue> convertedTree = convertGeneTree(geneTree, environment);
-		return convertedTree.evaluate(environment).getNumericValue();
+		return (double) convertedTree.evaluate(environment).getValue();
 	}
 	
 	public AbstractSyntaxTree<DataTypeEnum, IValue> convertGeneTree(AbstractSyntaxTree<DataTypeEnum, IValue> geneRuleTree, IEnvironment<IValue> environment){
@@ -395,7 +395,7 @@ public class GeneChangesList extends MapStringNum implements Serializable
 		
 		if(geneRule instanceof Variable){
 			String geneID = ((Variable)geneRule).toString();
-			double geneExpressionValue = environment.find(geneID).getNumericValue();
+			double geneExpressionValue = (double) environment.find(geneID).getValue();
 			geneRegulationRule = new VariableDouble(geneID, geneExpressionValue);
 		}
 		
