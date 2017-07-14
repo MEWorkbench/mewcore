@@ -14,9 +14,15 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<meworkbench.version>0.0.3-SNAPSHOT</meworkbench.version>
 	</properties>
+	
+	<scm>
+		<developerConnection>${project.scm.url}</developerConnection>
+	</scm>
 
 	<dependencies>
+	
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -26,17 +32,17 @@
 		<dependency>
 			<groupId>pt.uminho.ceb.biosystems.mew</groupId>
 			<artifactId>mew-biocomponents</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>${meworkbench.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.uminho.ceb.biosystems</groupId>
 			<artifactId>jecoli</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>${meworkbench.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pt.uminho.ceb.biosystems.mew</groupId>
 			<artifactId>mew-solvers</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>${meworkbench.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>colt</groupId>
@@ -49,16 +55,15 @@
 			<version>4.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.code</groupId>
-			<artifactId>matlabcontrol</artifactId>
-			<version>4.1.0</version>
+			<groupId>com.diffplug.matsim</groupId>
+			<artifactId>matconsolectl</artifactId>
+			<version>4.4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>uk.com.robust-it</groupId>
 			<artifactId>cloning</artifactId>
 			<version>1.9.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.googlecode.efficient-java-matrix-library</groupId>
 			<artifactId>ejml</artifactId>
@@ -75,12 +80,6 @@
 				<version>2.18.1</version>
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
-
-
-					<environmentVariables>
-						<LD_LIBRARY_PATH>/home/hgiesteira/Desktop/EclipseProjects/OptFlux/dependencies/unix64/static/:/opt/ibm/ILOG/CPLEX_Studio125/cplex/bin/x86-64_sles10_4.1/</LD_LIBRARY_PATH>
-						<PATH>/home/hgiesteira/Desktop/EclipseProjects/OptFlux/dependencies/unix64/bin/</PATH>
-					</environmentVariables>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -95,45 +94,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-javadoc-plugin</artifactId> -->
-			<!-- <executions> -->
-			<!-- <execution> -->
-			<!-- <id>attach-javadocs</id> -->
-			<!-- <goals> -->
-			<!-- <goal>jar</goal> -->
-			<!-- </goals> -->
-			<!-- </execution> -->
-			<!-- </executions> -->
-			<!-- </plugin> -->
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>thirdparty</id>
-			<url>http://193.137.11.210/nexus/content/repositories/thirdparty</url>
-		</repository>
-		<repository>
-			<id>biosystems-releases</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
-		</repository>
-		<repository>
-			<id>biosystems-snapshots</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>biosystems-snapshots</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>biosystems-releases</id>
-			<url>http://193.137.11.210/nexus/content/repositories/biosystems-releases</url>
-		</repository>
-	</distributionManagement>
 
 </project>
