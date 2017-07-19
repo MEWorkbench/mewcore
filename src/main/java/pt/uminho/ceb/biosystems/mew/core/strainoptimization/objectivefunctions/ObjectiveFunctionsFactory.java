@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
-
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.BPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.CYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.FVAObjectiveFunction;
@@ -180,7 +178,7 @@ public class ObjectiveFunctionsFactory {
 		MapUtils.prettyPrint(types);
 	}
 	
-	@Test
+//	@Test
 	public void testEnum(){
 		SolverType clp = SolverType.CLP;
 		
