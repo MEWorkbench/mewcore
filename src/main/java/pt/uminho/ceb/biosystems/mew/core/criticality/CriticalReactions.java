@@ -38,7 +38,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class CriticalReactions implements Serializable {
 	
@@ -59,7 +58,7 @@ public class CriticalReactions implements Serializable {
 	
 	public CriticalReactions(ISteadyStateModel model, 
 			EnvironmentalConditions env, 
-			SolverType solver)
+			String solver)
 	{
 		this.model = model;
 		center = new SimulationSteadyStateControlCenter(env, null, model, SimulationProperties.FBA);
@@ -270,7 +269,7 @@ public class CriticalReactions implements Serializable {
 	@Override
 	public CriticalReactions clone(){
 		
-		CriticalReactions cr = new CriticalReactions(this.model,this.getEnvConditions(),(SolverType) this.getCenter().getProperty(SimulationProperties.SOLVER));
+		CriticalReactions cr = new CriticalReactions(this.model,this.getEnvConditions(),(String) this.getCenter().getProperty(SimulationProperties.SOLVER));
 		
 		cr.setMinimalValue(this.minimalValue);		
 		cr.setWildTypeFluxes(this.getWildTypeFluxes());

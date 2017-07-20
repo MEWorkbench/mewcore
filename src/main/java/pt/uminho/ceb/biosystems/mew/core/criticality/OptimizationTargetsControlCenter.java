@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.ctc.wstx.util.StringUtil;
-
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.exceptions.InvalidSteadyStateModelException;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
 
 /**
@@ -54,7 +51,7 @@ public class OptimizationTargetsControlCenter {
 	 * @param environmentalConditions
 	 * @throws InvalidSteadyStateModelException
 	 */
-	public OptimizationTargetsControlCenter(String strategy, SolverType solver, Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, Set<String> pathways, Set<String> cofactors, Integer carbonOffset)
+	public OptimizationTargetsControlCenter(String strategy, String solver, Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, Set<String> pathways, Set<String> cofactors, Integer carbonOffset)
 			throws InvalidSteadyStateModelException {
 			
 		switch (strategy) {

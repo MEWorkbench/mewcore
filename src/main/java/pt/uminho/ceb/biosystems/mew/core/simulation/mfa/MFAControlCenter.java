@@ -32,7 +32,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.variability.MFAT
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFAProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.properties.MFASystemType;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraintList;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class MFAControlCenter extends AbstractSimulationSteadyStateControlCenter implements Serializable {
 	
@@ -147,7 +146,7 @@ public class MFAControlCenter extends AbstractSimulationSteadyStateControlCenter
 	}
 	
 	/** This method is used if the chosen approach had been LP or QP */
-	public void setSolver(SolverType solverType) {
+	public void setSolver(String solverType) {
 		addProperty(SimulationProperties.SOLVER, solverType);
 	}
 	

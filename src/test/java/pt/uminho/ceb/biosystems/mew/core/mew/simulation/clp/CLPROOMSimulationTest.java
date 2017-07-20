@@ -5,13 +5,13 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.AbstractSimulationTest;
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.ROOMSimulationTest;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 
 public class CLPROOMSimulationTest extends ROOMSimulationTest{
 
 	@Override
-	public SolverType getSolver() {
-		return SolverType.CLP;
+	public String getSolver() {
+		return CLPSolverBuilder.ID;
 	}
 
 	@Override

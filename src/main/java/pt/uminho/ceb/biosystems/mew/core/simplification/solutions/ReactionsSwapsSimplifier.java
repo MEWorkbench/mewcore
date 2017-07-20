@@ -7,7 +7,6 @@ import java.util.Set;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ReactionsSwapsSimplifier extends ReactionsSimplifier {
 	

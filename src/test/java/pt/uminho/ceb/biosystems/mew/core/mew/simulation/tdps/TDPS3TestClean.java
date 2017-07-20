@@ -24,7 +24,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractObjTerm;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
@@ -68,7 +68,7 @@ public class TDPS3TestClean {
 				" ");
 		
 		SimulationSteadyStateControlCenter ccTest = new SimulationSteadyStateControlCenter(null, null, modelTest, SimulationProperties.TDPS3);
-		ccTest.setSolver(SolverType.CPLEX3);
+		ccTest.setSolver(CPLEX3SolverBuilder.ID);
 		ccTest.addProperty(SimulationProperties.TDPS_PENALTY, 50.0);
 		ccTest.addProperty(SimulationProperties.TDPS_REMOVE_METABOLITES, metabolites2remove);
 		ccTest.setWTReference(getReference("/home/pmaia/ownCloud/documents/TDPS/results.txt"));

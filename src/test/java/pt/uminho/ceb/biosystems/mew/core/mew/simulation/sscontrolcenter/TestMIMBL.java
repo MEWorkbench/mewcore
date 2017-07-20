@@ -1,21 +1,27 @@
 package pt.uminho.ceb.biosystems.mew.core.mew.simulation.sscontrolcenter;
 
+import java.util.Set;
+import java.util.regex.Pattern;
+
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
+import cern.colt.Arrays;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
+import pt.uminho.ceb.biosystems.mew.biocomponents.container.io.readers.JSBMLReader;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
+import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
-import cern.colt.Arrays;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestMIMBL {
@@ -35,13 +41,17 @@ public class TestMIMBL {
 		CplexParamConfiguration.setBooleanParam("PreInd", true);
 		CplexParamConfiguration.setIntegerParam("HeurFreq", -1);
 		
-		ModelConfiguration modelConf = new ModelConfiguration("files/iAF1260_full/iAF1260.conf");
-		model = modelConf.getModel();
-		biomassID = modelConf.getModelBiomass();
+		JSBMLReader reader = new JSBMLReader("./src/test/resources/models/Ec_iAF1260_flux1.xml", "1", false);
+		Container cont = new Container(reader);
+		Set<String> met = cont.identifyMetabolitesIdByPattern(Pattern.compile(".*_b"));
+		cont.removeMetabolites(met);
+		ISteadyStateModel model = (SteadyStateModel) ContainerConverter.convert(cont);
+		
+		biomassID = model.getBiomassFlux();
 		targetID = "R_EX_succ_e_";
 		
 		cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		cc.setFBAObjSingleFlux(biomassID, 1.0);					
 	
@@ -77,7 +87,7 @@ public class TestMIMBL {
 	@Test
 	public void test_2() throws Exception{
 //		cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.MIMBL);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		cc.setMaximization(true);
 		cc.setFBAObjSingleFlux(biomassID, 1.0);		
 		cc.setEnvironmentalConditions(envCondAnaerobiose);

@@ -5,13 +5,12 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.AbstractSimulationTest;
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.FBASimulationTest;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class CPLEXFBASimulationTest extends FBASimulationTest{
 
 	@Override
-	public SolverType getSolver() {
-		return SolverType.CPLEX3;
+	public String getSolver() {
+		return "CPLEX3";
 	}
 
 	@Override

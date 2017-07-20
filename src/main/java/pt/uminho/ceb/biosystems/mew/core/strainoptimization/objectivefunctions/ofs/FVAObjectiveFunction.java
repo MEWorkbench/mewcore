@@ -13,7 +13,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimula
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.AbstractObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 /**
  * 
@@ -28,6 +27,7 @@ public class FVAObjectiveFunction extends AbstractObjectiveFunction {
 	public static final String								FVA_PARAM_BIOMASS		= "Biomass";
 	public static final String								FVA_PARAM_PRODUCT		= "Product";
 	public static final String								FVA_PARAM_MAXIMIZATION	= "Maximization";
+	public static final String								FVA_PARAM_SOLVER		= "Solver";
 	
 	private transient SimulationSteadyStateControlCenter	_cc						= null;
 
@@ -37,6 +37,7 @@ public class FVAObjectiveFunction extends AbstractObjectiveFunction {
 		myparams.put(FVA_PARAM_BIOMASS, ObjectiveFunctionParameterType.REACTION_BIOMASS);
 		myparams.put(FVA_PARAM_PRODUCT, ObjectiveFunctionParameterType.REACTION_PRODUCT);
 		myparams.put(FVA_PARAM_MAXIMIZATION, ObjectiveFunctionParameterType.BOOLEAN);
+		myparams.put(FVA_PARAM_SOLVER, ObjectiveFunctionParameterType.STRING);
 		return Collections.unmodifiableMap(myparams);
 	}
 	
@@ -46,8 +47,8 @@ public class FVAObjectiveFunction extends AbstractObjectiveFunction {
 		super(configuration);
 	}
 	
-	public FVAObjectiveFunction(String biomassID, String targetID, Boolean maximize) {
-		super(biomassID,targetID,maximize);
+	public FVAObjectiveFunction(String biomassID, String targetID, Boolean maximize, String solver) {
+		super(biomassID,targetID,maximize, solver);
 	}	
 	
 	@Override
@@ -55,6 +56,7 @@ public class FVAObjectiveFunction extends AbstractObjectiveFunction {
 		setParameterValue(FVA_PARAM_BIOMASS, params[0]);
 		setParameterValue(FVA_PARAM_PRODUCT, params[1]);
 		setParameterValue(FVA_PARAM_MAXIMIZATION, params[2]);
+		setParameterValue(FVA_PARAM_SOLVER, params[3]);
 	}
 		
 	@Override
@@ -95,9 +97,10 @@ public class FVAObjectiveFunction extends AbstractObjectiveFunction {
 	private void initControlCenter(SteadyStateSimulationResult simResult) {
 		Boolean maximize = (Boolean) getParameterValue(FVA_PARAM_MAXIMIZATION);
 		String biomassID = (String) getParameterValue(FVA_PARAM_BIOMASS);
+		String solverID =  (String) getParameterValue(FVA_PARAM_SOLVER);
 		if (_debug) System.out.println("[" + getClass().getSimpleName() + "]: initializing control center");
 		_cc = new SimulationSteadyStateControlCenter(simResult.getEnvironmentalConditions(), simResult.getGeneticConditions(), simResult.getModel(), SimulationProperties.FBA);
-		_cc.setSolver(SolverType.CPLEX3);
+		_cc.setSolver(solverID);
 		_cc.setMaximization(maximize);
 		_cc.setFBAObjSingleFlux(biomassID, 1.0);
 		

@@ -1,11 +1,11 @@
 package pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra;
 
-import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.exceptions.ClassicAlgebraInverseException;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.colt.matrix.linalg.Blas;
 import cern.colt.matrix.linalg.SeqBlas;
+import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
+import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.exceptions.ClassicAlgebraInverseException;
 
 public class MFALeastSquares extends MFAClassicAlgebra{
 

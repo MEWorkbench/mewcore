@@ -7,7 +7,6 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.CompartmentCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.MetaboliteCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.ReactionCI;
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.ModelConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 
@@ -179,36 +178,5 @@ public class DeadEnds {
 		}
 		
 		return isReversible;
-	}
-	
-	public static void main(String... args) throws Exception {
-		String test = "iaf"; // imm
-		boolean anaerobic = false;
-		
-		String file = null;
-		String envfile = null;
-		
-		if (test.equals("iaf")) {
-			file = "files/iAF1260_full/iAF1260.conf";
-			if (anaerobic) envfile = "files/iAF1260_full/iAF1260_anaerobic.env";
-		} else {
-			file = "files/iMM904/iMM904.conf";
-			if (anaerobic) envfile = "files/iMM904/iMM904_anaerobic.env";
-		}
-		
-		ModelConfiguration conf = new ModelConfiguration(file);
-		
-		Container container = conf.getContainer();
-		
-		EnvironmentalConditions env = (envfile != null) ? EnvironmentalConditions.readFromFile(envfile, ",") : null;
-		
-		DeadEnds deadEndsAnalysis = new DeadEnds(container, env);
-		
-		Set<String> deadEnds = deadEndsAnalysis.identifyReactionWithDeadEnds();
-		int i=0;
-		for(String de : deadEnds){
-			System.out.println("["+i+"] "+de);
-			i++;
-		}
 	}
 }

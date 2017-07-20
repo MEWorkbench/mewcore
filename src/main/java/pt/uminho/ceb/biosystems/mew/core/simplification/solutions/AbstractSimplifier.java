@@ -3,7 +3,6 @@ package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
 import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public abstract class AbstractSimplifier extends AbstractGeneticConditionsSimplifier {
 	

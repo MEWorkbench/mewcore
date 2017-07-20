@@ -9,11 +9,9 @@ import java.util.Map;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.junit.Test;
 
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.io.FileUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.math.NumericList;
 import pt.uminho.ceb.biosystems.mew.utilities.math.Quartile;
-import pt.uminho.ceb.biosystems.mew.utilities.math.Statistics;
 import pt.uminho.ceb.biosystems.mew.utilities.math.normalization.map.NormalizeMapQuantile;
 
 public class PercentileTests {
@@ -96,9 +94,9 @@ public class PercentileTests {
 	public void printQuantileTest() throws Exception{
 		
 		
-//		Map<String, Double> map = FileUtils.readStringValueTableFile("/home/hgiesteira/Desktop/EclipseProjectsMaven/SilicoWSDev/silico_core/src/test/resources/analysis/dataintegration/KeysValues01", "\t", true, 0, 5, true);
+//		Map<String, Double> map = FileUtils.readStringValueTableFile("/src/test/resources/analysis/dataintegration/KeysValues01", "\t", true, 0, 5, true);
 		
-//		Map<String, Map<String, String>> allData = FileUtils.readTableFileFormat("/home/hgiesteira/Desktop/EclipseProjectsMaven/SilicoWSDev/silico_core/src/test/resources/analysis/dataintegration/KeysValues01", "\t", 0, true);
+//		Map<String, Map<String, String>> allData = FileUtils.readTableFileFormat("/src/test/resources/analysis/dataintegration/KeysValues01", "\t", 0, true);
 		
 //		Map<String, Double> quartilemap = Statistics.convertMapToQuantile(map);
 		

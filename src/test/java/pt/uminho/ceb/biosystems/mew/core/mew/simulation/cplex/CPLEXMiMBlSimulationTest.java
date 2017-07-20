@@ -5,13 +5,13 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.AbstractSimulationTest;
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.MiMBlSimulationTest;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 
 public class CPLEXMiMBlSimulationTest extends MiMBlSimulationTest{
 
 	@Override
-	public SolverType getSolver() {
-		return SolverType.CPLEX3;
+	public String getSolver() {
+		return CPLEX3SolverBuilder.ID;
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyS
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 public class PercentMaxTheoreticalCarbonYieldObjectiveFunction extends CYIELDObjectiveFunction {
 	
@@ -37,7 +36,7 @@ public class PercentMaxTheoreticalCarbonYieldObjectiveFunction extends CYIELDObj
 		super(configuration);
 	}
 	
-	public PercentMaxTheoreticalCarbonYieldObjectiveFunction(String substrateID, String targetID, Container container, SolverType solver) throws Exception {
+	public PercentMaxTheoreticalCarbonYieldObjectiveFunction(String substrateID, String targetID, Container container, String solver) throws Exception {
 		processParams(substrateID, targetID, container, solver);
 	}
 	
@@ -57,7 +56,7 @@ public class PercentMaxTheoreticalCarbonYieldObjectiveFunction extends CYIELDObj
 	}
 	
 	private void initMTY(SteadyStateSimulationResult simResult) {
-		SolverType solver = (SolverType) getParameterValue(PMTCYIELD_PARAM_SOLVER);
+		String solver = (String) getParameterValue(PMTCYIELD_PARAM_SOLVER);
 		String productID = (String) getParameterValue(CYIELD_PARAM_PRODUCT);
 		String substrateID = (String) getParameterValue(CYIELD_PARAM_SUBSTRATE);
 		

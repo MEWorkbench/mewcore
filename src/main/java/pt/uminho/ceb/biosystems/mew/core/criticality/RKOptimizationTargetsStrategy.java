@@ -19,7 +19,6 @@ import pt.uminho.ceb.biosystems.mew.core.simplification.model.ZeroValueFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.fva.FBAFluxVariabilityAnalysis;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
 
@@ -27,7 +26,7 @@ public class RKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	
 	public static final String RK_OPTIMIZATION_STRATEGY = "RK";
 	
-	public RKOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, SolverType solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
+	public RKOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, String solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
 		super(container, model, environmentalConditions, solver, ignoredPathways, ignoredCofactors, carbonOffset);
 	}
 	

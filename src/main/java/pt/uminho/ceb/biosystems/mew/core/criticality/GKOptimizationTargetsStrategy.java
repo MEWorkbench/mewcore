@@ -8,7 +8,6 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
 
@@ -18,7 +17,7 @@ public class GKOptimizationTargetsStrategy extends AbstractOptimizationTargetsSt
 	
 	private RKOptimizationTargetsStrategy _rkOptimizationTargetsStrategy = null;
 	
-	public GKOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, SolverType solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
+	public GKOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, String solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
 		
 		super(container, model, environmentalConditions, solver, ignoredPathways, ignoredCofactors, carbonOffset);
 		_rkOptimizationTargetsStrategy = new RKOptimizationTargetsStrategy(container, model, environmentalConditions, solver, ignoredPathways, ignoredCofactors, carbonOffset);

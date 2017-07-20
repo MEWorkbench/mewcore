@@ -5,13 +5,13 @@ import java.util.Map;
 
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.AbstractSimulationTest;
 import pt.uminho.ceb.biosystems.mew.core.mew.simulation.abstracts.MOMASimulationTest;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.GLPKBinSolverBuilder;
 
 public class GLPKMOMASimulationTest extends MOMASimulationTest{
 
 	@Override
-	public SolverType getSolver() {
-		return SolverType.GLPK;
+	public String getSolver() {
+		return GLPKBinSolverBuilder.ID;
 	}
 
 	@Override

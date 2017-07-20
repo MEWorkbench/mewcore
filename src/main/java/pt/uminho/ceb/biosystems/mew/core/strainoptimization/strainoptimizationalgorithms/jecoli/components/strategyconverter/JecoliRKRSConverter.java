@@ -17,7 +17,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.RKRSSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.RKDecoder;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.RKRSDualSetRepresentationDecoder;
 
 /**

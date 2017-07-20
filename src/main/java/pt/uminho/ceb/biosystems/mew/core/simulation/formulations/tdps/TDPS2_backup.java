@@ -14,7 +14,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.IOverrideReaction
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesList;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.AbstractSSReferenceSimulation;
-import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.L1VarTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.VarTerm;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;

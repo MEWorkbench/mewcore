@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.uminho.ceb.biosystems.mew.core.cmd.searchtools.configuration.OptimizationConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ReactionConstraint;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
@@ -13,10 +12,8 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationPropert
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.AbstractObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.IObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 
 /**
  * This objective function allows the user to choose wether to maximize or minimize the FVAMin of
@@ -74,7 +71,7 @@ public class FVASenseMinPSYieldObjectiveFunction extends AbstractObjectiveFuncti
 			String substrateID,
 			Boolean maximize,
 			Boolean fvaMax,
-			SolverType solver,
+			String solver,
 			Double minimumRobustness,
 			Double minimumBiomass,
 			Double minimumPSYield) {
@@ -96,7 +93,7 @@ public class FVASenseMinPSYieldObjectiveFunction extends AbstractObjectiveFuncti
 	
 	private SimulationSteadyStateControlCenter getControlCenter(ISteadyStateModel model) {
 		if (_cc == null) {
-			SolverType solver = (SolverType) getParameterValue(FVA_SENSE_MIN_PSYIELD_PARAM_SOLVER);
+			String solver = (String) getParameterValue(FVA_SENSE_MIN_PSYIELD_PARAM_SOLVER);
 			String productID = (String) getParameterValue(FVA_SENSE_MIN_PSYIELD_PARAM_PRODUCT);
 			Boolean sense = (Boolean) getParameterValue(FVA_SENSE_MIN_PSYIELD_PARAM_SENSE);
 			_cc = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.FBA);
@@ -207,20 +204,20 @@ public class FVASenseMinPSYieldObjectiveFunction extends AbstractObjectiveFuncti
 	}
 	
 	
-	public static void main(String[] args) throws Exception {
-		String conf = "/home/pmaia/ownCloud/documents/DeYeast/20160513_kiran_pathways_allpathways_GK_newcriticals/configurations/conf_20160516_GK_allpathways_newcriticals.conf";
-		OptimizationConfiguration optconf = new OptimizationConfiguration(conf);
-		
-		optconf.setCurrentState(0);
-		Map<IObjectiveFunction, String> ofs = optconf.getObjectiveFunctions();
-		
-		for(IObjectiveFunction of : ofs.keySet()){
-			System.out.println(of.getBuilderString());
-			System.out.println(of.getShortString());
-			System.err.println(ofs.get(of));
-		}
-		
-		
-	}
+//	public static void main(String[] args) throws Exception {
+//		String conf = "/home/pmaia/ownCloud/documents/DeYeast/20160513_kiran_pathways_allpathways_GK_newcriticals/configurations/conf_20160516_GK_allpathways_newcriticals.conf";
+//		OptimizationConfiguration optconf = new OptimizationConfiguration(conf);
+//		
+//		optconf.setCurrentState(0);
+//		Map<IObjectiveFunction, String> ofs = optconf.getObjectiveFunctions();
+//		
+//		for(IObjectiveFunction of : ofs.keySet()){
+//			System.out.println(of.getBuilderString());
+//			System.out.println(of.getShortString());
+//			System.err.println(ofs.get(of));
+//		}
+//		
+//		
+//	}
 	
 }

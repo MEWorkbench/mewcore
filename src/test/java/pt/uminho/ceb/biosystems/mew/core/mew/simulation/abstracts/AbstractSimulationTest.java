@@ -31,7 +31,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.Ab
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.abstractions.WrongFormulationException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.InfeasibleProblemException;
 
 public abstract class AbstractSimulationTest {
@@ -60,7 +59,7 @@ public abstract class AbstractSimulationTest {
 	protected abstract Map<String, Double> getResults();
 	protected abstract boolean isMaximization();
 	
-	abstract public SolverType getSolver();
+	abstract public String getSolver();
 	
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();

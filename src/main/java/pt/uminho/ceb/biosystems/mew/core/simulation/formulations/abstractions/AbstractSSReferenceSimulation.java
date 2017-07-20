@@ -10,7 +10,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimula
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.ManagerExceptionUtils;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.MandatoryPropertyException;
 import pt.uminho.ceb.biosystems.mew.core.simulation.formulations.exceptions.PropertyCastException;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPProblem;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolution;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
@@ -46,7 +45,7 @@ public abstract class AbstractSSReferenceSimulation<T extends LPProblem> extends
 			}
 			
 			if(wtReference == null){
-				SolverType solver = getSolverType();
+				String solver = getSolverType();
 				EnvironmentalConditions envCond = getEnvironmentalConditions();
 				
 				if(debug) System.out.print("["+getClass().getSimpleName()+"] event [COMPUTING WT REFERENCE]...");

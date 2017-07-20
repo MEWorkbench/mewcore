@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
@@ -14,7 +13,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateMode
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.GLPKBinSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapStringNum;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
@@ -34,7 +33,7 @@ public class ROOMGLPKUnitTest {
 		kos.add("R_ACKr"); kos.add("R_ACt2r"); kos.add("R_H2Ot");
 //		cc.setReactionsKnockoutConditions(kos);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.GLPK);
+		cc.setSolver(GLPKBinSolverBuilder.ID);
 		cc.addProperty(SimulationProperties.USE_DRAINS_IN_WT_REFERENCE, true);
 		
 		SteadyStateSimulationResult reswt = cc.simulate();
@@ -56,7 +55,7 @@ public class ROOMGLPKUnitTest {
 		
 		SimulationSteadyStateControlCenter ccCPLEX = new SimulationSteadyStateControlCenter(null, null, model, SimulationProperties.ROOM);
 		ccCPLEX.setMaximization(true);
-		ccCPLEX.setSolver(SolverType.CPLEX);
+		ccCPLEX.setSolver(GLPKBinSolverBuilder.ID);
 //		ccCPLEX.setReactionsKnockoutConditions(kos);
 		ccCPLEX.addProperty(SimulationProperties.USE_DRAINS_IN_WT_REFERENCE, true);
 		

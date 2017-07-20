@@ -7,9 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.GenericConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGeneSteadyStateConfiguration;
-import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.IGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.configuration.ISteadyStateConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.GKSolutionSimplifier;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.simplification.simplifiers.GOUSolutionSimplifier;

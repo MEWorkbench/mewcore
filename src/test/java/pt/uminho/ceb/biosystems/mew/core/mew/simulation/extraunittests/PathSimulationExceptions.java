@@ -14,7 +14,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.SteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.exceptions.SolverDefinitionException;
 
 public class PathSimulationExceptions {
@@ -80,7 +80,7 @@ public class PathSimulationExceptions {
 	private void simulate(String method) throws Exception {
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(null, null, model, method);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX);
+		cc.setSolver(CLPSolverBuilder.ID);
 		cc.simulate();
 	}
 }

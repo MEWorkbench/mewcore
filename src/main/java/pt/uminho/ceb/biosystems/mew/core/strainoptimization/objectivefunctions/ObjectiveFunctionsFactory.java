@@ -2,7 +2,6 @@ package pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -22,8 +21,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.o
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBPCYObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedBiomassYIELDObjectiveFunction;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ofs.WeightedYIELDObjectiveFunction;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class ObjectiveFunctionsFactory {
 	
@@ -160,33 +157,5 @@ public class ObjectiveFunctionsFactory {
 			}
 		}
 		return klazzes;
-	}
-	
-	//	@Test
-	public void testOF(String[] args) throws InvalidObjectiveFunctionConfiguration {
-		ObjectiveFunctionsFactory fact = new ObjectiveFunctionsFactory();
-		BPCYObjectiveFunction of = (BPCYObjectiveFunction) fact.getObjectiveFunction("BPCY", "R_bio", "R_prod", "R_subst");
-		
-		MapUtils.prettyPrint(of.mandatoryParameters());
-		MapUtils.prettyPrint(of.getValues());
-	}
-	
-//	@Test
-	public void testParams() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		ObjectiveFunctionsFactory fact = new ObjectiveFunctionsFactory();
-		Map<String, ObjectiveFunctionParameterType> types = fact.getObjectiveFunctionParameterTypes("FVA_SENSE_MIN_PSYIELD");
-		MapUtils.prettyPrint(types);
-	}
-	
-//	@Test
-	public void testEnum(){
-		SolverType clp = SolverType.CLP;
-		
-		SolverType cplex3 = SolverType.CPLEX3;
-		
-		Object[] initArgs = new Object[]{clp, cplex3};
-		Class<?>[] argumentClasses = getArgumentsClasses(initArgs);
-		
-		System.out.println(Arrays.toString(argumentClasses));
 	}
 }

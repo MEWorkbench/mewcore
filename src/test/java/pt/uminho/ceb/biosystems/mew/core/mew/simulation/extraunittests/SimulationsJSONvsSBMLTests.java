@@ -25,7 +25,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.ReactionChangesLi
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.MapUtils;
 
 public class SimulationsJSONvsSBMLTests {
@@ -122,7 +122,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccJSON = new SimulationSteadyStateControlCenter(getEC(modelName), null, modelJSON, SimulationProperties.FBA);
 		ccJSON.setMethodType(SimulationProperties.FBA);
 		ccJSON.setMaximization(true);
-		ccJSON.setSolver(SolverType.CPLEX3);
+		ccJSON.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSim = ccJSON.simulate();
 		
@@ -138,7 +138,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccSBML = new SimulationSteadyStateControlCenter(null, null, modelSBML, SimulationProperties.FBA);
 		ccSBML.setMethodType(SimulationProperties.FBA);
 		ccSBML.setMaximization(true);
-		ccSBML.setSolver(SolverType.CPLEX3);
+		ccSBML.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult sbmlSim = ccSBML.simulate();
 
@@ -165,7 +165,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccJSON = new SimulationSteadyStateControlCenter(null, reactionsKO, modelJSON, SimulationProperties.FBA);
 		ccJSON.setMethodType(SimulationProperties.FBA);
 		ccJSON.setMaximization(true);
-		ccJSON.setSolver(SolverType.CPLEX3);
+		ccJSON.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSim = ccJSON.simulate();
 		
@@ -181,7 +181,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccSBML = new SimulationSteadyStateControlCenter(null, reactionsKO, modelSBML, SimulationProperties.FBA);
 		ccSBML.setMethodType(SimulationProperties.FBA);
 		ccSBML.setMaximization(true);
-		ccSBML.setSolver(SolverType.CPLEX3);
+		ccSBML.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult sbmlSim = ccSBML.simulate();
 
@@ -207,7 +207,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccJSON = new SimulationSteadyStateControlCenter(null, reactionsOU, modelJSON, SimulationProperties.FBA);
 		ccJSON.setMethodType(SimulationProperties.FBA);
 		ccJSON.setMaximization(true);
-		ccJSON.setSolver(SolverType.CPLEX3);
+		ccJSON.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSim = ccJSON.simulate();
 		
@@ -223,7 +223,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccSBML = new SimulationSteadyStateControlCenter(null, reactionsOU, modelSBML, SimulationProperties.FBA);
 		ccSBML.setMethodType(SimulationProperties.FBA);
 		ccSBML.setMaximization(true);
-		ccSBML.setSolver(SolverType.CPLEX3);
+		ccSBML.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult sbmlSim = ccSBML.simulate();
 
@@ -249,7 +249,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccJSON = new SimulationSteadyStateControlCenter(null, genesJSONKO, modelJSON, SimulationProperties.FBA);
 		ccJSON.setMethodType(SimulationProperties.FBA);
 		ccJSON.setMaximization(true);
-		ccJSON.setSolver(SolverType.CPLEX3);
+		ccJSON.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSim = ccJSON.simulate();
 		
@@ -265,7 +265,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccSBML = new SimulationSteadyStateControlCenter(null, genesSBMLKO, modelSBML, SimulationProperties.FBA);
 		ccSBML.setMethodType(SimulationProperties.FBA);
 		ccSBML.setMaximization(true);
-		ccSBML.setSolver(SolverType.CPLEX3);
+		ccSBML.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult sbmlSim = ccSBML.simulate();
 
@@ -291,7 +291,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccJSON = new SimulationSteadyStateControlCenter(null, genesJSONOU, modelJSON, SimulationProperties.FBA);
 		ccJSON.setMethodType(SimulationProperties.FBA);
 		ccJSON.setMaximization(true);
-		ccJSON.setSolver(SolverType.CPLEX3);
+		ccJSON.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult jsonSim = ccJSON.simulate();
 		
@@ -307,7 +307,7 @@ public class SimulationsJSONvsSBMLTests {
 		SimulationSteadyStateControlCenter ccSBML = new SimulationSteadyStateControlCenter(null, genesSBMLOU, modelSBML, SimulationProperties.FBA);
 		ccSBML.setMethodType(SimulationProperties.FBA);
 		ccSBML.setMaximization(true);
-		ccSBML.setSolver(SolverType.CPLEX3);
+		ccSBML.setSolver(CLPSolverBuilder.ID);
 		
 		SteadyStateSimulationResult sbmlSim = ccSBML.simulate();
 

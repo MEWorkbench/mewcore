@@ -29,7 +29,7 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.solutionset.ROUSolutionSet;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliOptimizationProperties;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CLPSolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 
@@ -117,7 +117,7 @@ public class StrainOptimizationControlCenterTest {
 		
 		SimulationSteadyStateControlCenter simCC = new SimulationSteadyStateControlCenter(envCond, null, model, SimulationProperties.PFBA);
 		simCC.setMaximization(true);
-		simCC.setSolver(SolverType.CLP);
+		simCC.setSolver(CLPSolverBuilder.ID);
 		
 //		SteadyStateSimulationResult referenceSimulation = simCC.simulate();
 //		FluxValueMap fvm = referenceSimulation.getFluxValues();
@@ -127,7 +127,7 @@ public class StrainOptimizationControlCenterTest {
 		methodConf.put(SimulationProperties.METHOD_ID, SimulationProperties.FBA);
 		methodConf.put(SimulationProperties.MODEL, model);
 		methodConf.put(SimulationProperties.IS_MAXIMIZATION, true);
-		methodConf.put(SimulationProperties.SOLVER, SolverType.CLP);
+		methodConf.put(SimulationProperties.SOLVER, CLPSolverBuilder.ID);
 		methodConf.put(SimulationProperties.OVERUNDER_2STEP_APPROACH, true);
 		methodConf.put(SimulationProperties.IS_OVERUNDER_SIMULATION, true);
 //		methodConf.put(SimulationProperties.OBJECTIVE_FUNCTION, of);

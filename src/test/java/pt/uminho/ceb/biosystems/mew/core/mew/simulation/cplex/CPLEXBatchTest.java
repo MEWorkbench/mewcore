@@ -12,7 +12,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.converters.ContainerConverter;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationProperties;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SimulationSteadyStateControlCenter;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
+import pt.uminho.ceb.biosystems.mew.solvers.builders.CPLEX3SolverBuilder;
 import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
 public class CPLEXBatchTest {
@@ -73,7 +73,7 @@ public class CPLEXBatchTest {
 		SimulationSteadyStateControlCenter cc = new SimulationSteadyStateControlCenter(env,null,model,SimulationProperties.FBA);
 		cc.setFBAObjSingleFlux("R10", 1.0);
 		cc.setMaximization(true);
-		cc.setSolver(SolverType.CPLEX3);
+		cc.setSolver(CPLEX3SolverBuilder.ID);
 		double res = cc.simulate().getOFvalue();
 		cc.forceSolverCleanup();
 		

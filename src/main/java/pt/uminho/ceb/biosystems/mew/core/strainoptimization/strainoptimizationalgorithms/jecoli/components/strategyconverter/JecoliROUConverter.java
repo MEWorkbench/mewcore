@@ -1,10 +1,7 @@
 package pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.strategyconverter;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import org.jfree.util.ArrayUtilities;
 
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.evaluationfunction.AbstractMultiobjectiveEvaluationFunction;
 import pt.uminho.ceb.biosystems.jecoli.algorithm.components.representation.hybridset.IntIntHybridSetRepresentationFactory;
@@ -19,8 +16,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.optimizationresult.s
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.JecoliGenericConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ISteadyStateDecoder;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.components.decoder.ROUDecoder;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
-import pt.uminho.ceb.biosystems.mew.utilities.datastructures.list.ListUtilities;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 /**

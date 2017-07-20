@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
+import cern.colt.matrix.linalg.Blas;
+import cern.colt.matrix.linalg.SeqBlas;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.FluxValueMap;
 import pt.uminho.ceb.biosystems.mew.core.simulation.components.SteadyStateSimulationResult;
@@ -11,11 +16,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ExpMeasuredFluxes;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.MFAApproaches;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.utils.AlgebraUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
-import cern.colt.matrix.linalg.Blas;
-import cern.colt.matrix.linalg.SeqBlas;
 
 /** This class is used to solve MFA problems with algebra calculus, 
  * either the system is determined or overdevermined */

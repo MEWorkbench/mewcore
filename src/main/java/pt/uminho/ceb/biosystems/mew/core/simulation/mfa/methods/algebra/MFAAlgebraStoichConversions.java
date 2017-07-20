@@ -2,12 +2,12 @@ package pt.uminho.ceb.biosystems.mew.core.simulation.mfa.methods.algebra;
 
 import java.util.List;
 
+import cern.colt.matrix.DoubleMatrix2D;
 import pt.uminho.ceb.biosystems.mew.core.model.components.ColtSparseStoichiometricMatrix;
 import pt.uminho.ceb.biosystems.mew.core.model.components.IStoichiometricMatrix;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraint;
 import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.ratioconstraints.FluxRatioConstraintList;
-import cern.colt.matrix.DoubleMatrix2D;
 
 public class MFAAlgebraStoichConversions {
 	

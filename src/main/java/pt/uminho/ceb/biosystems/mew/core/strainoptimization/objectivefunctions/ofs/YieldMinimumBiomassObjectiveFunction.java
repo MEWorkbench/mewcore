@@ -31,7 +31,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.A
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.InvalidObjectiveFunctionConfiguration;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.ObjectiveFunctionParameterType;
 import pt.uminho.ceb.biosystems.mew.core.utils.Debugger;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.math.MathUtils;
 
 public class YieldMinimumBiomassObjectiveFunction extends AbstractObjectiveFunction {
@@ -65,7 +64,7 @@ public class YieldMinimumBiomassObjectiveFunction extends AbstractObjectiveFunct
 		super(configuration);
 	}
 	
-	public YieldMinimumBiomassObjectiveFunction(String biomassId, String desiredFluxId, Double minimumBiomass, SolverType solver) {
+	public YieldMinimumBiomassObjectiveFunction(String biomassId, String desiredFluxId, Double minimumBiomass, String solver) {
 		super(biomassId, desiredFluxId, minimumBiomass, solver);
 	}
 	
@@ -99,7 +98,7 @@ public class YieldMinimumBiomassObjectiveFunction extends AbstractObjectiveFunct
 	}
 	
 	private void computeBiomassValue(SteadyStateSimulationResult simResult) {
-		SolverType solver = (SolverType) getParameterValue(YIELD_PARAM_SOLVER);
+		String solver = (String) getParameterValue(YIELD_PARAM_SOLVER);
 		String biomassID = (String) getParameterValue(YIELD_PARAM_BIOMASS);
 		Double minBiomassPercentage = (Double) getParameterValue(YIELD_PARAM_MIN_BIOMASS_PERCENTAGE);
 		

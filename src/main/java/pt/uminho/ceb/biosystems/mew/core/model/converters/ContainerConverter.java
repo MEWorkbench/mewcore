@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.Container;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.CompartmentCI;
 import pt.uminho.ceb.biosystems.mew.biocomponents.container.components.GeneCI;
@@ -43,7 +44,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.
 import pt.uminho.ceb.biosystems.mew.utilities.grammar.syntaxtree.AbstractSyntaxTree;
 import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.DataTypeEnum;
 import pt.uminho.ceb.biosystems.mew.utilities.math.language.mathboolean.IValue;
-import cern.colt.matrix.impl.SparseDoubleMatrix2D;
 
 
 public class ContainerConverter {

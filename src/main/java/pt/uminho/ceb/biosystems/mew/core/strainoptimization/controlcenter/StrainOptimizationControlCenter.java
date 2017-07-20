@@ -27,7 +27,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2RKCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2RKRSCSOM;
 import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizationalgorithms.jecoli.spea2.strategy.JecoliSPEA2ROUCSOM;
-import pt.uminho.ceb.biosystems.mew.solvers.lp.CplexParamConfiguration;
 
 /**
  * Created by ptiago on 23-02-2015.
@@ -69,12 +68,14 @@ public class StrainOptimizationControlCenter extends AbstractStrainOptimizationC
 		
 		AbstractObjTerm.setMaxValue(Double.MAX_VALUE);
 		AbstractObjTerm.setMinValue(-Double.MAX_VALUE);
-		CplexParamConfiguration.setDoubleParam("EpRHS", 1e-9);
-		CplexParamConfiguration.setDoubleParam("TiLim", 3.0d);
-		CplexParamConfiguration.setIntegerParam("MIPEmphasis", 2);
-		CplexParamConfiguration.setBooleanParam("NumericalEmphasis", true);
-		CplexParamConfiguration.setBooleanParam("PreInd", true);
-		CplexParamConfiguration.setIntegerParam("HeurFreq", -1);
+		
+		//MOVE TO solvers.cplex -> somewhere where it is always loaded as soon as CPLEX is selected
+//		CplexParamConfiguration.setDoubleParam("EpRHS", 1e-9);
+//		CplexParamConfiguration.setDoubleParam("TiLim", 3.0d);
+//		CplexParamConfiguration.setIntegerParam("MIPEmphasis", 2);
+//		CplexParamConfiguration.setBooleanParam("NumericalEmphasis", true);
+//		CplexParamConfiguration.setBooleanParam("PreInd", true);
+//		CplexParamConfiguration.setIntegerParam("HeurFreq", -1);
 		
 		String optimizationAlgorithm = (String) genericConfiguration.getProperty(GenericOptimizationProperties.OPTIMIZATION_ALGORITHM);
 		String strategy = (String) genericConfiguration.getProperty(GenericOptimizationProperties.OPTIMIZATION_STRATEGY);

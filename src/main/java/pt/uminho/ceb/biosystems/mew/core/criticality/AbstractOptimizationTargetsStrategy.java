@@ -16,7 +16,6 @@ import pt.uminho.ceb.biosystems.mew.biocomponents.validation.chemestry.Metabolit
 import pt.uminho.ceb.biosystems.mew.core.criticality.experimental.IExperimentalGeneEssentiality;
 import pt.uminho.ceb.biosystems.mew.core.model.components.EnvironmentalConditions;
 import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateModel;
-import pt.uminho.ceb.biosystems.mew.solvers.SolverType;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.CollectionUtils;
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.map.indexedhashmap.IndexedHashMap;
 import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
@@ -31,7 +30,7 @@ public abstract class AbstractOptimizationTargetsStrategy implements IOptimizati
 	
 	protected EnvironmentalConditions				_environmentalConditions	= null;
 	
-	protected SolverType							_solver						= null;
+	protected String								_solver						= null;
 	
 	protected Set<String>							_ignoredCofactors			= null;
 	
@@ -44,7 +43,7 @@ public abstract class AbstractOptimizationTargetsStrategy implements IOptimizati
 	protected Map<TargetIDStrategy, Set<String>>	_flags_data					= new IndexedHashMap<TargetIDStrategy, Set<String>>();
 	protected Map<TargetIDStrategy, Flag>			_flags						= new IndexedHashMap<TargetIDStrategy, Flag>();
 	
-	public AbstractOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, SolverType solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
+	public AbstractOptimizationTargetsStrategy(Container container, ISteadyStateModel model, EnvironmentalConditions environmentalConditions, String solver, Set<String> ignoredPathways, Set<String> ignoredCofactors, Integer carbonOffset) {
 		
 		_carbonOffset = carbonOffset;
 		_container = container;
@@ -279,7 +278,7 @@ public abstract class AbstractOptimizationTargetsStrategy implements IOptimizati
 			}
 			if (_solver != null) {
 				bw.newLine();
-				bw.append("solver=" + _solver.name());
+				bw.append("solver=" + _solver);
 			}
 			if (_carbonOffset != null) {
 				bw.newLine();
