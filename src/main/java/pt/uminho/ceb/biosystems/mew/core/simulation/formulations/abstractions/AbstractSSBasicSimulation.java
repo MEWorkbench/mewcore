@@ -299,8 +299,10 @@ public abstract class AbstractSSBasicSimulation<T extends LPProblem> implements 
 			} else
 				reference = (FluxValueMap) ManagerExceptionUtils.testCast(properties, FluxValueMap.class, SimulationProperties.OVERUNDER_REFERENCE_FLUXES, false);
 			
-			if (geneticConditions == null) throw new WrongFormulationException(new NullPointerException("GeneticConditions"));
-			overrideRC = new UnderOverSingleReference(model, environmentalConditions, geneticConditions, reference);
+//			if (geneticConditions == null) throw new WrongFormulationException(new NullPointerException("GeneticConditions"));
+			ReactionChangesList rcl = (geneticConditions!=null) ? geneticConditions.getReactionList() : null;			
+			overrideRC = new UnderOverSingleReference(model, environmentalConditions, rcl, reference);
+			
 		} else {
 			overrideRC = new OverrideSteadyStateModel(model, environmentalConditions, geneticConditions);
 		}
