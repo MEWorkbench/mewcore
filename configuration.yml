@@ -1,8 +1,8 @@
 version: 1
 type: maven
 resolver:
-  snapshotRepo: ARTIFACTORY_JCENTER_REPO_KEY
-  releaseRepo: ARTIFACTORY_JCENTER_REPO_KEY
+  snapshotRepo: SNAPSHOT_REPO_KEY
+  releaseRepo: RELEASE_REPO_KEY
   serverID: Default-Server
 deployer:
   snapshotRepo: SNAPSHOT_REPO_KEY
