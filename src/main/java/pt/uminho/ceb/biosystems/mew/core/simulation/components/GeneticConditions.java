@@ -74,6 +74,9 @@ public class GeneticConditions implements Serializable{
 
 	
 	public ReactionChangesList getReactionList() {
+		if(reactionList==null){
+			reactionList = new ReactionChangesList();
+		}
 		return reactionList;
 	}
 
