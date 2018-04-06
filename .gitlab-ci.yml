@@ -12,12 +12,12 @@ maven_compile:
   script:
     - mvn compile
  
-maven test:
-  stage: test
-  tags: 
-    - maven
-  script:
-    - mvn test
+#maven test:
+#  stage: test
+#  tags: 
+#    - maven
+#  script:
+#    - mvn test
 
 maven_deploy:
   stage: deploy
