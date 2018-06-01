@@ -112,6 +112,14 @@
 			<artifactId>ejml</artifactId>
 			<version>0.25</version>
 		</dependency>
+		
+		
+		<dependency>
+			<groupId>pt.uminho.ceb.biosystems.mew</groupId>
+			<artifactId>mew-solvers-cplex</artifactId>
+			<version>${meworkbench.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
