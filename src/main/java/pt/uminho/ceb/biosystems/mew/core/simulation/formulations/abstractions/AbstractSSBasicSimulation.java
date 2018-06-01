@@ -60,7 +60,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.TimeUtils;
  * 
  * 
  * @author pmaia, pvilaça
- * @date Jan 19, 2014
  * @version 1.0
  * @since metabolic3persistent
  * @param <T>

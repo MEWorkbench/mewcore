@@ -12,7 +12,7 @@ import pt.uminho.ceb.biosystems.mew.core.model.steadystatemodel.ISteadyStateMode
 import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
 
 
-/** Map<Flux Id, <Value, Confidence Interval>> */
+/* Map<Flux Id, <Value, Confidence Interval>> */
 public class ExpMeasuredFluxes extends LinkedHashMap<String, Pair<Double, Double>>{
 
 	private static final long serialVersionUID = 2250514675456568270L;

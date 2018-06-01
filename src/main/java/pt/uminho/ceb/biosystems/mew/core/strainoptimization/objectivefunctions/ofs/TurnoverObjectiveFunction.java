@@ -16,7 +16,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.O
  * 
  * 
  * @author pmaia
- * @date May 7, 2014
  * @version 0.1
  * @since Analysis
  */

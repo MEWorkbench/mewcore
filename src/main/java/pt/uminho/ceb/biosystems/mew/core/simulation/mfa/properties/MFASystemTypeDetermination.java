@@ -93,7 +93,7 @@ public class MFASystemTypeDetermination {
 //	}
 
 	
-	/** @return <System type, Degrees of freedom, Are real degrees of freedom?> 
+	/** @return System type, Degrees of freedom, Are real degrees of freedom? 
 	 * 
 	 * The type of the system is obtained from the comparison of the rank of the Gc matrix, with the number of unknown fluxes in the system (columns of Gc).
 	 * If the rank is less than the number of columns, than it is not possible to invert the matrix Gc, and the system is under-determined.
@@ -105,7 +105,7 @@ public class MFASystemTypeDetermination {
 	    return getSystemTypeAndDegrees(model, measuredFluxes, ratioConstraints, null);
 	}
 	
-	/** @return <System type, Degrees of freedom> 
+	/** @return System type, Degrees of freedom
 	 * 
 	 * The type of the system is obtained from the comparison of the rank of the Gc matrix, with the number of unknown fluxes in the system (columns of Gc).
 	 * If the rank is less than the number of columns, than it is not possible to invert the matrix Gc, and the system is under-determined.

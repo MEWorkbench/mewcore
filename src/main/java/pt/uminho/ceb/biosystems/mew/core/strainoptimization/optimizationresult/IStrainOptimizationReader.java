@@ -16,7 +16,6 @@ public interface IStrainOptimizationReader extends Serializable{
     /**
      *
      * @param inputStream to read data from (file,db,...)
-     * @param configuration base algorithm configuration
      * @return a solution genetic condition based on a specific jecoli configuration and an input stream
      * @throws Exception
      */

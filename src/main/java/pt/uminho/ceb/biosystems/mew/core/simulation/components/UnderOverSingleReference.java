@@ -33,12 +33,12 @@ public class UnderOverSingleReference extends OverrideSteadyStateModel {
 	protected double alpha = 0.001; // safe to remove ??
 	
 
-	/**
+	/*
 	 * Instantiates OverrideSteadyStateModelUnderOverExpression
 	 * 
 	 * @param underOverExpression
 	 * @param referenceValues
-	 * @param environmentalConditions
+	 * @param envCond
 	 * @param model
 	 */
 	public UnderOverSingleReference(ISteadyStateModel model, EnvironmentalConditions envCond, ReactionChangesList reactionList, FluxValueMap references) {

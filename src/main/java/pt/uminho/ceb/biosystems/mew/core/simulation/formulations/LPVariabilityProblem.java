@@ -25,7 +25,6 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.SolverException;
  * 
  * 
  * @author pvilaca
- * @date Mar 3, 2016
  * @version 0.1
  * @since mewcore - staging
  * @param <T> - An <code>LPProblem</code> to be used as the inner problem.

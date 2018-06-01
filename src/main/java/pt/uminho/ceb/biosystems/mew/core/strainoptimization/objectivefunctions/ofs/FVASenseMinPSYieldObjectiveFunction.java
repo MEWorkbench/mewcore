@@ -22,7 +22,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.O
  * product-substrate yield (PSYield).
  * 
  * @author pmaia
- * @date May 11, 2016
  * @version 0.1
  * @since
  */

@@ -46,9 +46,7 @@ public interface IStrainOptimizationResultSet<T extends IGenericConfiguration, E
      * Creates a solution given a genetic condition
      * 
      * @param gc
-     * @param result
      * @return
-     * @throws Exception
      */
     E createSolution(GeneticConditions gc);
     

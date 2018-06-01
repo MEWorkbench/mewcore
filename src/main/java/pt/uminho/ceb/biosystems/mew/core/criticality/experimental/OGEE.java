@@ -22,7 +22,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.collection.Collecti
  * //http://ogeedb.embl.de/
  * 
  * @author pmaia
- * @date Jul 29, 2014
  * @version 1.0
  * @since metabolic3persistent
  */

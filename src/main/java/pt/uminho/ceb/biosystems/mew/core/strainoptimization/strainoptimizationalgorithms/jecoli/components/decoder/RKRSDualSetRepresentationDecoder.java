@@ -22,7 +22,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
  * 
  * 
  * @author pmaia
- * @date Jan 16, 2015
  * @version 0.1
  * @since metabolic3persistent
  */

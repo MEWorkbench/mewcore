@@ -19,7 +19,6 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.components.GeneticConditions
  * E. coli Keio essentiality database basic utilities
  * 
  * @author pmaia
- * @date Jul 29, 2014
  * @version 0.1
  * @since metabolic3persistent
  */

@@ -30,7 +30,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.java.StringUtils;
  * </ul>
  * 
  * @author pmaia
- * @date Nov 11, 2013
  * @version 1.0
  * @since Metabolic3
  */

@@ -68,7 +68,7 @@ public class FluxRatioConstraint implements Serializable {
 		}
 	}
 	
-	/** Returns two new restrictions. One for <= and another for <= */
+	/** Returns two new restrictions. One for le and another for le */
 	public FluxRatioConstraint[] convertEquality(){
 				
 		if(!this.comparator.equals(RatioConstraintComparator.EQUAL))

@@ -202,7 +202,7 @@ public abstract class AbstractGeneticConditionsSimplifier implements ISimplifier
 		return res;
 	}
 	
-	/**
+	/*
 	 * Evaluates the solution based on a jecoli generic configuration and a map
 	 * with method and matching simulation result
 	 * 

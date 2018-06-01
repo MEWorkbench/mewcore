@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** Class used to transform a matrix into its Row Echelon Form 
+/* Class used to transform a matrix into its Row Echelon Form 
  * 
  * A matrix is in row echelon form (ref) when it satisfies the following conditions:
  *  1. The first non-zero element in each row, called the leading entry, is 1.

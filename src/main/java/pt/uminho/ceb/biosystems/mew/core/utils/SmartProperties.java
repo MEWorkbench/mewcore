@@ -35,7 +35,6 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.tree.generictree.Tr
  * @see java.util.Properties
  * 
  * @author pmaia
- * @date Oct 25, 2013
  * @version 1.2
  * @since Metabolic3
  */

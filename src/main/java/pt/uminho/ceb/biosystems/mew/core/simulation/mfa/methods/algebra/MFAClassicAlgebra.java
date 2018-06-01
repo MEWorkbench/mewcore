@@ -21,7 +21,7 @@ import pt.uminho.ceb.biosystems.mew.utilities.datastructures.pair.Pair;
  * either the system is determined or overdevermined */
 public abstract class MFAClassicAlgebra extends MFAAlgebra{
 	
-	/** Map<Model Index, <Flux measurement, Variance>> */
+	/* Map<Model Index, <Flux measurement, Variance>> */
 	protected Map<Integer,Pair<Double, Double>> vmModelIndexesMap;
 	
 	/** Extended Stoichiometric matrix with the equality flux ratios */
@@ -47,7 +47,7 @@ public abstract class MFAClassicAlgebra extends MFAAlgebra{
      * creates a list with the model flux indexes for the vectors in vc
      * Copy every column of the Stoichiometric matrix that corresponds to a measured flux to a new matrix (Gm)
      * Copy every column of the Stoichiometric matrix that do not corresponds to a measured flux to a new matrix (Gc)
-     * @return [0] gCmatrix : DoubleMatrix2D , [1] gMmatrix : DoubleMatrix2D , [2] vm : DoubleMatrix2D , [3] vc model indexes : List<Integer> */
+     * @return [0] gCmatrix : DoubleMatrix2D , [1] gMmatrix : DoubleMatrix2D , [2] vm : DoubleMatrix2D , [3] vc model indexes : List*/
     public Object[] configureMatrices(DoubleMatrix2D stoichiometricMatrix){
     	int nMetabolites = stoichiometricMatrix.rows();
     	int nMeasurements = vmModelIndexesMap.size();

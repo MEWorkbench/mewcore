@@ -104,7 +104,7 @@ public class CreateWarmupPoints {
 		}
 	}
 	
-	/** Calculates the mean for each line of the warmup matrix -> centerPoint **/
+	/* Calculates the mean for each line of the warmup matrix -> centerPoint **/
 	public SimpleMatrix meanWarmup(Integer nRxns, Integer nWrmup, SimpleMatrix warmupM){
 		SimpleMatrix centerPoint = new SimpleMatrix(nRxns,1);
 		for(int l = 0; l < nRxns; l++){

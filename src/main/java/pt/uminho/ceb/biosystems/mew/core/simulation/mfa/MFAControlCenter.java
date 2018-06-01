@@ -174,7 +174,7 @@ public class MFAControlCenter extends AbstractSimulationSteadyStateControlCenter
 	/**
 	 * This method can be used if the chosen approach had been the FVA one
 	 * 
-	 * @param minimumPercentage the minimum percentage of the minimum flux
+	 * @param minimumPercentageFlux the minimum percentage of the minimum flux
 	 */
 	public void setMinimumPercentage(Double minimumPercentageFlux) {
 		addProperty(MFAProperties.FVA_MIN_PERCENTAGE, minimumPercentageFlux);

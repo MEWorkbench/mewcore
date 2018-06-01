@@ -94,7 +94,7 @@ public abstract class Sampling implements ISampling{
 		return randPoint;
 	}
 
-	/** Calculates the mean for each line of the warmup matrix -> centerPoint **/
+	/* Calculates the mean for each line of the warmup matrix -> centerPoint **/
 	public static SimpleMatrix meanRowMatrix(SimpleMatrix centerPoint){
 		Integer nRxns = warmupM.numRows();
 		Integer nWrmup = warmupM.numCols();
@@ -196,7 +196,7 @@ public abstract class Sampling implements ISampling{
 		return dist;
 	}
 	
-	/** Determine positive and negative reactions
+	/* Determine positive and negative reactions
 	 * 1 -> positive, 0 -> negative **/
 	public ArrayList<Integer> findDirection (double uTol, SimpleMatrix u, ArrayList<Integer> validDir, Integer f){
 		ArrayList<Integer> dir = new ArrayList<Integer>();
@@ -229,7 +229,7 @@ public abstract class Sampling implements ISampling{
 		return validDir;
 	}
 	
-	/** Determine minimum and maximum steps 
+	/* Determine minimum and maximum steps 
 	 * 1 -> max, 0 -> min **/
 	public HashMap<String,Double> maxminStep(SimpleMatrix u, ArrayList<Integer> validDir, HashMap<String, Double> dist, Integer f){
 		HashMap<String,Double> stepTemp = new HashMap<String, Double>();

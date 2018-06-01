@@ -24,7 +24,6 @@ import pt.uminho.ceb.biosystems.mew.solvers.lp.LPSolutionType;
 /**
  * 
  * @author pmaia
- * @date Sep 9, 2014
  * @version 1.0
  * @since metabolic3persistent
  */

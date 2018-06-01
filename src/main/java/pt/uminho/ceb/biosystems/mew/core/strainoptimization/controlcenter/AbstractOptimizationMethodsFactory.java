@@ -28,7 +28,6 @@ public class AbstractOptimizationMethodsFactory<T extends IStrainOptimizationAlg
 	 * Returns an instance of a method without initializing a configuration 
 	 * 
 	 * @param methodId
-	 * @param genericConfiguration
 	 * @return
 	 * @throws InstantiationException
 	 * @throws InvocationTargetException

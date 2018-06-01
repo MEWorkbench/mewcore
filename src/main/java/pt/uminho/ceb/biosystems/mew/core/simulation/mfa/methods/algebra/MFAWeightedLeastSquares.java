@@ -23,7 +23,7 @@ public class MFAWeightedLeastSquares extends MFAClassicAlgebra{
 	}
     
 
-	/** -Gc^+ . Gm . (Gc . Y^-1 . GcT)^-1 . Gc - Y^-1 . vm */
+	/* -Gc^+ . Gm . (Gc . Y^-1 . GcT)^-1 . Gc - Y^-1 . vm */
 	@Override
 	public DoubleMatrix2D solveSystem(DoubleMatrix2D gmTransposeMatrix, 
     		DoubleMatrix2D gcTransposeMatrix, 
@@ -101,7 +101,7 @@ System.out.println("### VM best estimate:\n" + vmLikelihood.toString());
     }
     
     /** Builds a diagonal matrix, but instead having the variances of the measurements, the values in the diagonal are equal
-     * to a given alpha value times the flux measurement powered to 2 -> (a*vm)^2
+     * to a given alpha value times the flux measurement powered to 2 = (a*vm)^2
      * @param stoichiometricMatrix model stoichiometric matrix
      * @param alpha a default value to be multiplied to the flux measurements and powered to 2
      * @return mxm square matrix */

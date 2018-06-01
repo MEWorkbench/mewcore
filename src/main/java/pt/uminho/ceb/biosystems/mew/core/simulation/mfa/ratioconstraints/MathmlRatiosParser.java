@@ -16,7 +16,7 @@ import pt.uminho.ceb.biosystems.mew.core.simulation.mfa.fluxratios.grammar.Valid
 
 
 
-/** Content MathML focuses on the semantics, or meaning, of the expression rather than its layout. Central to Content MathML is the <apply> element that represents function application. */
+/* Content MathML focuses on the semantics, or meaning, of the expression rather than its layout. Central to Content MathML is the <apply> element that represents function application. */
 public class MathmlRatiosParser {
 
 	protected List<String> errorMessages;

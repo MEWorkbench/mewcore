@@ -5,7 +5,6 @@ package pt.uminho.ceb.biosystems.mew.core.simplification.solutions;
  * This class is a simple list of constants.
  * 
  * @author pmaia
- * @date May 24, 2016
  * @version
  * @since
  */

@@ -20,7 +20,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.objectivefunctions.O
  * FVAMin.
  * 
  * @author pmaia
- * @date Aug 6, 2014
  * @version 1.0
  * @since metabolic3persistent
  */

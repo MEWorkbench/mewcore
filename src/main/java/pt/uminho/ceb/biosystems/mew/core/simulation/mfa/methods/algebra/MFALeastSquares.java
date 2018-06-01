@@ -13,7 +13,7 @@ public class MFALeastSquares extends MFAClassicAlgebra{
 		super(model);
 	}
 	
-	/** Vc = -1 . ((Gc_T)^+) . Gm_T . Vm  
+	/* Vc = -1 . ((Gc_T)^+) . Gm_T . Vm  
 	 * @throws ClassicAlgebraInverseException */
 	@Override
 	public DoubleMatrix2D solveSystem(DoubleMatrix2D gmTransposeMatrix, 

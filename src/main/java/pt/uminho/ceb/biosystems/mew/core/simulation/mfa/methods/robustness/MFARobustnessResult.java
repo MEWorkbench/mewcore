@@ -12,7 +12,7 @@ public class MFARobustnessResult extends SteadyStateSimulationResult {
 	private static final long serialVersionUID = 2590966879851025057L;
 
 
-	/** Map<Flux id, [Objective function values]> 
+	/* Map<Flux id, [Objective function values]> 
 	 * Each position of the values array, corresponds to the objective function value to the 
 	 * simulation with the ith percentage of the wild type flux (key) 
 	 * [0] 100%

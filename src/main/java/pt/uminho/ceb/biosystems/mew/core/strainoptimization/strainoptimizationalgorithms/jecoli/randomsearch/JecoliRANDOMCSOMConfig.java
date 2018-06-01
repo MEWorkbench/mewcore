@@ -8,7 +8,6 @@ import pt.uminho.ceb.biosystems.mew.core.strainoptimization.strainoptimizational
  * 
  * 
  * @author pmaia
- * @date Jan 20, 2016
  * @version 
  * @since
  */
