@@ -37,4 +37,4 @@ sed -i -e s/DEPLOYMENT_REPO_ID/$DEPLOYMENT_REPO_ID/g ${H2_HOME}/settings.xml
 #echo GPG_PRIVATE_KEY: $GPG_PRIVATE_KEY
 #gpg -v --batch --import <(echo "$GPG_PRIVATE_KEY")
 
-mvn -Dmeworkbench.version=${MEWORKBENCH_VERSION} -s ${H2_HOME}/settings.xml -Dmaven.repo.local=$M2REPOSITORY deploy
+mvn -Dmeworkbench.version=${MEWORKBENCH_VERSION} -DskipTests=true -s ${H2_HOME}/settings.xml -Dmaven.repo.local=$M2REPOSITORY deploy
